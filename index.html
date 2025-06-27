@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Booking - Maid Cafe</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: #f1f2f4;
+      }
+      .container {
+        padding: 30px 20px;
+      }
+      .upi-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 15px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+      }
+      .qr-code {
+        margin: 30px 0;
+      }
+      .qr-code img {
+        width: 250px;
+        height: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Book Your Spot for Maid Cafe</h1>
+
+      <!-- UPI Payment Button -->
+      <a
+        class="upi-button"
+        href="upi://pay?pa=YOUR_UPI_ID@bank&pn=Event+Name&am=100"
+        target="_blank"
+      >
+        Pay via UPI
+      </a>
+
+      <!-- UPI QR Code Image -->
+      <div class="qr-code">
+        <img src="qr-code.png" alt="Scan to Pay via UPI" />
+        <p>Scan this QR code to pay</p>
+      </div>
+
+      <!-- Weeztix Embed -->
+      <div
+        id="shop-frame"
+        data-url="https://shop.weeztix.com/34f635ce-989f-4f1d-a246-876c22986814"
+        style="max-width: 600px; margin: 0 auto"
+      ></div>
+      <script src="https://shop.weeztix.com/build/integrate.js"></script>
+    </div>
+  </body>
+</html>
