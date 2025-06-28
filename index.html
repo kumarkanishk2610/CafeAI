@@ -19,7 +19,6 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--background);
         color: var(--text);
-        line-height: 1.6;
         text-align: center;
       }
 
@@ -38,8 +37,7 @@
       h2 {
         font-size: 1.2rem;
         color: #666;
-        margin-top: 5px;
-        margin-bottom: 30px;
+        margin: 5px 0 30px;
       }
 
       .instruction-list {
@@ -85,7 +83,7 @@
         font-size: 18px;
         border: none;
         border-radius: 8px;
-        margin: 20px auto 0;
+        margin: 10px auto;
         cursor: pointer;
         transition: background-color 0.3s ease;
         display: inline-block;
@@ -141,8 +139,7 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
       }
 
-      .overlay-content input[type="email"],
-      .overlay-content input[type="number"] {
+      .overlay-content input {
         width: 90%;
         padding: 12px;
         margin: 10px 0;
@@ -188,12 +185,9 @@
         border-radius: 8px;
         padding: 10px 20px;
         font-weight: bold;
-        margin-top: 15px;
-        margin-bottom: 10px;
-        width: 90%;
+        margin: 15px auto 10px;
         max-width: 350px;
-        margin-left: auto;
-        margin-right: auto;
+        width: 90%;
       }
 
       .hidden {
@@ -204,20 +198,18 @@
         .booking-flex {
           flex-direction: column;
         }
-
         h1 {
           font-size: 2rem;
         }
-
         h2 {
           font-size: 1rem;
         }
       }
     </style>
   </head>
+
   <body>
     <div class="container">
-      <!-- Instruction Screen -->
       <div id="instruction-screen">
         <h1>Welcome to the Maid Cafe Event</h1>
         <h2>Follow these steps to book your tickets</h2>
@@ -254,7 +246,6 @@
         </button>
       </div>
 
-      <!-- Booking Screen -->
       <div id="booking-screen" class="hidden">
         <h1>Reserve Your Spot</h1>
         <h2>Select your seats below, then pay before submitting the form.</h2>
@@ -272,7 +263,6 @@
       </div>
     </div>
 
-    <!-- UPI Payment Popup -->
     <div class="overlay" id="upiOverlay">
       <div class="overlay-content">
         <h2>Pay via UPI</h2>
@@ -282,17 +272,9 @@
           placeholder="Your Email"
           oninput="updateUPIDetails()"
         />
-        <p
-          style="
-            margin-top: 0;
-            font-size: 0.875rem;
-            color: black;
-            text-align: center;
-          "
-        >
+        <p style="margin-top: 0; font-size: 0.875rem; color: black">
           Make sure you use the same email in the booking form.
         </p>
-
         <input
           type="number"
           id="seats"
@@ -304,12 +286,7 @@
           <span>Total Amount:</span>
           <span id="amountValue">₹0</span>
         </div>
-        <p style="margin-bottom: 10px">
-          To pay, click the button or scan the QR code below.
-        </p>
-        <button class="btn" id="upiBtn" onclick="handleUPIPayment()" disabled>
-          Pay Now!
-        </button>
+        <button class="btn" id="upiBtn" disabled>Pay Now!</button>
         <div class="qr-code">
           <div id="qrcode"></div>
           <img
@@ -320,13 +297,23 @@
           />
           <p>Scan to Pay</p>
         </div>
+        <div style="margin-top: 10px">
+          <button class="btn" id="gpayBtn" style="background-color: #4285f4">
+            Pay via GPay
+          </button>
+          <button class="btn" id="phonepeBtn" style="background-color: #5b2dc6">
+            Pay via PhonePe
+          </button>
+          <button class="btn" id="paytmBtn" style="background-color: #00baf2">
+            Pay via Paytm
+          </button>
+        </div>
         <button class="btn close-btn" onclick="closePaymentPopup()">
           Close
         </button>
       </div>
     </div>
 
-    <!-- QR Code Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
       let qrcode;
@@ -340,7 +327,7 @@
         document.getElementById("upiOverlay").style.display = "flex";
         if (!qrcode) {
           qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "upi://pay?pa=kanishkkumar2610@oksbi&pn=Kanishk%20Kumar&aid=uGICAgICTxviZHg&am=0&cu=INR&mc=0000&tn=",
+            text: "upi://pay?pa=afcp@airtel&am=0&cu=INR&tn=",
             width: 200,
             height: 200,
           });
@@ -354,47 +341,57 @@
 
       function updateUPIDetails() {
         const emailInput = document.getElementById("email");
+        const seatsInput = document.getElementById("seats");
         const email = emailInput.value.trim();
-        const seats = parseInt(document.getElementById("seats").value.trim());
+        const seats = parseInt(seatsInput.value.trim());
         const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
         const amount = !isNaN(seats) && seats > 0 ? seats * 500 : 0;
         const note = `${email} - ${seats || 0} seats`;
-        const upiURL = `upi://pay?pa=kanishkkumar2610@oksbi&pn=Kanishk%20Kumar&aid=uGICAgICTxviZHg&am=${amount}&cu=INR&mc=0000&tn=${encodeURIComponent(
-          note
-        )}`;
 
         document.getElementById("amountValue").textContent =
           amount > 0 ? `₹500 x ${seats} = ₹${amount}` : "₹0";
-
         emailInput.style.borderColor = isValidEmail ? "#ccc" : "red";
+
         const payBtn = document.getElementById("upiBtn");
         payBtn.disabled = !(isValidEmail && seats > 0);
+
+        const baseParams = `pa=afcp@airtel&pn=KANISHK%20KUMAR&tn=${encodeURIComponent(
+          note
+        )}&am=${amount}&cu=INR&mc=0000`;
+        const upiURL = `upi://pay?${baseParams}`;
+        const gpayURL = `tez://upi/pay?${baseParams}`;
+        const phonepeURL = `phonepe://pay?${baseParams}`;
+        const paytmURL = `paytmmp://pay?${baseParams}`;
 
         if (qrcode && isValidEmail && seats > 0) {
           qrcode.clear();
           qrcode.makeCode(upiURL);
-          document.getElementById("fallbackQR").style.display = "none";
           document.getElementById("qrcode").style.display = "block";
+          document.getElementById("fallbackQR").style.display = "none";
         } else {
           document.getElementById("qrcode").style.display = "none";
           document.getElementById("fallbackQR").style.display = "block";
         }
 
         payBtn.onclick = () => {
-          if (isValidEmail && seats > 0) {
-            window.open(upiURL, "_blank");
-          }
+          if (isValidEmail && seats > 0) window.open(upiURL, "_blank");
         };
+
+        document.getElementById("gpayBtn").onclick = () =>
+          window.open(gpayURL, "_blank");
+        document.getElementById("phonepeBtn").onclick = () =>
+          window.open(phonepeURL, "_blank");
+        document.getElementById("paytmBtn").onclick = () =>
+          window.open(paytmURL, "_blank");
       }
 
-      // Timer for Proceed Button
       window.addEventListener("load", () => {
         const btn = document.getElementById("startBtn");
-        let seconds = 0;
+        let seconds = 1;
         const interval = setInterval(() => {
           seconds--;
           btn.textContent = `Please read the instructions! You can proceed to booking in ${seconds}s`;
-          if (seconds <= 2) {
+          if (seconds <= 0) {
             clearInterval(interval);
             btn.disabled = false;
             btn.textContent = "Proceed to Booking";
