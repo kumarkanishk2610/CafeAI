@@ -340,7 +340,7 @@
         document.getElementById("upiOverlay").style.display = "flex";
         if (!qrcode) {
           qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "upi://pay?pa=kanishkkumar2610@oksbi&pn=Kanishk%20Kumar&aid=uGICAgICTxviZHg&am=0&cu=INR&tn=",
+            text: "upi://pay?pa=kanishkkumar2610@oksbi&pn=Kanishk%20Kumar&aid=uGICAgICTxviZHg&am=0&cu=INR&mc=0000&tn=",
             width: 200,
             height: 200,
           });
@@ -359,7 +359,7 @@
         const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
         const amount = !isNaN(seats) && seats > 0 ? seats * 500 : 0;
         const note = `${email} - ${seats || 0} seats`;
-        const upiURL = `upi://pay?pa=kanishkkumar2610@oksbi&pn=Kanishk%20Kumar&aid=uGICAgICTxviZHg&am=${amount}&cu=INR&tn=${encodeURIComponent(
+        const upiURL = `upi://pay?pa=kanishkkumar2610@oksbi&pn=Kanishk%20Kumar&aid=uGICAgICTxviZHg&am=${amount}&cu=INR&mc=0000&tn=${encodeURIComponent(
           note
         )}`;
 
