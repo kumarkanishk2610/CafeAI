@@ -286,13 +286,15 @@
           style="
             margin-top: 0;
             font-size: 0.875rem;
-            color: black;
-            text-align: center;
+            color: grey;
+            text-align: left;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
           "
         >
           Make sure you use the same email in the booking form.
         </p>
-
         <input
           type="number"
           id="seats"
@@ -330,6 +332,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
       let qrcode;
+      let latestUpiURL = "";
 
       function showBooking() {
         document.getElementById("instruction-screen").classList.add("hidden");
@@ -340,7 +343,7 @@
         document.getElementById("upiOverlay").style.display = "flex";
         if (!qrcode) {
           qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "upi://pay?pa=scar@upi&pn=SULEKH KUMAR&am=0&cu=INR&tn=",
+            text: "",
             width: 200,
             height: 200,
           });
@@ -363,6 +366,8 @@
           note
         )}`;
 
+        latestUpiURL = upiURL;
+
         document.getElementById("amountValue").textContent =
           amount > 0 ? `₹500 x ${seats} = ₹${amount}` : "₹0";
 
@@ -379,22 +384,22 @@
           document.getElementById("qrcode").style.display = "none";
           document.getElementById("fallbackQR").style.display = "block";
         }
+      }
 
-        payBtn.onclick = () => {
-          if (isValidEmail && seats > 0) {
-            window.open(upiURL, "_blank");
-          }
-        };
+      function handleUPIPayment() {
+        if (latestUpiURL) {
+          window.open(latestUpiURL, "_blank");
+        }
       }
 
       // Timer for Proceed Button
       window.addEventListener("load", () => {
         const btn = document.getElementById("startBtn");
-        let seconds = 0;
+        let seconds = 15;
         const interval = setInterval(() => {
           seconds--;
           btn.textContent = `Please read the instructions! You can proceed to booking in ${seconds}s`;
-          if (seconds <= 2) {
+          if (seconds <= 0) {
             clearInterval(interval);
             btn.disabled = false;
             btn.textContent = "Proceed to Booking";
