@@ -19,6 +19,7 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--background);
         color: var(--text);
+        line-height: 1.6;
         text-align: center;
       }
 
@@ -37,7 +38,8 @@
       h2 {
         font-size: 1.2rem;
         color: #666;
-        margin: 5px 0 30px;
+        margin-top: 5px;
+        margin-bottom: 30px;
       }
 
       .instruction-list {
@@ -83,7 +85,7 @@
         font-size: 18px;
         border: none;
         border-radius: 8px;
-        margin: 10px auto;
+        margin: 20px auto 0;
         cursor: pointer;
         transition: background-color 0.3s ease;
         display: inline-block;
@@ -139,7 +141,8 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
       }
 
-      .overlay-content input {
+      .overlay-content input[type="email"],
+      .overlay-content input[type="number"] {
         width: 90%;
         padding: 12px;
         margin: 10px 0;
@@ -185,9 +188,12 @@
         border-radius: 8px;
         padding: 10px 20px;
         font-weight: bold;
-        margin: 15px auto 10px;
-        max-width: 350px;
+        margin-top: 15px;
+        margin-bottom: 10px;
         width: 90%;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .hidden {
@@ -198,16 +204,17 @@
         .booking-flex {
           flex-direction: column;
         }
+
         h1 {
           font-size: 2rem;
         }
+
         h2 {
           font-size: 1rem;
         }
       }
     </style>
   </head>
-
   <body>
     <div class="container">
       <div id="instruction-screen">
@@ -266,15 +273,15 @@
     <div class="overlay" id="upiOverlay">
       <div class="overlay-content">
         <h2>Pay via UPI</h2>
+        <p style="margin-top: 0; font-size: 0.875rem; color: black">
+          Make sure you use the same email in both the payment and booking form.
+        </p>
         <input
           type="email"
           id="email"
           placeholder="Your Email"
           oninput="updateUPIDetails()"
         />
-        <p style="margin-top: 0; font-size: 0.875rem; color: black">
-          Make sure you use the same email in the booking form.
-        </p>
         <input
           type="number"
           id="seats"
@@ -286,7 +293,6 @@
           <span>Total Amount:</span>
           <span id="amountValue">₹0</span>
         </div>
-        <button class="btn" id="upiBtn" disabled>Pay Now!</button>
         <div class="qr-code">
           <div id="qrcode"></div>
           <img
@@ -295,18 +301,17 @@
             alt="Scan to Pay"
             style="display: none"
           />
-          <p>Scan to Pay</p>
-        </div>
-        <div style="margin-top: 10px">
-          <button class="btn" id="gpayBtn" style="background-color: #4285f4">
-            Pay via GPay
-          </button>
-          <button class="btn" id="phonepeBtn" style="background-color: #5b2dc6">
-            Pay via PhonePe
-          </button>
-          <button class="btn" id="paytmBtn" style="background-color: #00baf2">
-            Pay via Paytm
-          </button>
+          <p>
+            Scan this QR to Pay via any UPI app, or pay directly to
+            <strong>afcp@airtel</strong> with the comment below:
+          </p>
+
+          <p
+            id="upiNoteDisplay"
+            style="font-weight: bold; color: #444; font-size: 0.95rem"
+          >
+            (Your comment will appear here)
+          </p>
         </div>
         <button class="btn close-btn" onclick="closePaymentPopup()">
           Close
@@ -327,7 +332,7 @@
         document.getElementById("upiOverlay").style.display = "flex";
         if (!qrcode) {
           qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "upi://pay?pa=afcp@airtel&am=0&cu=INR&tn=",
+            text: "upi://pay?pa=afcp@airtel&pn=Kanishk%20Kumar&am=0&cu=INR&mc=0000&tn=",
             width: 200,
             height: 200,
           });
@@ -341,48 +346,33 @@
 
       function updateUPIDetails() {
         const emailInput = document.getElementById("email");
-        const seatsInput = document.getElementById("seats");
         const email = emailInput.value.trim();
-        const seats = parseInt(seatsInput.value.trim());
+        const seats = parseInt(document.getElementById("seats").value.trim());
         const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
         const amount = !isNaN(seats) && seats > 0 ? seats * 500 : 0;
         const note = `${email} - ${seats || 0} seats`;
+        const upiURL = `upi://pay?pa=afcp@airtel&pn=Kanishk%20Kumar&am=${amount}&cu=INR&mc=0000&tn=${encodeURIComponent(
+          note
+        )}`;
 
         document.getElementById("amountValue").textContent =
           amount > 0 ? `₹500 x ${seats} = ₹${amount}` : "₹0";
+
         emailInput.style.borderColor = isValidEmail ? "#ccc" : "red";
 
-        const payBtn = document.getElementById("upiBtn");
-        payBtn.disabled = !(isValidEmail && seats > 0);
-
-        const baseParams = `pa=afcp@airtel&pn=KANISHK%20KUMAR&tn=${encodeURIComponent(
-          note
-        )}&am=${amount}&cu=INR&mc=0000`;
-        const upiURL = `upi://pay?${baseParams}`;
-        const gpayURL = `tez://upi/pay?${baseParams}`;
-        const phonepeURL = `phonepe://pay?${baseParams}`;
-        const paytmURL = `paytmmp://pay?${baseParams}`;
+        // Show the UPI comment note dynamically
+        document.getElementById("upiNoteDisplay").textContent =
+          isValidEmail && seats > 0 ? note : "(Your comment will appear here)";
 
         if (qrcode && isValidEmail && seats > 0) {
           qrcode.clear();
           qrcode.makeCode(upiURL);
-          document.getElementById("qrcode").style.display = "block";
           document.getElementById("fallbackQR").style.display = "none";
+          document.getElementById("qrcode").style.display = "block";
         } else {
           document.getElementById("qrcode").style.display = "none";
           document.getElementById("fallbackQR").style.display = "block";
         }
-
-        payBtn.onclick = () => {
-          if (isValidEmail && seats > 0) window.open(upiURL, "_blank");
-        };
-
-        document.getElementById("gpayBtn").onclick = () =>
-          window.open(gpayURL, "_blank");
-        document.getElementById("phonepeBtn").onclick = () =>
-          window.open(phonepeURL, "_blank");
-        document.getElementById("paytmBtn").onclick = () =>
-          window.open(paytmURL, "_blank");
       }
 
       window.addEventListener("load", () => {
