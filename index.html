@@ -17,6 +17,16 @@
         padding: 30px 20px;
       }
 
+      input[type="email"],
+      input[type="number"] {
+        padding: 10px;
+        margin: 10px 0;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
       .upi-button,
       .proceed-button {
         background-color: #4caf50;
@@ -43,59 +53,128 @@
       .hidden {
         display: none;
       }
+
+      /* Flex container for booking screen layout */
+      .booking-flex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+      }
+
+      .booking-left {
+        flex: 1;
+        min-width: 300px;
+        max-width: 600px;
+      }
+
+      .booking-right {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-
-      <!-- Step 1: Instructions -->
+      <!-- Instruction Screen -->
       <div id="instruction-screen">
         <h1>Welcome to the Maid Cafe Event Booking</h1>
-        <p>
-          Please read the following instructions carefully before proceeding:
-        </p>
-        <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
-          <li>Each ticket costs ₹500 and includes a reserved seat.</li>
-          <li>Payment can be made via UPI or QR code.</li>
-          <li>Once paid, proceed to book using the embedded ticketing system.</li>
-          <li>Ensure you use the same name and email during payment and booking.</li>
+        <p>Please read the following instructions before booking:</p>
+        <ul style="text-align: left; max-width: 500px; margin: 0 auto">
+          <li>
+            Step 1: Select your choice of tickets in the Weeztix embed on the
+            next page.
+          </li>
+          <li>
+            Step 2: Fill your email and number of seats in the payment section.
+          </li>
+          <li>
+            Step 3: Complete your payment. Once payment is made, confirm your
+            booking in Weeztix.
+          </li>
         </ul>
-        <button class="proceed-button" onclick="showBookingScreen()">Proceed to Booking</button>
+        <button class="proceed-button" onclick="showBooking()">
+          Proceed to Booking
+        </button>
       </div>
 
-      <!-- Step 2: Booking & Payment -->
+      <!-- Booking + Payment Screen -->
       <div id="booking-screen" class="hidden">
         <h1>Book Your Spot for Maid Cafe</h1>
 
-        <!-- UPI Payment Button -->
-        <a
-          class="upi-button"
-          href="upi://pay?pa=afcp@airtel&pn=Maid+Cafe&am=500"
-          target="_blank"
-        >
-          Pay via UPI
-        </a>
+        <!-- Flex container -->
+        <div class="booking-flex">
+          <!-- Weeztix Embed (Left) -->
+          <div class="booking-left">
+            <div
+              id="shop-frame"
+              data-url="https://shop.weeztix.com/34f635ce-989f-4f1d-a246-876c22986814"
+              style="width: 100%"
+            ></div>
+          </div>
 
-        <!-- UPI QR Code Image -->
-        <div class="qr-code">
-          <img src="qr-code.png" alt="Scan to Pay via UPI" />
-          <p>Scan this QR code to pay</p>
+          <!-- Custom Form + UPI (Right) -->
+          <div class="booking-right">
+            <p>Enter your details to generate a payment link:</p>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="Your Email"
+              required
+            /><br />
+            <input
+              type="number"
+              id="seats"
+              placeholder="Number of Seats"
+              min="1"
+              required
+            /><br />
+
+            <button class="upi-button" onclick="generateUPILink()">
+              Pay via UPI
+            </button>
+            <a id="upiLink" class="hidden" target="_blank">Continue to Pay</a>
+
+            <!-- QR Code -->
+            <div class="qr-code">
+              <img src="qr-code.png" alt="Scan to Pay via UPI" />
+              <p>Or scan this QR code to pay</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Weeztix Embed -->
-        <div
-          id="shop-frame"
-          data-url="https://shop.weeztix.com/34f635ce-989f-4f1d-a246-876c22986814"
-          style="max-width: 600px; margin: 0 auto"
-        ></div>
+        <!-- Load Weeztix Script -->
         <script src="https://shop.weeztix.com/build/integrate.js"></script>
       </div>
     </div>
 
     <script>
-      function showBookingScreen() {
+      function showBooking() {
         document.getElementById("instruction-screen").classList.add("hidden");
         document.getElementById("booking-screen").classList.remove("hidden");
+      }
+
+      function generateUPILink() {
+        const email = document.getElementById("email").value.trim();
+        const seats = parseInt(document.getElementById("seats").value.trim());
+
+        if (!email || isNaN(seats) || seats <= 0) {
+          alert("Please enter a valid email and seat quantity.");
+          return;
+        }
+
+        const amount = seats * 500;
+        const note = `${email} - ${seats} seats`;
+        const upiURL = `upi://pay?pa=afcp@airtel&pn=Maid+Cafe&am=${amount}&cu=INR&tn=${encodeURIComponent(
+          note
+        )}`;
+
+        const link = document.getElementById("upiLink");
+        link.href = upiURL;
+        link.click();
       }
     </script>
   </body>
