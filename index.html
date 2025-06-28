@@ -3,6 +3,412 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maid Cafe Booking</title>
+    <style>
+      :root {
+        --primary: #ff69b4;
+        --background: #fff0f5;
+        --accent: #ffffff;
+        --text: #333;
+        --btn-hover: #ff85c1;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .container {
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: var(--primary);
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        color: #666;
+        margin-top: 5px;
+        margin-bottom: 30px;
+      }
+
+      .instruction-list {
+        list-style: none;
+        padding: 0;
+        max-width: 650px;
+        margin: 20px auto;
+      }
+
+      .instruction-list li {
+        background: #fff;
+        border-left: 6px solid var(--primary);
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: left;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .instruction-list li:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .step-title {
+        font-weight: bold;
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+
+      .note {
+        background: #fff8fc;
+        border-left: 6px solid #aaa;
+        color: #555;
+      }
+
+      .btn {
+        background-color: var(--primary);
+        color: white;
+        padding: 14px 30px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        margin: 20px auto 0;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+      }
+
+      .btn:hover {
+        background-color: var(--btn-hover);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .booking-flex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+      }
+
+      .booking-left {
+        flex: 1;
+        min-width: 300px;
+        max-width: 600px;
+        background-color: var(--accent);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+      }
+
+      .overlay-content {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .overlay-content input[type="email"],
+      .overlay-content input[type="number"] {
+        width: 90%;
+        padding: 12px;
+        margin: 10px 0;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .qr-code {
+        margin: 20px 0;
+      }
+
+      #qrcode {
+        margin: 0 auto;
+        width: 200px;
+        height: 200px;
+      }
+
+      #fallbackQR {
+        display: block;
+        margin: 0 auto;
+        width: 200px;
+        height: 200px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .close-btn {
+        background-color: #ccc;
+        color: black;
+        margin-top: 20px;
+      }
+
+      #amountSummary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        width: 90%;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .booking-flex {
+          flex-direction: column;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        h2 {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Instruction Screen -->
+      <div id="instruction-screen">
+        <h1>Welcome to the Maid Cafe Event</h1>
+        <h2>Follow these steps to book your tickets</h2>
+        <ul class="instruction-list">
+          <li>
+            <div class="step-title">Step 1: Select Seats</div>
+            Select your seats in the form. This will block the seats for 8
+            minutes.
+          </li>
+          <li>
+            <div class="step-title">Step 2: Pay via UPI</div>
+            Complete payment using the pink <strong>Pay via UPI</strong> button.
+          </li>
+          <li>
+            <div class="step-title">Step 3: Submit the Form</div>
+            Submit the form to confirm your booking. We’ll verify the payment
+            and email your ticket.
+          </li>
+          <li class="note">
+            <div class="step-title">Note:</div>
+            <p>
+              Please enter your details correctly for verification and ticket
+              delivery.
+            </p>
+            <p>Cash payments: contact the helpdesk.</p>
+            <p>
+              This ticket is for the Maid Cafe only. Please buy Anime India
+              entry separately.
+            </p>
+          </li>
+        </ul>
+        <button class="btn" id="startBtn" onclick="showBooking()" disabled>
+          Proceed to Booking (15s)
+        </button>
+      </div>
+
+      <!-- Booking Screen -->
+      <div id="booking-screen" class="hidden">
+        <h1>Reserve Your Spot</h1>
+        <h2>Select your seats below, then pay before submitting the form.</h2>
+        <button class="btn" onclick="openPaymentPopup()">Pay via UPI</button>
+        <div class="booking-flex">
+          <div class="booking-left">
+            <div
+              id="shop-frame"
+              data-url="https://shop.weeztix.com/34f635ce-989f-4f1d-a246-876c22986814"
+              style="width: 100%"
+            ></div>
+          </div>
+        </div>
+        <script src="https://shop.weeztix.com/build/integrate.js"></script>
+      </div>
+    </div>
+
+    <!-- UPI Payment Popup -->
+    <div class="overlay" id="upiOverlay">
+      <div class="overlay-content">
+        <h2>Pay via UPI</h2>
+        <input
+          type="email"
+          id="email"
+          placeholder="Your Email"
+          oninput="updateUPIDetails()"
+        />
+        <p
+          style="
+            margin-top: 0;
+            font-size: 0.875rem;
+            color: black;
+            text-align: center;
+          "
+        >
+          Make sure you use the same email in the booking form.
+        </p>
+
+        <input
+          type="number"
+          id="seats"
+          placeholder="Number of Seats"
+          min="1"
+          oninput="updateUPIDetails()"
+        />
+        <div id="amountSummary">
+          <span>Total Amount:</span>
+          <span id="amountValue">₹0</span>
+        </div>
+        <p style="margin-bottom: 10px">
+          To pay, click the button or scan the QR code below.
+        </p>
+        <button class="btn" id="upiBtn" onclick="handleUPIPayment()" disabled>
+          Pay Now!
+        </button>
+        <div class="qr-code">
+          <div id="qrcode"></div>
+          <img
+            id="fallbackQR"
+            src="qr-code.png"
+            alt="Scan to Pay"
+            style="display: none"
+          />
+          <p>Scan to Pay</p>
+        </div>
+        <button class="btn close-btn" onclick="closePaymentPopup()">
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+      let qrcode;
+
+      function showBooking() {
+        document.getElementById("instruction-screen").classList.add("hidden");
+        document.getElementById("booking-screen").classList.remove("hidden");
+      }
+
+      function openPaymentPopup() {
+        document.getElementById("upiOverlay").style.display = "flex";
+        if (!qrcode) {
+          qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "upi://pay?pa=afcp@airtel&pn=Maid+Cafe&am=0&cu=INR&tn=",
+            width: 200,
+            height: 200,
+          });
+        }
+        updateUPIDetails();
+      }
+
+      function closePaymentPopup() {
+        document.getElementById("upiOverlay").style.display = "none";
+      }
+
+      function updateUPIDetails() {
+        const emailInput = document.getElementById("email");
+        const email = emailInput.value.trim();
+        const seats = parseInt(document.getElementById("seats").value.trim());
+        const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+        const amount = !isNaN(seats) && seats > 0 ? seats * 500 : 0;
+        const note = `${email} - ${seats || 0} seats`;
+        const upiURL = `upi://pay?pa=afcp@airtel&pn=Maid+Cafe&am=${amount}&cu=INR&tn=${encodeURIComponent(
+          note
+        )}`;
+
+        document.getElementById("amountValue").textContent =
+          amount > 0 ? `₹500 x ${seats} = ₹${amount}` : "₹0";
+
+        emailInput.style.borderColor = isValidEmail ? "#ccc" : "red";
+        const payBtn = document.getElementById("upiBtn");
+        payBtn.disabled = !(isValidEmail && seats > 0);
+
+        if (qrcode && isValidEmail && seats > 0) {
+          qrcode.clear();
+          qrcode.makeCode(upiURL);
+          document.getElementById("fallbackQR").style.display = "none";
+          document.getElementById("qrcode").style.display = "block";
+        } else {
+          document.getElementById("qrcode").style.display = "none";
+          document.getElementById("fallbackQR").style.display = "block";
+        }
+
+        payBtn.onclick = () => {
+          if (isValidEmail && seats > 0) {
+            window.open(upiURL, "_blank");
+          }
+        };
+      }
+
+      // Timer for Proceed Button
+      window.addEventListener("load", () => {
+        const btn = document.getElementById("startBtn");
+        let seconds = 0;
+        const interval = setInterval(() => {
+          seconds--;
+          btn.textContent = `Please read the instructions! You can proceed to booking in ${seconds}s`;
+          if (seconds <= 2) {
+            clearInterval(interval);
+            btn.disabled = false;
+            btn.textContent = "Proceed to Booking";
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Booking - Maid Cafe</title>
     <style>
       body {
