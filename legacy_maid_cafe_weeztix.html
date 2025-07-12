@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maid Café Expo – Book & Select Slot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-pink-50 flex flex-col">
+    <!-- Header -->
+    <header class="bg-pink-600 text-white py-6 shadow-md">
+      <h1 class="text-3xl font-bold text-center tracking-wider">
+        ✨ Maid Café Expo 2025 – Ticket Booking ✨
+      </h1>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-grow flex items-center justify-center p-4">
+      <section
+        class="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8 space-y-8 border-4 border-pink-200"
+      >
+        <!-- Intro -->
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-semibold text-pink-700">
+            Reserve Your Seats in 3 Easy Steps
+          </h2>
+          <p class="text-gray-600">
+            Fill the form → Pay via UPI → Pick your slot on Luma.
+          </p>
+        </div>
+
+        <!-- Steps -->
+        <ol
+          class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed"
+        >
+          <li>
+            Enter your <span class="font-medium text-pink-600">email</span> and
+            <span class="font-medium text-pink-600">number of seats</span>
+            (₹500 per seat).
+          </li>
+          <li>
+            Scan the
+            <span class="font-medium text-pink-600">UPI QR code</span> we
+            generate for the exact total. The payment note auto‑includes your
+            email & seat count.
+          </li>
+          <li>
+            After your UPI app shows success, click
+            <em>I’ve Paid – Continue</em> and choose your slot right here (no
+            extra page!).
+          </li>
+        </ol>
+
+        <!-- Booking form -->
+        <form id="bookingForm" class="space-y-6">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="flex flex-col gap-1">
+              <label for="email" class="font-medium text-gray-700">Email</label>
+              <input
+                id="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="seats" class="font-medium text-gray-700"
+                >Number of seats</label
+              >
+              <input
+                id="seats"
+                type="number"
+                min="1"
+                max="10"
+                step="1"
+                required
+                placeholder="1"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-pink-600 text-white py-2 rounded-lg font-semibold shadow hover:bg-pink-700 transition"
+          >
+            Generate QR Code & Amount
+          </button>
+        </form>
+
+        <!-- Payment section -->
+        <div id="paymentSection" class="hidden space-y-4">
+          <p class="text-gray-700">
+            <span class="font-medium text-pink-600">Amount to pay:</span>
+            <span id="amountDisplay"></span>
+          </p>
+          <div class="flex justify-center">
+            <img
+              id="qrImage"
+              alt="UPI QR Code"
+              class="w-48 h-48 border-2 border-pink-300 rounded-lg shadow"
+            />
+          </div>
+
+          <button
+            id="paidButton"
+            class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold shadow hover:bg-green-700 transition"
+          >
+            I’ve Paid – Continue to Slot Selection
+          </button>
+        </div>
+
+        <!-- Luma selection (initially hidden) -->
+        <div id="lumaSection" class="hidden space-y-6 border-t pt-6">
+          <div class="text-center space-y-2">
+            <h3 class="text-lg font-semibold text-pink-700">
+              Select Your Slot on Luma
+            </h3>
+            <p class="text-sm text-gray-700">
+              Booking for
+              <span id="infoSeats" class="font-bold text-pink-600"></span>
+              seat(s) –
+              <span id="infoEmail" class="font-bold text-pink-600"></span>
+            </p>
+            <p class="text-xs text-pink-600">
+              Make sure the same email & seat count are entered on Luma.
+              Mismatches will be rejected.
+            </p>
+          </div>
+          <div class="border rounded-xl overflow-auto shadow max-h-[80vh]">
+            <iframe
+              src="https://lu.ma/embed/event/evt-yT0wEPGy2LzOmxf/simple"
+              width="100%"
+              height="700"
+              frameborder="0"
+              style="border: 1px solid #bfcbda88; border-radius: 4px"
+              allowfullscreen
+              aria-hidden="false"
+              tabindex="0"
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Refund note -->
+        <div class="text-sm text-gray-600 border-t pt-4">
+          <p>
+            <strong>Refund window:</strong> If your preferred slot isn’t
+            available on Luma, submit a refund request within 2 hours of payment
+            using
+            <a href="#" class="text-pink-600 underline">this Google Form</a>. No
+            refunds after you’ve selected a slot.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 py-6">
+      © 2025 Maid Café Expo. All Rights Reserved.
+    </footer>
+
+    <!-- JS -->
+    <script>
+      const form = document.getElementById("bookingForm");
+      const paymentSection = document.getElementById("paymentSection");
+      const amountDisplay = document.getElementById("amountDisplay");
+      const qrImage = document.getElementById("qrImage");
+      const paidButton = document.getElementById("paidButton");
+      const lumaSection = document.getElementById("lumaSection");
+      const infoEmail = document.getElementById("infoEmail");
+      const infoSeats = document.getElementById("infoSeats");
+
+      const UPI_ID = "afcp@airtel";
+      const PAYEE_NAME = "Maid Cafe Expo";
+
+      let cachedEmail = "";
+      let cachedSeats = 0;
+
+      function buildUPILink(email, seats, amount) {
+        const params = new URLSearchParams({
+          pa: UPI_ID,
+          pn: PAYEE_NAME,
+          am: amount,
+          cu: "INR",
+          tn: `${email}|${seats}`,
+        });
+        return `upi://pay?${params.toString()}`;
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        cachedEmail = document.getElementById("email").value.trim();
+        cachedSeats = +document.getElementById("seats").value;
+        if (!cachedEmail || cachedSeats < 1) return;
+
+        const amount = cachedSeats * 500;
+        amountDisplay.textContent = `₹${amount}`;
+        const upiLink = buildUPILink(cachedEmail, cachedSeats, amount);
+        const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+          upiLink
+        )}`;
+        qrImage.src = qrURL;
+
+        paymentSection.classList.remove("hidden");
+        paymentSection.scrollIntoView({ behavior: "smooth" });
+      });
+
+      paidButton.addEventListener("click", () => {
+        if (!cachedEmail || !cachedSeats) {
+          alert("Please generate your QR code and complete the payment first.");
+          return;
+        }
+        // Show Luma section with cached details
+        infoEmail.textContent = cachedEmail;
+        infoSeats.textContent = cachedSeats;
+        lumaSection.classList.remove("hidden");
+        lumaSection.scrollIntoView({ behavior: "smooth" });
+      });
+    </script>
+  </body>
+</html>
