@@ -57,11 +57,8 @@
       }
 
       #logo {
-        /* Bigger: 40 % of the shorter viewport edge */
-        width: 40vmin;
-        height: 40vmin;
-        min-width: 160px; /* still reasonable on very small phones */
-        max-width: 480px; /* comfy cap on 4K monitors */
+        width: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
+        height: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
         transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
           filter 0.4s ease;
       }
@@ -99,29 +96,17 @@
 
     <!-- Helper text -->
     <p
-      class="absolute inset-x-0 bottom-6 px-4 text-center text-pink-700 font-medium text-base sm:text-lg animate-pulse pointer-events-none"
+      class="absolute bottom-10 w-full text-center text-pink-700 font-medium animate-pulse"
     >
       Tap the logo to enter the booking lounge ✨
     </p>
 
     <script>
       const logo = document.getElementById("logo");
-
-      function resetLogo() {
-        // ensure the logo is visible whenever the page is (re‑)shown
-        logo.classList.remove("clicked");
-        logo.style.opacity = "";
-        logo.style.transform = "";
-      }
-
       logo.addEventListener("click", () => {
         logo.classList.add("clicked");
         setTimeout(() => (window.location.href = "booking.html"), 800);
       });
-
-      // Fired on normal load and on return from back‑/forward‑cache
-      document.addEventListener("DOMContentLoaded", resetLogo);
-      window.addEventListener("pageshow", resetLogo);
     </script>
   </body>
 </html>
