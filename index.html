@@ -17,51 +17,42 @@
     <style>
       /* ---------- GLOBAL ---------- */
       :root {
-        /* Safe‑area insets (for iOS & some Android) */
         --sat: env(safe-area-inset-top, 0px);
         --sab: env(safe-area-inset-bottom, 0px);
 
         /* Logo sizing */
-        --logo-min: 12rem; /* 192 px */
-        --logo-ideal: 100vmin; /* scales with viewport */
-        --logo-max: 40rem; /* 320 px */
+        --logo-min: 12rem; /* 192 px  */
+        --logo-ideal: 100vmin; /* scales  */
+        --logo-max: 40rem; /* 320 px  */
       }
 
-      /* Set a fallback custom --vh that JS will keep in sync */
+      /* Fallback for JS‑updated --vh */
       html {
-        /* 1% of visible height; initial guess */
         --vh: 1vh;
       }
 
       body {
         font-family: "Quicksand", sans-serif;
-
-        /* pastel‑dream gradient */
         background: radial-gradient(
           ellipse at 25% 15%,
           #fff1f9 0%,
           #ffe9f5 35%,
           #ffd6ef 100%
         );
-        background-attachment: fixed; /* overscroll stays pretty */
-
-        /* Perfect height on every device */
-        min-height: 100dvh; /* modern browsers */
-        min-height: calc(var(--vh) * 100); /* fallback */
-
-        /* Safe‑area padding */
+        background-attachment: fixed;
+        min-height: 100dvh;
+        min-height: calc(var(--vh) * 100);
         padding-top: var(--sat);
         padding-bottom: var(--sab);
       }
 
       /* ---------- FLOATING BUBBLES ---------- */
-      .bubbles:before,
-      .bubbles:after {
+      .bubbles::before,
+      .bubbles::after {
         content: "";
         position: absolute;
         inset: 0;
-        z-index: -1; /* sit under everything */
-
+        z-index: -1;
         background: radial-gradient(circle at 20% 30%, #fdbaeb 0 8%, #0000 9%),
           radial-gradient(circle at 80% 40%, #f9a8d4 0 7%, #0000 8%),
           radial-gradient(circle at 50% 80%, #fda4af 0 6%, #0000 7%);
@@ -70,7 +61,7 @@
         opacity: 0.35;
         pointer-events: none;
       }
-      .bubbles:after {
+      .bubbles::after {
         animation-direction: reverse;
         opacity: 0.25;
       }
@@ -133,7 +124,7 @@
 
     <!-- Scripts -->
     <script>
-      /* ——— 1. Keep --vh in sync (older mobile browsers) ——— */
+      /* 1️⃣ Maintain an accurate --vh on resize (mobile safe) */
       const setVH = () =>
         document.documentElement.style.setProperty(
           "--vh",
@@ -142,11 +133,18 @@
       setVH();
       window.addEventListener("resize", setVH);
 
-      /* ——— 2. Logo click → spin → redirect ——— */
+      /* 2️⃣ Logo click → spin out → redirect */
       const logo = document.getElementById("logo");
       logo.addEventListener("click", () => {
         logo.classList.add("clicked");
         setTimeout(() => (window.location.href = "booking.html"), 800);
+      });
+
+      /* 3️⃣ When user navigates BACK here, restore the logo */
+      window.addEventListener("pageshow", () => {
+        logo.classList.remove("clicked"); // clear the spin‑out class
+        logo.style.opacity = ""; // reset any inline opacity
+        logo.style.transform = ""; // reset inline transform
       });
     </script>
   </body>
