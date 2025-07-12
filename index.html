@@ -84,9 +84,16 @@
 
       /* ---------- LOGO ---------- */
       #logo {
+        width: clamp(
+          12rem,
+          100vmin,
+          40rem
+        ); /* min 192 px, scales with viewport, max 24 rem ≈ 384 px */
+        height: auto;
         transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
           filter 0.4s ease;
       }
+
       #logo:hover {
         transform: scale(1.08) rotate(8deg);
         filter: drop-shadow(0 8px 12px rgb(251 113 133 / 0.5));
