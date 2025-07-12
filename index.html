@@ -3,19 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cafe Kyaa! – Welcome</title>
+    <title>Cafe Kyaa! – Welcome & Booking</title>
 
-    <!-- Google Font & Tailwind -->
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Styles & Animations -->
+    <!-- Styles & Animations (merged from both pages) -->
     <style>
-      /* ---------- GLOBAL ---------- */
+      /* ---------- GLOBAL VARS ---------- */
       :root {
         --sat: env(safe-area-inset-top, 0px);
         --sab: env(safe-area-inset-bottom, 0px);
@@ -29,10 +31,19 @@
       /* Fallback for JS‑updated --vh */
       html {
         --vh: 1vh;
+        scroll-behavior: smooth;
       }
 
       body {
         font-family: "Quicksand", sans-serif;
+        min-height: 100dvh;
+        min-height: calc(var(--vh) * 100);
+        padding-top: var(--sat);
+        padding-bottom: var(--sab);
+      }
+
+      /* ---------- WELCOME BUBBLES BG ---------- */
+      .bubbles {
         background: radial-gradient(
           ellipse at 25% 15%,
           #fff1f9 0%,
@@ -40,13 +51,7 @@
           #ffd6ef 100%
         );
         background-attachment: fixed;
-        min-height: 100dvh;
-        min-height: calc(var(--vh) * 100);
-        padding-top: var(--sat);
-        padding-bottom: var(--sab);
       }
-
-      /* ---------- FLOATING BUBBLES ---------- */
       .bubbles::before,
       .bubbles::after {
         content: "";
@@ -79,8 +84,6 @@
 
       /* ---------- LOGO ---------- */
       #logo {
-        width: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
-        height: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
         transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
           filter 0.4s ease;
       }
@@ -103,28 +106,426 @@
           opacity: 0;
         }
       }
+
+      /* ------------ Booking Page Gradient BG ------------- */
+      .gradient-bg {
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 18s ease infinite;
+      }
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* ------------ Fade / Slide‑Up Utility ------------- */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .fade-in.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ------------ Modal Pop ------------- */
+      @keyframes modalScale {
+        0% {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      #rulesModal {
+        animation: fadeIn 0.4s ease-out both;
+      }
+      #rulesModal .modal-card {
+        animation: modalScale 0.45s ease-out both 0.1s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ------------ Button Glow ------------- */
+      .btn-gradient {
+        @apply bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg rounded-lg transform transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl;
+      }
+
+      /* ---------- Responsive Luma embed (phones) ---------- */
+      @media (max-width: 640px) {
+        #lumaWrapper {
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          margin-right: calc(-50vw + 50%);
+          border-radius: 0;
+          border-left: 0;
+          border-right: 0;
+        }
+      }
     </style>
   </head>
 
   <body
-    class="bubbles flex flex-col items-center justify-center relative overflow-hidden"
+    class="bubbles relative flex flex-col items-center justify-center overflow-hidden"
   >
-    <!-- LOGO -->
-    <img
-      id="logo"
-      src="logo.png"
-      alt="Cafe Kyaa! logo"
-      class="rounded-full cursor-pointer select-none"
-    />
+    <!-- ======================= WELCOME SCREEN ======================= -->
+    <section
+      id="welcomeScreen"
+      class="flex flex-col items-center justify-center text-center px-4 min-h-screen"
+    >
+      <!-- LOGO -->
+      <img
+        id="logo"
+        src="logo.png"
+        alt="Cafe Kyaa! logo"
+        class="rounded-full cursor-pointer select-none"
+      />
 
-    <!-- Helper text -->
-    <p class="mt-8 text-pink-700 font-medium animate-pulse px-4 text-center">
-      Tap the logo to enter the booking lounge ✨
-    </p>
+      <!-- Helper text -->
+      <p class="mt-8 text-pink-700 font-medium animate-pulse px-4 text-center">
+        Tap the logo to enter the booking lounge ✨
+      </p>
+    </section>
 
-    <!-- Scripts -->
+    <!-- ======================= BOOKING SCREEN ======================= -->
+    <section
+      id="bookingScreen"
+      class="hidden w-full flex-grow flex flex-col text-gray-800"
+    >
+      <!-- ===================== MODAL: HOUSE RULES ===================== -->
+      <div
+        id="rulesModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      >
+        <div
+          class="modal-card w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 space-y-6 border-4 border-pink-200 fade-in overflow-y-auto max-h-[90vh]"
+        >
+          <!-- Modal Header -->
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl font-semibold text-pink-700">
+              House Rules &amp; Guest Consent
+            </h2>
+            <p class="text-gray-600">
+              Please read our rules carefully to ensure a safe and enchanting
+              experience for everyone. 🌸
+            </p>
+          </div>
+
+          <!-- Rule list -->
+          <ol
+            class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed"
+          >
+            <li>
+              <span class="font-medium text-pink-600"
+                >Respect &amp; Courtesy:</span
+              >
+              Treat maids, staff, and fellow guests with kindness. Harassment of
+              any kind will result in removal without refund.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Consent First:</span> No
+              physical contact or photography without explicit permission from
+              our maids.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Voice Level:</span> Keep
+              conversations at a gentle indoor volume so everyone can enjoy the
+              atmosphere.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Food &amp; Drinks:</span>
+              No outside consumables are allowed inside the café booth.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600"
+                >Health &amp; Safety:</span
+              >
+              Follow all guidance from staff regarding queueing, hygiene, and
+              emergency instructions.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Slot Timing:</span>
+              Bookings are strictly for the selected 30‑minute slot. Please
+              arrive 5 minutes early to maximize your stay.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600"
+                >Payment Verification:</span
+              >
+              Show your QR‑code confirmation at entry; unpaid guests cannot be
+              seated.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Refund Policy:</span>
+              Cancellations up to 24 hours prior receive a 50 % refund;
+              otherwise, tickets are non‑refundable.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Prohibited Items:</span>
+              Weapons, alcohol, and illicit substances are strictly forbidden.
+            </li>
+            <li>
+              <span class="font-medium text-pink-600">Have Fun! 🎀</span>
+              Immerse yourself in the kawaii spirit and make magical memories.
+            </li>
+          </ol>
+
+          <!-- Consent & Close -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-pink-100"
+          >
+            <label
+              class="inline-flex items-start text-gray-700 gap-2 cursor-pointer"
+            >
+              <input
+                id="agreeRules"
+                type="checkbox"
+                class="mt-1 h-4 w-4 text-pink-600 rounded focus:ring-pink-400"
+              />
+              <span>I have read and agree to the Maid Café Expo rules.</span>
+            </label>
+
+            <button
+              id="acceptRules"
+              class="pointer-events-none bg-pink-400 text-white font-medium py-2 px-6 rounded-lg shadow transition disabled:opacity-50 disabled:shadow-none disabled:bg-pink-300"
+              disabled
+            >
+              Accept &amp; Continue →
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- =================== END MODAL =================== -->
+
+      <!-- Slim Sticky Header -->
+      <header
+        class="fixed top-0 inset-x-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+      >
+        <div class="flex items-center h-14 px-4">
+          <img
+            src="logo.png"
+            alt="Cafe Kyaa! Logo"
+            class="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-contain"
+          />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide whitespace-nowrap"
+          >
+            Cafe&nbsp;Kyaa!
+          </h1>
+          <span
+            class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+            >Anime&nbsp;India&nbsp;2025&nbsp;·&nbsp;Mumbai</span
+          >
+        </div>
+      </header>
+
+      <!-- =================== MAIN =================== -->
+      <main class="flex-grow flex flex-col items-center p-4 fade-in pt-16">
+        <!-- ==== Booking Card ==== -->
+        <section
+          class="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-0 border-0 border-pink-200 relative overflow-hidden"
+        >
+          <!-- Cute floating hearts -->
+          <svg
+            class="absolute inset-0 w-full h-full pointer-events-none opacity-5"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <symbol id="heart" viewBox="0 0 32 29.6">
+                <path
+                  d="M23.6,0c-3.4,0-6.4,2.1-7.6,5.1C14.8,2.1,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,14.3,16,21.2,16,21.2s16-6.9,16-21.2C32,3.8,28.2,0,23.6,0z"
+                />
+              </symbol>
+            </defs>
+            <g>
+              <use href="#heart" x="20" y="10" fill="#f472b6" />
+              <use href="#heart" x="260" y="80" fill="#f9a8d4" />
+              <use href="#heart" x="120" y="160" fill="#fda4af" />
+              <use href="#heart" x="200" y="220" fill="#f9a8d4" />
+            </g>
+          </svg>
+
+          <!-- Intro -->
+          <div class="text-center space-y-2">
+            <h2 class="text-2xl font-semibold text-pink-700">
+              Reserve Your Seats in 3 Easy Steps
+            </h2>
+            <p class="text-gray-600">
+              Fill the form → Pay via UPI → Pick your slot on Luma.
+            </p>
+          </div>
+
+          <!-- Steps -->
+          <ol
+            class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed"
+          >
+            <li>
+              Enter your
+              <span class="font-medium text-pink-600">email</span> and
+              <span class="font-medium text-pink-600">number of seats</span>
+              (₹500 per seat).
+            </li>
+            <li>
+              Scan the
+              <span class="font-medium text-pink-600">UPI QR code</span> we
+              generate for the exact total. The payment note auto‑includes your
+              email &amp; seat count.
+            </li>
+            <li>
+              After your UPI app shows success, click
+              <em>I’ve Paid – Continue</em> and choose your slot right here (no
+              extra page!).
+            </li>
+          </ol>
+
+          <!-- Booking form -->
+          <form id="bookingForm" class="space-y-6">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1">
+                <label for="email" class="font-medium text-gray-700"
+                  >Email</label
+                >
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+                />
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="seats" class="font-medium text-gray-700"
+                  >Number of seats</label
+                >
+                <input
+                  id="seats"
+                  type="number"
+                  min="1"
+                  max="10"
+                  step="1"
+                  required
+                  placeholder="1"
+                  class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full btn-gradient py-2 font-semibold"
+            >
+              Generate QR Code &amp; Amount
+            </button>
+          </form>
+
+          <!-- Payment section -->
+          <div id="paymentSection" class="hidden space-y-4 fade-in">
+            <p class="text-gray-700">
+              <span class="font-medium text-pink-600">Amount to pay:</span>
+              <span id="amountDisplay"></span>
+            </p>
+            <div class="flex justify-center">
+              <img
+                id="qrImage"
+                alt="UPI QR Code"
+                class="w-48 h-48 border-2 border-pink-300 rounded-lg shadow"
+              />
+            </div>
+
+            <button
+              id="paidButton"
+              class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold shadow transition transform hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              I’ve Paid – Continue to Slot Selection
+            </button>
+          </div>
+
+          <!-- Refund note -->
+          <div class="text-sm text-gray-600 border-t pt-4 fade-in">
+            <p>
+              <strong>Refund window:</strong> If your preferred slot isn’t
+              available on Luma, submit a refund request within 2 hours of
+              payment using
+              <a href="#" class="text-pink-600 underline">this Google Form</a>.
+              No refunds after you’ve selected a slot.
+            </p>
+          </div>
+        </section>
+
+        <!-- ==== Luma Embed OUTSIDE the Card ==== -->
+        <section id="lumaSection" class="hidden w-full space-y-6 pt-8 fade-in">
+          <div class="text-center space-y-2">
+            <h3 class="text-lg font-semibold text-pink-700">
+              Select Your Slot on Luma
+            </h3>
+            <p class="text-sm text-gray-700">
+              Booking for
+              <span id="infoSeats" class="font-bold text-pink-600"></span>
+              seat(s) – 
+              <span id="infoEmail" class="font-bold text-pink-600"></span>
+              <button
+                id="copyEmailBtn"
+                type="button"
+                class="hidden bg-pink-100 text-pink-700 text-xs font-medium px-2 py-1 rounded hover:bg-pink-200 transition"
+              >
+                Copy
+              </button>
+            </p>
+            <p class="text-xs text-pink-600">
+              Make sure the same email &amp; seat count are entered on Luma.
+              Mismatches will be rejected.
+            </p>
+          </div>
+
+          <div
+            id="lumaWrapper"
+            class="border-t border-pink-200 pt-6 overflow-auto max-h-[80vh]"
+          >
+            <iframe
+              src="https://lu.ma/embed/event/evt-yT0wEPGy2LzOmxf/simple"
+              width="100%"
+              height="700"
+              frameborder="0"
+              style="border: 1px solid #bfcbda88; border-radius: 4px"
+              allowfullscreen
+              aria-hidden="false"
+              tabindex="0"
+            ></iframe>
+          </div>
+        </section>
+      </main>
+
+      <footer class="text-center text-xs text-gray-500 py-6 fade-in">
+        © 2025 Maid Café Expo. All Rights Reserved.
+      </footer>
+    </section>
+
+    <!-- =================== SCRIPTS =================== -->
     <script>
-      /* 1️⃣ Maintain an accurate --vh on resize (mobile safe) */
+      /* ---------- 1️⃣ Maintain an accurate --vh on resize (mobile safe) ---------- */
       const setVH = () =>
         document.documentElement.style.setProperty(
           "--vh",
@@ -133,19 +534,167 @@
       setVH();
       window.addEventListener("resize", setVH);
 
-      /* 2️⃣ Logo click → spin out → redirect */
+      /* ---------- 2️⃣ Logo click → spin out → reveal booking screen ---------- */
       const logo = document.getElementById("logo");
+      const welcomeScreen = document.getElementById("welcomeScreen");
+      const bookingScreen = document.getElementById("bookingScreen");
+
       logo.addEventListener("click", () => {
         logo.classList.add("clicked");
-        setTimeout(() => (window.location.href = "booking.html"), 800);
+        setTimeout(() => {
+          // Hide welcome, show booking
+          welcomeScreen.classList.add("hidden");
+          bookingScreen.classList.remove("hidden");
+
+          // Swap body backgrounds & text color
+          document.body.classList.remove("bubbles");
+          document.body.classList.add(
+            "gradient-bg",
+            "min-h-screen",
+            "text-gray-800",
+            "flex",
+            "flex-col"
+          );
+
+          // Scroll to top of the page
+          window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        }, 800); // Matches spinOut animation duration
       });
 
-      /* 3️⃣ When user navigates BACK here, restore the logo */
+      /* ---------- 3️⃣ When user navigates BACK (rare) restore ---------- */
       window.addEventListener("pageshow", () => {
-        logo.classList.remove("clicked"); // clear the spin‑out class
-        logo.style.opacity = ""; // reset any inline opacity
-        logo.style.transform = ""; // reset inline transform
+        logo.classList.remove("clicked");
+        logo.style.opacity = "";
+        logo.style.transform = "";
+        // Optional: ensure booking hidden again
+        welcomeScreen.classList.remove("hidden");
+        bookingScreen.classList.add("hidden");
+        document.body.classList.add("bubbles");
+        document.body.classList.remove("gradient-bg");
       });
+
+      /* ---------- BOOKING PAGE LOGIC (unchanged) ---------- */
+      const rulesModal = document.getElementById("rulesModal");
+      const agreeRules = document.getElementById("agreeRules");
+      const acceptRules = document.getElementById("acceptRules");
+      const copyEmailBtn = document.getElementById("copyEmailBtn");
+
+      acceptRules.setAttribute("aria-disabled", "true");
+
+      agreeRules.addEventListener("change", (e) => {
+        if (e.target.checked) {
+          acceptRules.classList.remove("pointer-events-none");
+          acceptRules.removeAttribute("disabled");
+          acceptRules.setAttribute("aria-disabled", "false");
+        } else {
+          acceptRules.classList.add("pointer-events-none");
+          acceptRules.setAttribute("disabled", "");
+          acceptRules.setAttribute("aria-disabled", "true");
+        }
+      });
+
+      acceptRules.addEventListener("click", () => {
+        // Hide the modal and allow interaction with the page
+        rulesModal.classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+      });
+
+      // Prevent scrolling while modal open
+      document.body.classList.add("overflow-hidden");
+
+      // ---------- BOOKING LOGIC ----------
+      const form = document.getElementById("bookingForm");
+      const paymentSection = document.getElementById("paymentSection");
+      const amountDisplay = document.getElementById("amountDisplay");
+      const qrImage = document.getElementById("qrImage");
+      const paidButton = document.getElementById("paidButton");
+      const lumaSection = document.getElementById("lumaSection");
+      const infoEmail = document.getElementById("infoEmail");
+      const infoSeats = document.getElementById("infoSeats");
+
+      const emailInput = document.getElementById("email");
+      const seatsInput = document.getElementById("seats");
+
+      const UPI_ID = "afcp@airtel";
+      const PAYEE_NAME = "Maid Cafe Expo";
+
+      let cachedEmail = "";
+      let cachedSeats = 0;
+
+      function buildUPILink(email, seats, amount) {
+        const params = new URLSearchParams({
+          pa: UPI_ID,
+          pn: PAYEE_NAME,
+          am: amount,
+          cu: "INR",
+          tn: `${email}|${seats}`,
+        });
+        return `upi://pay?${params.toString()}`;
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        cachedEmail = emailInput.value.trim();
+        cachedSeats = +seatsInput.value;
+        if (!cachedEmail || cachedSeats < 1) return;
+
+        const amount = cachedSeats * 500;
+        amountDisplay.textContent = `₹${amount}`;
+        const upiLink = buildUPILink(cachedEmail, cachedSeats, amount);
+        const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+          upiLink
+        )}`;
+        qrImage.src = qrURL;
+
+        paymentSection.classList.remove("hidden");
+        paymentSection.scrollIntoView({ behavior: "smooth" });
+      });
+
+      paidButton.addEventListener("click", () => {
+        if (!cachedEmail || !cachedSeats) {
+          alert("Please generate your QR code and complete the payment first.");
+          return;
+        }
+
+        /* -------- Disable the input fields so they can't be edited -------- */
+        emailInput.setAttribute("disabled", "true");
+        seatsInput.setAttribute("disabled", "true");
+        emailInput.classList.add("bg-gray-100", "cursor-not-allowed");
+        seatsInput.classList.add("bg-gray-100", "cursor-not-allowed");
+        /* ------------------------------------------------------------------ */
+
+        // Show Luma section with cached details
+        infoEmail.textContent = cachedEmail;
+        infoSeats.textContent = cachedSeats;
+        lumaSection.classList.remove("hidden");
+        copyEmailBtn.classList.remove("hidden");
+        lumaSection.scrollIntoView({ behavior: "smooth" });
+      });
+
+      copyEmailBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(cachedEmail).then(() => {
+          const old = copyEmailBtn.textContent;
+          copyEmailBtn.textContent = "Copied!";
+          setTimeout(() => (copyEmailBtn.textContent = old), 2000);
+        });
+      });
+
+      /* ---------- APPEAR‑ON‑SCROLL ANIMATIONS ---------- */
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => observer.observe(el));
     </script>
   </body>
 </html>
