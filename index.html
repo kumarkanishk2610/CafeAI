@@ -31,7 +31,7 @@
         background-size: 140% 140%;
         animation: bubble 25s linear infinite;
         opacity: 0.35;
-        pointer-events: none; /* --- fix: bubbles no longer intercept clicks --- */
+        pointer-events: none; /* bubbles no longer intercept clicks */
       }
       .bubbles:after {
         animation-direction: reverse;
@@ -50,9 +50,15 @@
       }
 
       /* logo reveal / responsive sizing */
+      :root {
+        --logo-min: 12rem; /* 192 px */
+        --logo-ideal: 28vmin; /* scales with the smaller viewport side */
+        --logo-max: 20rem; /* 320 px */
+      }
+
       #logo {
-        width: clamp(9rem, 24vw, 14rem); /* scales with viewport */
-        height: clamp(9rem, 24vw, 14rem);
+        width: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
+        height: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
         transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
           filter 0.4s ease;
       }
