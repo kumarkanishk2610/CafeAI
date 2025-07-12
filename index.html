@@ -96,79 +96,10 @@
     </p>
 
     <script>
-<<<<<<< Updated upstream
-      let qrcode;
-
-      function showBooking() {
-        document.getElementById("instruction-screen").classList.add("hidden");
-        document.getElementById("booking-screen").classList.remove("hidden");
-      }
-
-      function openPaymentPopup() {
-        document.getElementById("upiOverlay").style.display = "flex";
-        if (!qrcode) {
-          qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "upi://pay?pa=afcp@airtel&pn=Kanishk%20Kumar&am=0&cu=INR&mc=0000&tn=",
-            width: 200,
-            height: 200,
-          });
-        }
-        updateUPIDetails();
-      }
-
-      function closePaymentPopup() {
-        document.getElementById("upiOverlay").style.display = "none";
-      }
-
-      function updateUPIDetails() {
-        const emailInput = document.getElementById("email");
-        const email = emailInput.value.trim();
-        const seats = parseInt(document.getElementById("seats").value.trim());
-        const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
-        const amount = !isNaN(seats) && seats > 0 ? seats * 1 : 0;
-        const note = `${email} - ${seats || 0} seats`;
-        const upiURL = `upi://pay?pa=afcp@airtel&pn=Kanishk%20Kumar&am=${amount}&cu=INR&mc=0000&tn=${encodeURIComponent(
-          note
-        )}`;
-
-        document.getElementById("amountValue").textContent =
-          amount > 0 ? `₹1 x ${seats} = ₹${amount}` : "₹0";
-
-        emailInput.style.borderColor = isValidEmail ? "#ccc" : "red";
-
-        // Show the UPI comment note dynamically
-        document.getElementById("upiNoteDisplay").textContent =
-          isValidEmail && seats > 0 ? note : "(Your comment will appear here)";
-
-        if (qrcode && isValidEmail && seats > 0) {
-          qrcode.clear();
-          qrcode.makeCode(upiURL);
-          document.getElementById("fallbackQR").style.display = "none";
-          document.getElementById("qrcode").style.display = "block";
-        } else {
-          document.getElementById("qrcode").style.display = "none";
-          document.getElementById("fallbackQR").style.display = "block";
-        }
-      }
-
-      window.addEventListener("load", () => {
-        const btn = document.getElementById("startBtn");
-        let seconds = 1;
-        const interval = setInterval(() => {
-          seconds--;
-          btn.textContent = `Please read the instructions! You can proceed to booking in ${seconds}s`;
-          if (seconds <= 0) {
-            clearInterval(interval);
-            btn.disabled = false;
-            btn.textContent = "Proceed to Booking";
-          }
-        }, 1000);
-=======
       const logo = document.getElementById("logo");
       logo.addEventListener("click", () => {
         logo.classList.add("clicked");
         setTimeout(() => (window.location.href = "booking.html"), 800);
->>>>>>> Stashed changes
       });
     </script>
   </body>
