@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – Payment</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0);
+        --sab: env(safe-area-inset-bottom, 0);
+      }
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        padding: var(--sat) 0 var(--sab);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- Header -->
+    <header
+      class="fixed top-0 inset-x-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <img src="logo.png" class="h-10 w-10 rounded-full" />
+        <h1
+          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+        >
+          Cafe Kyaa!
+        </h1>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+          >Anime India 2025 · Mumbai</span
+        >
+      </div>
+    </header>
+
+    <main class="pt-20 flex flex-col items-center p-4">
+      <section
+        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border-pink-200"
+      >
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-semibold text-pink-700">
+            Reserve Your Seats in 3 Easy Steps
+          </h2>
+          <p class="text-gray-600">
+            Fill the form → Pay via UPI → Pick your slot on Luma.
+          </p>
+        </div>
+
+        <ol
+          class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed"
+        >
+          <li>
+            Enter your <span class="font-medium text-pink-600">email</span> and
+            <span class="font-medium text-pink-600">number of seats</span>
+            (₹500 per seat).
+          </li>
+          <li>
+            Scan the generated
+            <span class="font-medium text-pink-600">UPI QR code</span> (amount
+            auto‑filled).
+          </li>
+          <li>
+            After payment success, click <em>I’ve Paid – Continue</em> and
+            choose your slot.
+          </li>
+        </ol>
+
+        <!-- Form -->
+        <form id="bookingForm" class="space-y-6">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="flex flex-col gap-1">
+              <label for="email" class="font-medium text-gray-700">Email</label>
+              <input
+                id="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="seats" class="font-medium text-gray-700"
+                >Number of seats</label
+              >
+              <input
+                id="seats"
+                type="number"
+                min="1"
+                max="10"
+                required
+                placeholder="1"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow"
+          >
+            Generate QR Code & Amount
+          </button>
+        </form>
+
+        <!-- Payment -->
+        <div id="paymentSection" class="hidden space-y-4">
+          <p class="text-gray-700">
+            <span class="font-medium text-pink-600">Amount to pay:</span>
+            <span id="amountDisplay"></span>
+          </p>
+          <div class="flex justify-center">
+            <img
+              id="qrImage"
+              alt="UPI QR Code"
+              class="w-48 h-48 border-2 border-pink-300 rounded-lg shadow"
+            />
+          </div>
+          <button
+            id="paidButton"
+            class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold shadow"
+          >
+            I’ve Paid – Continue to Slot Selection
+          </button>
+        </div>
+
+        <p class="text-sm text-gray-600 border-t pt-4">
+          <strong>Refund window:</strong> If your preferred slot isn’t available
+          on Luma, request a refund within 2 h of payment.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      // vh fix
+      const setVH = () =>
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${window.innerHeight * 0.01}px`
+        );
+      setVH();
+      window.addEventListener("resize", setVH);
+
+      // booking → payment
+      const form = document.getElementById("bookingForm"),
+        paySec = document.getElementById("paymentSection"),
+        amountDisp = document.getElementById("amountDisplay"),
+        qrImg = document.getElementById("qrImage"),
+        paidBtn = document.getElementById("paidButton"),
+        emailInp = document.getElementById("email"),
+        seatsInp = document.getElementById("seats");
+
+      const UPI_ID = "afcp@airtel",
+        PAYEE = "Maid Cafe Expo";
+      let cachedEmail = "",
+        cachedSeats = 0;
+
+      const buildUPI = (email, seats, amt) =>
+        `upi://pay?${new URLSearchParams({
+          pa: UPI_ID,
+          pn: PAYEE,
+          am: amt,
+          cu: "INR",
+          tn: `${email}|${seats}`,
+        })}`;
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        cachedEmail = emailInp.value.trim();
+        cachedSeats = +seatsInp.value;
+        if (!cachedEmail || cachedSeats < 1) return;
+        const amt = cachedSeats * 500;
+        amountDisp.textContent = `₹${amt}`;
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+          buildUPI(cachedEmail, cachedSeats, amt)
+        )}`;
+        paySec.classList.remove("hidden");
+        paySec.scrollIntoView({ behavior: "smooth" });
+      });
+
+      paidBtn.addEventListener("click", () => {
+        if (!cachedEmail || !cachedSeats)
+          return alert("Please complete payment first.");
+        const params = new URLSearchParams({
+          email: cachedEmail,
+          seats: cachedSeats,
+        });
+        location.href = `luma.html?${params.toString()}`;
+      });
+    </script>
+  </body>
+</html>

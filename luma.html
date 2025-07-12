@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – Slot Selection</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- ░ HEADER ░ -->
+    <header
+      class="fixed top-0 inset-x-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <img src="logo.png" class="h-10 w-10 rounded-full" />
+        <h1
+          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+        >
+          Cafe Kyaa!
+        </h1>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+          >Anime India 2025 · Mumbai</span
+        >
+      </div>
+    </header>
+
+    <main class="pt-20 flex flex-col items-center p-4 space-y-6">
+      <div class="text-center space-y-2">
+        <h2 class="text-lg font-semibold text-pink-700">
+          Select Your Slot on Luma
+        </h2>
+        <p class="text-sm text-gray-700">
+          Booking for
+          <span id="infoSeats" class="font-bold text-pink-600"></span>
+          seat(s) – 
+          <span id="infoEmail" class="font-bold text-pink-600"></span>
+          <button
+            id="copyBtn"
+            type="button"
+            class="hidden bg-pink-100 text-pink-700 text-xs font-medium px-2 py-1 rounded"
+          >
+            Copy
+          </button>
+        </p>
+        <p class="text-xs text-pink-600">
+          Use the same email &amp; seat count on Luma.
+        </p>
+      </div>
+
+      <!-- ░ LUMA EMBED (no internal scroll) ░ -->
+      <div class="w-full max-w-3xl border-t border-pink-200 pt-6">
+        <!-- Change the event ID to yours; height is generous so the page itself scrolls -->
+        <iframe
+          src="https://lu.ma/embed/event/evt-yT0wEPGy2LzOmxf/simple"
+          width="100%"
+          height="1400"
+          <!--
+          ↑
+          big
+          enough
+          for
+          typical
+          event
+          list
+          --
+        >
+          frameborder="0" style="border:1px solid #bfcbda88;border-radius:4px"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </main>
+
+    <script>
+      /* fix 100vh on mobile */
+      const setVH = () =>
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${window.innerHeight * 0.01}px`
+        );
+      setVH();
+      window.addEventListener("resize", setVH);
+
+      const params = new URLSearchParams(location.search),
+        email = params.get("email") || "—",
+        seats = params.get("seats") || "—";
+
+      document.getElementById("infoEmail").textContent = email;
+      document.getElementById("infoSeats").textContent = seats;
+
+      /* copy helper */
+      const copyBtn = document.getElementById("copyBtn");
+      if (email !== "—") {
+        copyBtn.classList.remove("hidden");
+        copyBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText(email).then(() => {
+            const old = copyBtn.textContent;
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => (copyBtn.textContent = old), 2000);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
