@@ -349,14 +349,14 @@
         const email = emailInput.value.trim();
         const seats = parseInt(document.getElementById("seats").value.trim());
         const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
-        const amount = !isNaN(seats) && seats > 0 ? seats * 500 : 0;
+        const amount = !isNaN(seats) && seats > 0 ? seats * 1 : 0;
         const note = `${email} - ${seats || 0} seats`;
         const upiURL = `upi://pay?pa=afcp@airtel&pn=Kanishk%20Kumar&am=${amount}&cu=INR&mc=0000&tn=${encodeURIComponent(
           note
         )}`;
 
         document.getElementById("amountValue").textContent =
-          amount > 0 ? `₹500 x ${seats} = ₹${amount}` : "₹0";
+          amount > 0 ? `₹1 x ${seats} = ₹${amount}` : "₹0";
 
         emailInput.style.borderColor = isValidEmail ? "#ccc" : "red";
 
