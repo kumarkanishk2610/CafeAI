@@ -15,31 +15,52 @@
 
     <!-- Styles & Animations -->
     <style>
+      /* ---------- GLOBAL ---------- */
+      :root {
+        /* Safe‑area insets (for iOS & some Android) */
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
+
+        /* Logo sizing */
+        --logo-min: 12rem; /* 192 px */
+        --logo-ideal: 100vmin; /* scales with viewport */
+        --logo-max: 40rem; /* 320 px */
+      }
+
+      /* Set a fallback custom --vh that JS will keep in sync */
+      html {
+        /* 1% of visible height; initial guess */
+        --vh: 1vh;
+      }
+
       body {
         font-family: "Quicksand", sans-serif;
 
-        /* dreamy pastel gradient background */
-        /***  ADD THESE TWO LINES  ***/
+        /* pastel‑dream gradient */
         background: radial-gradient(
           ellipse at 25% 15%,
           #fff1f9 0%,
           #ffe9f5 35%,
           #ffd6ef 100%
         );
-        background-attachment: fixed; /* keeps the gradient in place on overscroll */
+        background-attachment: fixed; /* overscroll stays pretty */
 
-        padding-bottom: env(safe-area-inset-bottom); /* iOS bottom bar safety */
+        /* Perfect height on every device */
+        min-height: 100dvh; /* modern browsers */
+        min-height: calc(var(--vh) * 100); /* fallback */
+
+        /* Safe‑area padding */
+        padding-top: var(--sat);
+        padding-bottom: var(--sab);
       }
 
-      /* animated pastel bubbles */
+      /* ---------- FLOATING BUBBLES ---------- */
       .bubbles:before,
       .bubbles:after {
         content: "";
         position: absolute;
         inset: 0;
-
-        /*  place bubbles *under* the gradient + content  */
-        z-index: -1; /*  <--  THIS LINE IS NEW  */
+        z-index: -1; /* sit under everything */
 
         background: radial-gradient(circle at 20% 30%, #fdbaeb 0 8%, #0000 9%),
           radial-gradient(circle at 80% 40%, #f9a8d4 0 7%, #0000 8%),
@@ -49,7 +70,6 @@
         opacity: 0.35;
         pointer-events: none;
       }
-
       .bubbles:after {
         animation-direction: reverse;
         opacity: 0.25;
@@ -66,13 +86,7 @@
         }
       }
 
-      /* logo reveal / responsive sizing */
-      :root {
-        --logo-min: 12rem; /* 192 px */
-        --logo-ideal: 28vmin; /* scales with the smaller viewport side */
-        --logo-max: 20rem; /* 320 px */
-      }
-
+      /* ---------- LOGO ---------- */
       #logo {
         width: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
         height: clamp(var(--logo-min), var(--logo-ideal), var(--logo-max));
@@ -100,10 +114,11 @@
       }
     </style>
   </head>
+
   <body
-    class="min-h-screen flex items-center justify-center relative overflow-hidden bubbles"
+    class="bubbles flex flex-col items-center justify-center relative overflow-hidden"
   >
-    <!-- LOGO -->
+    <!-- LOGO -->
     <img
       id="logo"
       src="logo.png"
@@ -111,14 +126,23 @@
       class="rounded-full cursor-pointer select-none"
     />
 
-    <!-- Helper text -->
-    <p
-      class="absolute bottom-10 w-full text-center text-pink-700 font-medium animate-pulse"
-    >
+    <!-- Helper text -->
+    <p class="mt-8 text-pink-700 font-medium animate-pulse px-4 text-center">
       Tap the logo to enter the booking lounge ✨
     </p>
 
+    <!-- Scripts -->
     <script>
+      /* ——— 1. Keep --vh in sync (older mobile browsers) ——— */
+      const setVH = () =>
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${window.innerHeight * 0.01}px`
+        );
+      setVH();
+      window.addEventListener("resize", setVH);
+
+      /* ——— 2. Logo click → spin → redirect ——— */
       const logo = document.getElementById("logo");
       logo.addEventListener("click", () => {
         logo.classList.add("clicked");

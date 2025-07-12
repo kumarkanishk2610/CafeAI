@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cafe Kyaa! – Ticket Booking</title>
 
-    <!-- Google Font -->
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom Styles & Animations -->
+    <!-- Custom Styles & Animations -->
     <style>
       /* ------------ Global ------------- */
       html {
@@ -91,6 +91,18 @@
       .btn-gradient {
         @apply bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg rounded-lg transform transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl;
       }
+
+      /* ---------- Responsive Luma embed (phones) ---------- */
+      @media (max-width: 640px) {
+        #lumaWrapper {
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          margin-right: calc(-50vw + 50%);
+          border-radius: 0;
+          border-left: 0;
+          border-right: 0;
+        }
+      }
     </style>
   </head>
 
@@ -101,12 +113,12 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
     >
       <div
-        class="modal-card w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 space-y-6 border-4 border-pink-200 fade-in"
+        class="modal-card w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 space-y-6 border-4 border-pink-200 fade-in overflow-y-auto max-h-[90vh]"
       >
         <!-- Modal Header -->
         <div class="text-center space-y-2">
           <h2 class="text-2xl font-semibold text-pink-700">
-            House Rules & Guest Consent
+            House Rules &amp; Guest Consent
           </h2>
           <p class="text-gray-600">
             Please read our rules carefully to ensure a safe and enchanting
@@ -119,7 +131,9 @@
           class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed"
         >
           <li>
-            <span class="font-medium text-pink-600">Respect & Courtesy:</span>
+            <span class="font-medium text-pink-600"
+              >Respect &amp; Courtesy:</span
+            >
             Treat maids, staff, and fellow guests with kindness. Harassment of
             any kind will result in removal without refund.
           </li>
@@ -134,11 +148,11 @@
             atmosphere.
           </li>
           <li>
-            <span class="font-medium text-pink-600">Food & Drinks:</span> No
+            <span class="font-medium text-pink-600">Food &amp; Drinks:</span> No
             outside consumables are allowed inside the café booth.
           </li>
           <li>
-            <span class="font-medium text-pink-600">Health & Safety:</span>
+            <span class="font-medium text-pink-600">Health &amp; Safety:</span>
             Follow all guidance from staff regarding queueing, hygiene, and
             emergency instructions.
           </li>
@@ -187,7 +201,7 @@
             class="pointer-events-none bg-pink-400 text-white font-medium py-2 px-6 rounded-lg shadow transition disabled:opacity-50 disabled:shadow-none disabled:bg-pink-300"
             disabled
           >
-            Accept & Continue →
+            Accept &amp; Continue →
           </button>
         </div>
       </div>
@@ -196,22 +210,31 @@
 
     <!-- Slim Sticky Header -->
     <header
-      class="fixed top-0 inset-x-0 flex items-center justify-between px-4 py-3 bg-white/60 backdrop-blur-md shadow-sm z-40"
+      class="fixed top-0 inset-x-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
-      <h1
-        class="text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-      >
-        Cafe Kyaa!
-      </h1>
-      <span class="text-xs font-medium text-rose-600"
-        >Anime India 2025 · Mumbai</span
-      >
+      <div class="flex items-center h-14 px-4">
+        <img
+          src="logo.png"
+          alt="Cafe Kyaa! Logo"
+          class="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-contain"
+        />
+        <h1
+          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide whitespace-nowrap"
+        >
+          Cafe&nbsp;Kyaa!
+        </h1>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+          >Anime&nbsp;India&nbsp;2025&nbsp;·&nbsp;Mumbai</span
+        >
+      </div>
     </header>
 
-    <!-- Main -->
-    <main class="flex-grow flex items-center justify-center p-4 fade-in pt-24">
+    <!-- =================== MAIN =================== -->
+    <main class="flex-grow flex flex-col items-center p-4 fade-in pt-24">
+      <!-- ==== Booking Card ==== -->
       <section
-        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-8 border-4 border-pink-200 relative overflow-hidden"
+        class="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-8 border-4 border-pink-200 relative overflow-hidden"
       >
         <!-- Cute floating hearts -->
         <svg
@@ -221,7 +244,7 @@
           <defs>
             <symbol id="heart" viewBox="0 0 32 29.6">
               <path
-                d="M23.6,0c-3.4,0-6.4,2.1-7.6,5.1C14.8,2.1,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,14.3,16,21.2,16,21.2s16-6.9,16-21.2 C32,3.8,28.2,0,23.6,0z"
+                d="M23.6,0c-3.4,0-6.4,2.1-7.6,5.1C14.8,2.1,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,14.3,16,21.2,16,21.2s16-6.9,16-21.2C32,3.8,28.2,0,23.6,0z"
               />
             </symbol>
           </defs>
@@ -256,7 +279,7 @@
             Scan the
             <span class="font-medium text-pink-600">UPI QR code</span> we
             generate for the exact total. The payment note auto‑includes your
-            email & seat count.
+            email &amp; seat count.
           </li>
           <li>
             After your UPI app shows success, click
@@ -296,7 +319,7 @@
           </div>
 
           <button type="submit" class="w-full btn-gradient py-2 font-semibold">
-            Generate QR Code & Amount
+            Generate QR Code &amp; Amount
           </button>
         </form>
 
@@ -322,46 +345,6 @@
           </button>
         </div>
 
-        <!-- Luma selection (initially hidden) -->
-        <div id="lumaSection" class="hidden space-y-6 border-t pt-6 fade-in">
-          <div class="text-center space-y-2">
-            <h3 class="text-lg font-semibold text-pink-700">
-              Select Your Slot on Luma
-            </h3>
-            <p class="text-sm text-gray-700">
-              Booking for
-              <span id="infoSeats" class="font-bold text-pink-600"></span>
-              seat(s) –
-              <span id="infoEmail" class="font-bold text-pink-600"></span>
-              <button
-                id="copyEmailBtn"
-                type="button"
-                class="hidden bg-pink-100 text-pink-700 text-xs font-medium px-2 py-1 rounded hover:bg-pink-200 focus:outline-none transition"
-              >
-                Copy
-              </button>
-            </p>
-            <p class="text-xs text-pink-600">
-              Make sure the same email & seat count are entered on Luma.
-              Mismatches will be rejected.
-            </p>
-          </div>
-          <div
-            class="border rounded-xl overflow-auto shadow max-h-[80vh] fade-in"
-          >
-            <iframe
-              src="https://lu.ma/embed/event/evt-yT0wEPGy2LzOmxf/simple"
-              width="100%"
-              height="700"
-              frameborder="0"
-              style="border: 1px solid #bfcbda88; border-radius: 4px"
-              allowfullscreen
-              aria-hidden="false"
-              tabindex="0"
-            ></iframe>
-          </div>
-        </div>
-
         <!-- Refund note -->
         <div class="text-sm text-gray-600 border-t pt-4 fade-in">
           <p>
@@ -373,11 +356,52 @@
           </p>
         </div>
       </section>
+
+      <!-- ==== Luma Embed OUTSIDE the Card ==== -->
+      <section id="lumaSection" class="hidden w-full space-y-6 pt-8 fade-in">
+        <div class="text-center space-y-2">
+          <h3 class="text-lg font-semibold text-pink-700">
+            Select Your Slot on Luma
+          </h3>
+          <p class="text-sm text-gray-700">
+            Booking for
+            <span id="infoSeats" class="font-bold text-pink-600"></span> seat(s)
+            – 
+            <span id="infoEmail" class="font-bold text-pink-600"></span>
+            <button
+              id="copyEmailBtn"
+              type="button"
+              class="hidden bg-pink-100 text-pink-700 text-xs font-medium px-2 py-1 rounded hover:bg-pink-200 transition"
+            >
+              Copy
+            </button>
+          </p>
+          <p class="text-xs text-pink-600">
+            Make sure the same email &amp; seat count are entered on Luma.
+            Mismatches will be rejected.
+          </p>
+        </div>
+
+        <div
+          id="lumaWrapper"
+          class="border-t border-pink-200 pt-6 overflow-auto max-h-[80vh]"
+        >
+          <iframe
+            src="https://lu.ma/embed/event/evt-yT0wEPGy2LzOmxf/simple"
+            width="100%"
+            height="700"
+            frameborder="0"
+            style="border: 1px solid #bfcbda88; border-radius: 4px"
+            allowfullscreen
+            aria-hidden="false"
+            tabindex="0"
+          ></iframe>
+        </div>
+      </section>
     </main>
 
-    <!-- Footer -->
     <footer class="text-center text-xs text-gray-500 py-6 fade-in">
-      © 2025 Maid Café Expo. All Rights Reserved.
+      © 2025 Maid Café Expo. All Rights Reserved.
     </footer>
 
     <!-- =================== SCRIPTS =================== -->
@@ -482,7 +506,6 @@
 
       copyEmailBtn.addEventListener("click", () => {
         navigator.clipboard.writeText(cachedEmail).then(() => {
-          // quick feedback
           const old = copyEmailBtn.textContent;
           copyEmailBtn.textContent = "Copied!";
           setTimeout(() => (copyEmailBtn.textContent = old), 2000);
