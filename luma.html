@@ -195,6 +195,13 @@
       >
         I have completed my payment and booked my slots!
       </button>
+      <button
+        id="wrongBtn"
+        type="button"
+        class="w-full max-w-3xl bg-red-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+      >
+        I have completed my payment but cannot find suitable slots.
+      </button>
 
       <script
         src="https://embed.lu.ma/checkout-button.js"
@@ -265,6 +272,9 @@
 
       doneBtn.onclick = () =>
         (location.href = `faq.html?${new URLSearchParams({ email, seats })}`);
+      wrongBtn.onclick = () =>
+        (location.href =
+          "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUXbmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXA%3D");
     </script>
   </body>
 </html>
