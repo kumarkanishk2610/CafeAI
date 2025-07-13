@@ -1,10 +1,12 @@
+<!-- payment.html – fixed “Copy Booking ID / Email” buttons & unique IDs -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cafe Kyaa! – Payment</title>
+    <title>Cafe Kyaa! – Payment</title>
 
+    <!-- Quicksand + Tailwind -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
@@ -49,12 +51,12 @@
     </style>
   </head>
   <body class="text-gray-800">
-    <!-- Header -->
+    <!-- header -->
     <header
-      class="fixed top-0 inset-x-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
       <div class="flex items-center h-14 px-4">
-        <img src="logo.png" class="h-10 w-10 rounded-full" />
+        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
         <h1
           class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
         >
@@ -62,163 +64,439 @@
         </h1>
         <span
           class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
-          >Anime India 2025 · Mumbai</span
+          >Anime India 2025 · Mumbai</span
         >
       </div>
     </header>
 
+    <!-- main -->
     <main class="pt-20 flex flex-col items-center p-4">
       <section
-        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border-pink-200"
+        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-pink-200"
       >
-        <div class="text-center space-y-2">
-          <h2 class="text-2xl font-semibold text-pink-700">
-            Reserve Your Seats in 3 Easy Steps
-          </h2>
-          <p class="text-gray-600">
-            Fill the form → Pay via UPI → Pick your slot on Luma.
-          </p>
-        </div>
-
-        <ol
-          class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed"
+        <!-- order-summary | stacked info layout -->
+        <div
+          class="relative isolate overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-6 shadow-lg ring-1 ring-inset ring-rose-100/60"
         >
-          <li>
-            Enter your <span class="font-medium text-pink-600">email</span> and
-            <span class="font-medium text-pink-600">number of seats</span>
-            (₹500 per seat).
-          </li>
-          <li>
-            Scan the generated
-            <span class="font-medium text-pink-600">UPI QR code</span> (amount
-            auto‑filled).
-          </li>
-          <li>
-            After payment success, click <em>I’ve Paid – Continue</em> and
-            choose your slot.
-          </li>
-        </ol>
+          <!-- decorative blobs -->
+          <span
+            aria-hidden="true"
+            class="absolute -top-8 -left-8 h-32 w-32 rounded-full bg-rose-100/60 blur-3xl"
+          ></span>
+          <span
+            aria-hidden="true"
+            class="absolute -bottom-10 -right-6 h-32 w-32 rounded-full bg-pink-200/60 blur-3xl pointer-events-none"
+          ></span>
 
-        <!-- Form -->
-        <form id="bookingForm" class="space-y-6">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div class="flex flex-col gap-1">
-              <label for="email" class="font-medium text-gray-700">Email</label>
-              <input
-                id="email"
-                type="email"
-                required
-                placeholder="you@example.com"
-                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
-              />
-            </div>
-            <div class="flex flex-col gap-1">
-              <label for="seats" class="font-medium text-gray-700"
-                >Number of seats</label
+          <!-- HEADER -->
+          <header
+            class="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <!-- icon & title -->
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="h-10 w-10 shrink-0 text-pink-600"
+                aria-hidden="true"
               >
-              <input
-                id="seats"
-                type="number"
-                min="1"
-                max="10"
-                required
-                placeholder="1"
-                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
-              />
+                <title>Ticket icon</title>
+                <path
+                  fill-rule="evenodd"
+                  d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <div>
+                <h2
+                  class="text-xl font-bold tracking-wide text-gray-800 sm:text-2xl"
+                >
+                  Order&nbsp;Summary
+                </h2>
+                <p class="text-xs font-medium text-gray-600">
+                  Cafe Kyaa! Tickets
+                </p>
+              </div>
+            </div>
+
+            <!-- price summary -->
+            <dl class="text-right">
+              <dt class="sr-only">Seats</dt>
+              <dd
+                class="text-lg font-semibold text-gray-800 tabular-nums sm:text-2xl"
+              >
+                <span id="seatCount">0</span> seat(s)
+              </dd>
+              <dt class="sr-only">Price per seat</dt>
+              <dd class="text-sm font-medium text-gray-600">@ ₹500 each</dd>
+              <dt class="sr-only">Total</dt>
+              <dd class="text-lg font-extrabold text-pink-700 sm:text-2xl">
+                ₹<span id="amtTitle">0</span>
+              </dd>
+            </dl>
+          </header>
+
+          <!-- INFO (stacked for narrow screens) -->
+          <div class="mt-6 space-y-4 text-xs text-gray-700">
+            <!-- EMAIL -->
+            <div class="space-y-1">
+              <span class="font-medium text-gray-600">Email</span>
+              <div class="flex items-start gap-2">
+                <span id="emailVal" class="break-words min-w-0 flex-1"></span>
+                <button
+                  type="button"
+                  id="copyEmailBtn"
+                  class="shrink-0 rounded-md p-1 text-pink-700 hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
+                  aria-label="Copy Booking ID"
+                >
+                  <!-- copy icon -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M8 16h13V3H8v13zm-2 2V1h17v17H6z" />
+                    <path d="M1 8h13v13H1V8zm2 2v9h9v-9H3z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- BOOKING ID -->
+            <div class="space-y-1">
+              <span class="font-medium text-gray-600">Booking ID</span>
+              <div class="flex items-start gap-2">
+                <span
+                  id="bookingIdVal"
+                  class="break-words min-w-0 flex-1"
+                ></span>
+                <button
+                  type="button"
+                  id="copyBookingIdBtn"
+                  class="shrink-0 rounded-md p-1 text-pink-700 hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
+                  aria-label="Copy email"
+                >
+                  <!-- copy icon -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M8 16h13V3H8v13zm-2 2V1h17v17H6z" />
+                    <path d="M1 8h13v13H1V8zm2 2v9h9v-9H3z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-          <button
-            type="submit"
-            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow"
-          >
-            Generate QR Code & Amount
-          </button>
-        </form>
+        </div>
 
-        <!-- Payment -->
-        <div id="paymentSection" class="hidden space-y-4">
-          <p class="text-gray-700">
-            <span class="font-medium text-pink-600">Amount to pay:</span>
-            <span id="amountDisplay"></span>
-          </p>
-          <div class="flex justify-center">
+        <!-- payment section -->
+        <div class="flex flex-col items-center gap-8">
+          <!-- UPI strip -->
+          <div
+            class="bg-white rounded-2xl shadow-lg/20 p-2 flex flex-col gap-4 w-full max-w-lg"
+          >
+            <h3 class="text-gray-800 font-semibold text-xl">
+              Scan & Pay using any UPI App
+            </h3>
+            <div class="grid grid-cols-3 gap-4 place-items-center">
+              <img src="assets/icons/gpay.svg" class="max-h-6" alt="GPay" />
+              <img src="assets/icons/paytm.svg" class="max-h-6" alt="Paytm" />
+              <img
+                src="assets/icons/phonepe.svg"
+                class="max-h-6"
+                alt="PhonePe"
+              />
+              <img
+                src="assets/icons/amazonpay.svg"
+                class="max-h-6"
+                alt="Amazon Pay"
+              />
+              <img src="assets/icons/bhim.svg" class="max-h-6" alt="BHIM" />
+              <img src="assets/icons/upi.svg" class="max-h-6" alt="UPI" />
+            </div>
+          </div>
+
+          <!-- QR card -->
+          <div
+            class="bg-white rounded-3xl shadow-lg/20 p-4 w-72 flex flex-col items-center"
+          >
+            <p class="mb-2 text-gray-700 text-center">
+              <span class="font-medium text-pink-600">Amount:</span> ₹<span
+                id="amountDisplay"
+              ></span>
+            </p>
             <img
               id="qrImage"
               alt="UPI QR Code"
-              class="w-48 h-48 border-2 border-pink-300 rounded-lg shadow"
+              class="w-[170px] h-[170px] rounded-md border-4 border-pink-500"
             />
+            <button
+              id="downloadQRBtn"
+              type="button"
+              class="mt-3 w-[170px] rounded-lg bg-pink-600 py-2 text-sm font-semibold text-white shadow hover:bg-pink-700"
+            >
+              Download QR Code
+            </button>
+
+            <button
+              id="manualPayBtn"
+              type="button"
+              class="text-sm text-pink-600 underline hover:text-pink-700 mt-4"
+            >
+              Alternatively, pay manually via UPI
+            </button>
           </div>
+
+          <!-- continue -->
           <button
             id="paidButton"
-            class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold shadow"
+            type="button"
+            class="w-full max-w-lg bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold shadow"
           >
-            I’ve Paid – Continue to Slot Selection
+            I’ve Paid – Continue to Slot Selection
           </button>
         </div>
-
         <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Refund window:</strong> If your preferred slot isn’t available
-          on Luma, request a refund within 2 h of payment.
+          <strong>Note:</strong> Use the same email and seat count throughout
+          the booking. After payment, our team will verify and confirm your
+          ticket. You’ll receive a confirmation email once it's done.
+        </p>
+        <p class="text-sm text-gray-600 border-t pt-4">
+          <strong>Refunds:</strong> If your preferred slot isn’t available, you
+          can request a refund within 2 hours via
+          <a
+            href="https://forms.gle/YOUR_FORM_ID"
+            target="_blank"
+            class="text-blue-600 underline hover:text-blue-800"
+            >this form</a
+          >. If tickets are sold out, your payment will be refunded
+          automatically within 24 hours.
         </p>
       </section>
     </main>
 
+    <!-- manual payment modal -->
+    <div
+      id="manualModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-xl p-6 w-80 space-y-4 shadow-xl relative text-xs"
+      >
+        <h4 class="text-base font-semibold text-gray-800 text-center">
+          Manual UPI Payment Details
+        </h4>
+
+        <!-- rows -->
+        <div class="space-y-2">
+          <div
+            class="grid grid-cols-[auto,1fr,auto] items-center bg-gray-50 rounded px-2 py-1 gap-2"
+          >
+            <span class="font-medium">Amount</span>
+            <span id="manualAmountText" class="text-center font-mono"></span>
+            <button
+              id="copyAmtBtn"
+              type="button"
+              class="justify-self-end bg-pink-100 text-pink-700 text-xs font-medium px-2 py-0.5 rounded"
+            >
+              Copy
+            </button>
+          </div>
+          <div
+            class="grid grid-cols-[auto,1fr,auto] items-center bg-gray-50 rounded px-2 py-1 gap-2"
+          >
+            <span class="font-medium">To</span>
+            <span id="upiIdVal" class="text-center font-mono break-all"
+              >8758610922@ptsbi</span
+            >
+            <button
+              id="copyUpiBtn"
+              type="button"
+              class="justify-self-end bg-pink-100 text-pink-700 text-xs font-medium px-2 py-0.5 rounded"
+            >
+              Copy
+            </button>
+          </div>
+          <div
+            class="grid grid-cols-[auto,1fr,auto] items-center bg-gray-50 rounded px-2 py-1 gap-2"
+          >
+            <span class="font-medium">Note</span>
+            <code
+              id="bookingIdTextModal"
+              class="text-center font-mono break-all"
+            ></code>
+            <button
+              id="copyBookingIdModalBtn"
+              type="button"
+              class="justify-self-end bg-pink-100 text-pink-700 text-xs font-medium px-2 py-0.5 rounded"
+            >
+              Copy
+            </button>
+          </div>
+        </div>
+
+        <button
+          id="closeModal"
+          type="button"
+          class="absolute top-2 right-3 text-gray-400 hover:text-gray-600 text-xl"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- script -->
     <script>
-      // vh fix
+      /* ---------- viewport helper ---------- */
       const setVH = () =>
         document.documentElement.style.setProperty(
           "--vh",
-          `${window.innerHeight * 0.01}px`
+          `${innerHeight * 0.01}px`
         );
       setVH();
-      window.addEventListener("resize", setVH);
+      addEventListener("resize", setVH);
 
-      // booking → payment
-      const form = document.getElementById("bookingForm"),
-        paySec = document.getElementById("paymentSection"),
-        amountDisp = document.getElementById("amountDisplay"),
-        qrImg = document.getElementById("qrImage"),
-        paidBtn = document.getElementById("paidButton"),
-        emailInp = document.getElementById("email"),
-        seatsInp = document.getElementById("seats");
+      /* ---------- constants ---------- */
+      const HEADER_OFFSET = 60;
+      const UPI_ID = "8758610922@ptsbi",
+        PAYEE = "Kanishk Kumar";
 
-      const UPI_ID = "afcp@airtel",
-        PAYEE = "Maid Cafe Expo";
-      let cachedEmail = "",
-        cachedSeats = 0;
+      /* ---------- elements ---------- */
+      const seatCount = document.getElementById("seatCount");
+      const amtTitle = document.getElementById("amtTitle");
+      const amtDisp = document.getElementById("amountDisplay");
+      const manualAmt = document.getElementById("manualAmountText");
+      const emailVal = document.getElementById("emailVal");
+      const bookingIdVal = document.getElementById("bookingIdVal");
+      const bookingIdTextModal = document.getElementById("bookingIdTextModal");
+      const qrImg = document.getElementById("qrImage");
+      const downloadQRBtn = document.getElementById("downloadQRBtn");
 
-      const buildUPI = (email, seats, amt) =>
-        `upi://pay?${new URLSearchParams({
+      const manualPayBtn = document.getElementById("manualPayBtn");
+      const manualModal = document.getElementById("manualModal");
+      const closeModal = document.getElementById("closeModal");
+      const copyAmtBtn = document.getElementById("copyAmtBtn");
+      const copyUpiBtn = document.getElementById("copyUpiBtn");
+      const copyEmailBtn = document.getElementById("copyEmailBtn");
+      const copyBookingIdBtn = document.getElementById("copyBookingIdBtn");
+      const copyBookingIdModalBtn = document.getElementById(
+        "copyBookingIdModalBtn"
+      );
+      const paidBtn = document.getElementById("paidButton");
+
+      /* ---------- read query‑params ---------- */
+      const params = new URLSearchParams(location.search);
+      const email = params.get("email")?.trim() || "";
+      const seats = +params.get("seats") || 0;
+      if (!email || seats < 1) {
+        location.replace("initiatepayment.html");
+      }
+
+      const amount = seats * 500;
+      const comment = `${email}-${seats}`; // booking ID / note
+
+      /* ---------- helpers ---------- */
+      const buildUPI = (e, s, a) =>
+        "upi://pay?" +
+        new URLSearchParams({
           pa: UPI_ID,
-          pn: PAYEE,
-          am: amt,
+          /*pn: PAYEE,*/
+          am: a,
           cu: "INR",
-          tn: `${email}|${seats}`,
-        })}`;
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        cachedEmail = emailInp.value.trim();
-        cachedSeats = +seatsInp.value;
-        if (!cachedEmail || cachedSeats < 1) return;
-        const amt = cachedSeats * 500;
-        amountDisp.textContent = `₹${amt}`;
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-          buildUPI(cachedEmail, cachedSeats, amt)
-        )}`;
-        paySec.classList.remove("hidden");
-        paySec.scrollIntoView({ behavior: "smooth" });
-      });
-
-      paidBtn.addEventListener("click", () => {
-        if (!cachedEmail || !cachedSeats)
-          return alert("Please complete payment first.");
-        const params = new URLSearchParams({
-          email: cachedEmail,
-          seats: cachedSeats,
+          tn: `${e}-${s}`,
         });
-        location.href = `luma.html?${params.toString()}`;
+
+      /* copy helper with non‑destructive feedback */
+      const copy = async (text, btn) => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+          btn.classList.add(
+            "ring-2",
+            "ring-offset-1",
+            "ring-green-400",
+            "transition",
+            "duration-150"
+          );
+          setTimeout(() => {
+            btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+          }, 1100);
+        } catch (e) {
+          alert("Copy failed: " + e);
+        }
+      };
+
+      /* ---------- initialise UI ---------- */
+      seatCount.textContent = seats;
+      amtTitle.textContent = amount;
+      amtDisp.textContent = amount;
+      manualAmt.textContent = amount;
+
+      emailVal.textContent = email;
+      bookingIdVal.textContent = comment;
+      bookingIdTextModal.textContent = comment;
+
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+        buildUPI(email, seats, amount)
+      )}`;
+
+      /* ---------- events ---------- */
+      manualPayBtn.onclick = () => manualModal.classList.remove("hidden");
+      closeModal.onclick = () => manualModal.classList.add("hidden");
+      manualModal.addEventListener("click", (e) => {
+        if (e.target === manualModal) manualModal.classList.add("hidden");
       });
+
+      copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
+      copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
+      copyEmailBtn.onclick = () => copy(emailVal.textContent, copyEmailBtn);
+      copyBookingIdBtn.onclick = () => copy(comment, copyBookingIdBtn);
+      copyBookingIdModalBtn.onclick = () =>
+        copy(bookingIdTextModal.textContent, copyBookingIdModalBtn);
+
+      paidBtn.onclick = () => {
+        location.href = `luma.html?${new URLSearchParams({ email, seats })}`;
+      };
+      /* download the QR image */
+      downloadQRBtn.onclick = async () => {
+        try {
+          /* fetch the QR image as a blob */
+          const res = await fetch(qrImg.src, { mode: "cors" });
+          const blob = await res.blob();
+
+          /* create a temporary object‑URL & click a hidden <a download> */
+          const url = URL.createObjectURL(blob);
+          const a = Object.assign(document.createElement("a"), {
+            href: url,
+            download: `CafeKyaa_QR_${bookingIdVal.textContent}.png`,
+          });
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          alert(
+            "Couldn’t download the QR code. Please long‑press / right‑click the image instead."
+          );
+          console.error(err);
+        }
+      };
     </script>
   </body>
 </html>

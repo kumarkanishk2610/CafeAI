@@ -1,0 +1,177 @@
+<!-- initiatepayment.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – Start Payment</title>
+
+    <!-- Quicksand + Tailwind -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0);
+        --sab: env(safe-area-inset-bottom, 0);
+      }
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        padding: var(--sat) 0 var(--sab);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- header -->
+    <header
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+        <h1
+          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+        >
+          Cafe Kyaa!
+        </h1>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+          >Anime India 2025 · Mumbai</span
+        >
+      </div>
+    </header>
+
+    <!-- main -->
+    <main class="pt-20 flex flex-col items-center p-4">
+      <section
+        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border-pink-200"
+      >
+        <!-- intro -->
+        <div class="text-center space-y-3">
+          <h2 class="text-2xl font-semibold text-pink-700">Booking Details</h2>
+          <ol
+            class="text-gray-700 text-left max-w-md mx-auto space-y-2 list-decimal list-inside"
+          >
+            <li>
+              Enter a valid email address and choose the number of seats you'd
+              like to reserve (maximum 12).
+            </li>
+            <li>
+              In the next step, proceed to payment using the generated UPI QR
+              code.
+            </li>
+            <li>
+              After payment, select your preferred time slot at your
+              convenience, using the form given.
+            </li>
+          </ol>
+        </div>
+
+        <!-- form -->
+        <form id="bookingForm" class="space-y-6">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="flex flex-col gap-1">
+              <label for="email" class="font-medium text-gray-700">Email</label>
+              <input
+                id="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="seats" class="font-medium text-gray-700"
+                >Number of seats</label
+              >
+              <input
+                id="seats"
+                type="number"
+                min="1"
+                max="12"
+                required
+                placeholder="1"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow"
+          >
+            Generate QR Code & Proceed
+          </button>
+        </form>
+        <p class="text-sm text-gray-600 border-t pt-4">
+          <strong>Note:</strong> Use the same email and seat count throughout
+          the booking. After payment, our team will verify and confirm your
+          ticket. You’ll receive a confirmation email once it's done.
+        </p>
+        <p class="text-sm text-gray-600 border-t pt-4">
+          <strong>Refunds:</strong> If your preferred slot isn’t available, you
+          can request a refund within 2 hours via
+          <a
+            href="https://forms.gle/YOUR_FORM_ID"
+            target="_blank"
+            class="text-blue-600 underline hover:text-blue-800"
+            >this form</a
+          >. If tickets are sold out, your payment will be refunded
+          automatically within 24 hours.
+        </p>
+      </section>
+    </main>
+
+    <!-- script -->
+    <script>
+      /* viewport helper */
+      const setVH = () =>
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${innerHeight * 0.01}px`
+        );
+      setVH();
+      addEventListener("resize", setVH);
+
+      /* redirect to payment.html with query‑string */
+      document.getElementById("bookingForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const seats = +document.getElementById("seats").value;
+        if (!email || seats < 1) {
+          alert("Please enter valid details");
+          return;
+        }
+        location.href = `payment.html?${new URLSearchParams({ email, seats })}`;
+      });
+    </script>
+  </body>
+</html>

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cafe Kyaa! – Welcome</title>
+    <title>Cafe Kyaa! – Welcome</title>
 
-    <!-- Font & Tailwind -->
+    <!-- Fonts + Tailwind -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
@@ -13,7 +13,6 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Styles -->
     <style>
       :root {
         --sat: env(safe-area-inset-top, 0);
@@ -29,7 +28,6 @@
         min-height: calc(var(--vh) * 100);
         padding: var(--sat) 0 var(--sab);
       }
-      /* bubbles bg */
       .bubbles {
         background: radial-gradient(
           ellipse at 25% 15%,
@@ -67,38 +65,13 @@
           background-position: 0 0;
         }
       }
-      /* gradient after logo tap */
-      .gradient-bg {
-        background: linear-gradient(
-          -60deg,
-          #fff1f2 0%,
-          #ffe4e6 25%,
-          #fce7f3 50%,
-          #ffe5f8 75%,
-          #fff1f2 100%
-        );
-        background-size: 400% 400%;
-        animation: grad 18s ease infinite;
-      }
-      @keyframes grad {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-      /* logo */
       #logo {
         width: clamp(12rem, 100vmin, 40rem);
         transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s;
       }
       #logo:hover {
         transform: scale(1.08) rotate(8deg);
-        filter: drop-shadow(0 8px 12px rgb(251 113 133/0.5));
+        filter: drop-shadow(0 8px 12px rgb(251 113 133 / 0.5));
       }
       #logo.clicked {
         animation: spinOut 0.9s ease forwards;
@@ -115,7 +88,6 @@
           opacity: 0;
         }
       }
-      /* fade util */
       .fade {
         opacity: 0;
         transform: translateY(24px);
@@ -128,27 +100,29 @@
     </style>
   </head>
 
-  <body class="bubbles relative flex flex-col items-center justify-center">
-    <!-- ░ HEADER ░ -->
+  <body
+    class="bubbles relative flex flex-col items-center justify-center overflow-hidden"
+  >
+    <!-- HEADER -->
     <header
       id="topBar"
       class="hidden fixed top-0 inset-x-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
       <div class="flex items-center h-14 px-4">
-        <img src="logo.png" class="h-10 w-10 rounded-full" />
+        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
         <h1
           class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
         >
-          Cafe Kyaa!
+          Cafe Kyaa!
         </h1>
         <span
           class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
-          >Anime India 2025 · Mumbai</span
+          >Anime India 2025 · Mumbai</span
         >
       </div>
     </header>
 
-    <!-- ░ WELCOME ░ -->
+    <!-- WELCOME -->
     <section
       id="welcome"
       class="flex flex-col items-center justify-center text-center px-4 min-h-screen"
@@ -160,126 +134,111 @@
         class="rounded-full cursor-pointer select-none"
       />
       <p class="mt-8 text-pink-700 font-medium animate-pulse px-4">
-        Tap the logo to enter the booking lounge ✨
+        Tap the logo to Begin!✨
       </p>
     </section>
 
-    <!-- ░ HOUSE RULES (card) ░ -->
-    <section
-      id="rules"
-      class="hidden w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-6 border-pink-200 fade mt-24 relative overflow-hidden"
+    <!-- MAIN -->
+    <main
+      id="content"
+      class="hidden pt-20 flex flex-col items-center w-full bg-white text-gray-800"
     >
-      <!-- decorative hearts -->
-      <svg
-        class="absolute inset-0 w-full h-full pointer-events-none opacity-5"
-        xmlns="http://www.w3.org/2000/svg"
+      <!-- RULES -->
+      <section
+        id="rules"
+        class="hidden fade w-full max-w-3xl px-6 py-0 space-y-0"
       >
-        <defs>
-          <symbol id="heart" viewBox="0 0 32 29.6">
-            <path
-              d="M23.6,0c-3.4,0-6.4,2.1-7.6,5.1C14.8,2.1,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,14.3,16,21.2,16,21.2s16-6.9,16-21.2C32,3.8,28.2,0,23.6,0z"
+        <div class="text-center space-y-3">
+          <h2 class="text-2xl font-semibold text-pink-700">
+            House Rules & Guest Consent
+          </h2>
+          <p class="text-gray-600">
+            Please read the rules carefully to ensure a safe and enchanting
+            experience for everyone. 🌸
+          </p>
+        </div>
+
+        <ol
+          class="list-decimal pl-5 space-y-5 text-gray-700 leading-relaxed text-sm sm:text-base text-justify"
+        >
+          <li>
+            <span class="font-medium text-pink-600">Respect & Courtesy:</span>
+            Treat maids, staff, and fellow guests with kindness.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Consent First:</span> No
+            physical contact or photography without permission.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Voice Level:</span> Keep
+            conversations at a gentle indoor volume.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Food & Drinks:</span> No
+            outside consumables inside.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Health & Safety:</span>
+            Follow staff guidance at all times.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Slot Timing:</span> Arrive 5
+            min early; 30‑min slots are strict.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Payment Verification:</span>
+            Show your QR confirmation at entry.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Refund Policy:</span> 50 %
+            refund up to 24 h before; none after slot chosen.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Prohibited Items:</span>
+            Weapons, alcohol, illicit substances.
+          </li>
+          <li>
+            <span class="font-medium text-pink-600">Have Fun! 🎀</span> Immerse
+            yourself in the kawaii spirit!
+          </li>
+        </ol>
+
+        <div class="space-y-4">
+          <label
+            class="inline-flex items-start gap-2 text-sm text-gray-700 cursor-pointer"
+          >
+            <input
+              id="agree"
+              type="checkbox"
+              class="mt-1 h-4 w-4 text-pink-600 rounded focus:ring-pink-500"
             />
-          </symbol>
-        </defs>
-        <g>
-          <use href="#heart" x="20" y="10" fill="#f472b6" />
-          <use href="#heart" x="260" y="80" fill="#f9a8d4" />
-          <use href="#heart" x="120" y="160" fill="#fda4af" />
-          <use href="#heart" x="200" y="220" fill="#f9a8d4" />
-        </g>
-      </svg>
+            <span>I have read and agree to the Maid Café Expo rules.</span>
+          </label>
 
-      <div class="text-center space-y-2">
-        <h2 class="text-2xl font-semibold text-pink-700">
-          House Rules &amp; Guest Consent
-        </h2>
-        <p class="text-gray-600 text-sm">
-          Please read our rules carefully to ensure a safe and enchanting
-          experience for everyone. 🌸
-        </p>
-      </div>
+          <button
+            id="continue"
+            type="button"
+            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow opacity-50 cursor-not-allowed"
+          >
+            Accept & Continue →
+          </button>
+          <p id="timerText" class="text-sm text-center text-pink-600">
+            You can accept after <span id="count">30</span>s. <br />
+            Please take a moment to read the rules!
+          </p>
+          <p> </p>
+        </div>
+      </section>
+    </main>
 
-      <ol
-        class="list-decimal pl-5 space-y-4 text-gray-700 leading-relaxed text-sm sm:text-base"
-      >
-        <li>
-          <span class="font-medium text-pink-600">Respect &amp; Courtesy:</span>
-          Treat maids, staff, and fellow guests with kindness.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Consent First:</span> No
-          physical contact or photography without permission.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Voice Level:</span> Keep
-          conversations at a gentle indoor volume.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Food &amp; Drinks:</span> No
-          outside consumables inside.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Health &amp; Safety:</span>
-          Follow staff guidance at all times.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Slot Timing:</span>
-          Arrive 5 min early; 30‑min slots are strict.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Payment Verification:</span>
-          Show your QR confirmation at entry.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Refund Policy:</span> 50 %
-          refund up to 24 h before; none after slot chosen.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Prohibited Items:</span>
-          Weapons, alcohol, illicit substances.
-        </li>
-        <li>
-          <span class="font-medium text-pink-600">Have Fun! 🎀</span> Immerse
-          yourself in the kawaii spirit!
-        </li>
-      </ol>
-
-      <!-- countdown note -->
-      <p id="timerText" class="text-xs text-pink-600 text-center">
-        You can accept after <span id="count">30</span> s
-      </p>
-
-      <!-- consent -->
-      <div
-        class="sticky bottom-0 left-0 bg-white pt-4 pb-3 border-t border-pink-100 space-y-4"
-      >
-        <label
-          class="inline-flex items-start gap-2 text-sm text-gray-700 cursor-pointer"
-        >
-          <input
-            id="agree"
-            type="checkbox"
-            class="mt-1 h-4 w-4 text-pink-600 rounded focus:ring-pink-400"
-          />
-          <span>I have read and agree to the Maid Café Expo rules.</span>
-        </label>
-        <button
-          id="continue"
-          class="w-full bg-pink-400 text-white font-medium py-2 px-6 rounded-lg shadow opacity-50 cursor-not-allowed"
-        >
-          Accept & Continue →
-        </button>
-      </div>
-    </section>
-
-    <!-- ░ JS ░ -->
+    <!-- SCRIPT -->
     <script>
-      /* fix 100vh on mobile */
-      const setVH = () =>
+      function setVH() {
         document.documentElement.style.setProperty(
           "--vh",
           `${window.innerHeight * 0.01}px`
         );
+      }
       setVH();
       window.addEventListener("resize", setVH);
 
@@ -292,7 +251,6 @@
         timerTxt = document.getElementById("timerText"),
         countEl = document.getElementById("count");
 
-      /* show rules + header after logo tap */
       logo.addEventListener("click", () => {
         logo.classList.add("clicked");
         setTimeout(() => {
@@ -300,15 +258,16 @@
           rules.classList.remove("hidden");
           rules.classList.add("show");
           topBar.classList.remove("hidden");
+          document.getElementById("content").classList.remove("hidden");
           document.body.classList.remove("bubbles", "justify-center");
-          document.body.classList.add("gradient-bg", "text-gray-800");
+          document.body.classList.add("bg-gray-50", "text-gray-800");
+          document.body.classList.remove("overflow-hidden");
           window.scrollTo({ top: 0, behavior: "auto" });
-          startTimer(); // ← start 30‑second timer
+          startTimer();
         }, 800);
       });
 
-      /* 30‑second countdown logic */
-      let remaining = 30,
+      let remaining = 2,
         timerId;
       function startTimer() {
         countEl.textContent = remaining;
@@ -323,16 +282,14 @@
         }, 1000);
       }
 
-      /* enable button only when checkbox ticked & timer done */
       function updateButtonState() {
         const ready = agree.checked && remaining <= 0;
         contBtn.classList.toggle("opacity-50", !ready);
         contBtn.classList.toggle("cursor-not-allowed", !ready);
-        contBtn.dataset.ready = ready ? "yes" : "no"; // flag for click handler
+        contBtn.dataset.ready = ready ? "yes" : "no";
       }
       agree.addEventListener("change", updateButtonState);
 
-      /* click handler with warning */
       contBtn.addEventListener("click", () => {
         if (contBtn.dataset.ready !== "yes") {
           alert(
@@ -340,7 +297,7 @@
           );
           return;
         }
-        location.href = "payment.html";
+        location.href = "initiatepayment.html";
       });
     </script>
   </body>
