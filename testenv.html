@@ -38,12 +38,13 @@
         const upiID = "afcp@airtel";
         const name = "Kanishk Kumar";
         const amount = "1.00";
-        const txnNote = "Purchase in Merchant";
-        const txnRef = "1234ABCD";
+        //const txnNote = "Purchase in Merchant";
+        //const txnRef = "1234ABCD";
 
         const upiURL = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(
           name
-        )}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`;
+        )}&am=${amount}&cu=INR`;
+        //&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`;
 
         // Open UPI app
         window.location.href = upiURL;
