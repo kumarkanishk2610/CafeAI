@@ -2,62 +2,52 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Google Pay UPI Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pay with UPI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 100px;
+        background-color: #f0f0f0;
+      }
+
+      button {
+        padding: 15px 30px;
+        font-size: 18px;
+        background-color: #4285f4;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover {
+        background-color: #3367d6;
+      }
+    </style>
   </head>
   <body>
-    <h2>Pay Using Google Pay (UPI)</h2>
-    <button id="payBtn">Pay Now</button>
+    <h2>Pay ₹1 to Shitij Bhowmick</h2>
+    <p>Click the button to pay via any UPI app</p>
+    <button onclick="payWithUPI()">Pay Now</button>
 
     <script>
-      const supportedInstruments = [
-        {
-          supportedMethods: "https://tez.google.com/pay",
-          data: {
-            pa: "Q838463056@ybl",
-            pn: "Shitij Bhowmick",
-            tr: "1234ABCD", // transaction reference ID
-            url: "http://maidcafe.kanishk.one",
-            mc: "0000", // merchant category code
-            tn: "Purchase in Merchant",
-            //gstBrkUp: "GST:16.90|CGST:08.45|SGST:08.45",
-            //invoiceNo: "BillRef123",
-            //invoiceDate: "2019-06-11T13:21:50+05:30",
-            //gstIn: "29ABCDE1234F2Z5",
-          },
-        },
-      ];
+      function payWithUPI() {
+        const upiID = "Q838463056@ybl";
+        const name = "Shitij Bhowmick";
+        const amount = "1.00";
+        const txnNote = "Purchase in Merchant";
+        const txnRef = "1234ABCD";
 
-      const details = {
-        total: {
-          label: "Total",
-          amount: {
-            currency: "INR",
-            value: "1.00",
-          },
-        },
-      };
+        const upiURL = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(
+          name
+        )}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}&tr=${txnRef}`;
 
-      document.getElementById("payBtn").addEventListener("click", async () => {
-        if (!window.PaymentRequest) {
-          alert("Payment Request API not supported in this browser.");
-          return;
-        }
-
-        try {
-          const request = new PaymentRequest(supportedInstruments, details);
-          const paymentResponse = await request.show();
-
-          // You should process the paymentResponse here with your backend
-          console.log(paymentResponse);
-
-          // Simulate payment processing
-          await paymentResponse.complete("success");
-          alert("Payment completed successfully!");
-        } catch (err) {
-          console.error("Payment failed", err);
-          alert("Payment failed or was cancelled.");
-        }
-      });
+        // Open UPI app
+        window.location.href = upiURL;
+      }
     </script>
   </body>
 </html>
