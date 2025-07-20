@@ -244,14 +244,6 @@
             </button>
 
             <button
-              id="upiIntentBtn"
-              type="button"
-              class="mt-2 w-[170px] rounded-lg bg-pink-600 py-2 text-sm font-semibold text-white shadow hover:bg-pink-700"
-            >
-              Pay via UPI
-            </button>
-
-            <button
               id="manualPayBtn"
               type="button"
               class="text-sm text-pink-600 underline hover:text-pink-700 mt-4"
@@ -436,8 +428,8 @@
           purpose: "00",
           am: a, // amount
           cu: "INR", // currency
-          //tn: `${e}-${s}`, // transaction note  (email‑seats)
-          //tr, // transaction reference (bookingId)
+          tn: `${e}-${s}`, // transaction note  (email‑seats)
+          tr, // transaction reference (bookingId)
         });
 
       /* Copy helper with non‑destructive feedback */
@@ -503,10 +495,6 @@
       paidBtn.onclick = () => {
         location.href = `luma.html?${new URLSearchParams({ email, seats })}`;
       };
-
-      document.getElementById("upiIntentBtn").addEventListener("click", () => {
-        window.open(upiURL); // or use window.open(upiURL) to open in new tab/window
-      });
 
       /* ---------- download the QR image ---------- */
       downloadQRBtn.onclick = async () => {

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Google Pay UPI Payment</title>
+  </head>
+  <body>
+    <h2>Pay Using Google Pay (UPI)</h2>
+    <button id="payBtn">Pay Now</button>
+
+    <script>
+      const supportedInstruments = [
+        {
+          supportedMethods: "https://tez.google.com/pay",
+          data: {
+            pa: "afcp@airtel",
+            pn: "Kanishk Kumar",
+            tr: "1234ABCD", // transaction reference ID
+            url: "http://maidcafe.kanishk.one",
+            mc: "0000", // merchant category code
+            tn: "Purchase in Merchant",
+            //gstBrkUp: "GST:16.90|CGST:08.45|SGST:08.45",
+            //invoiceNo: "BillRef123",
+            //invoiceDate: "2019-06-11T13:21:50+05:30",
+            //gstIn: "29ABCDE1234F2Z5",
+          },
+        },
+      ];
+
+      const details = {
+        total: {
+          label: "Total",
+          amount: {
+            currency: "INR",
+            value: "99.00",
+          },
+        },
+      };
+
+      document.getElementById("payBtn").addEventListener("click", async () => {
+        if (!window.PaymentRequest) {
+          alert("Payment Request API not supported in this browser.");
+          return;
+        }
+
+        try {
+          const request = new PaymentRequest(supportedInstruments, details);
+          const paymentResponse = await request.show();
+
+          // You should process the paymentResponse here with your backend
+          console.log(paymentResponse);
+
+          // Simulate payment processing
+          await paymentResponse.complete("success");
+          alert("Payment completed successfully!");
+        } catch (err) {
+          console.error("Payment failed", err);
+          alert("Payment failed or was cancelled.");
+        }
+      });
+    </script>
+  </body>
+</html>
