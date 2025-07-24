@@ -71,16 +71,19 @@
       class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
       <div class="flex items-center h-14 px-4">
-        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
-        <h1
-          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-        >
-          Cafe Kyaa!
-        </h1>
+        <a href="index.html" class="flex items-center hover:opacity-80">
+          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+          >
+            Cafe Kyaa!
+          </h1>
+        </a>
         <span
           class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
-          >Anime India 2025 · Mumbai</span
         >
+          Anime India 2025 · Mumbai
+        </span>
       </div>
     </header>
 
@@ -286,7 +289,7 @@
           </div>
           <!-- QR card -->
           <div
-            class="bg-white rounded-3xl shadow-lg/20 p-0 w-72 flex flex-col items-center"
+            class="bg-white rounded-3xl shadow-lg/20 p-0 w-144 flex flex-col items-center"
           >
             <p class="mb-2 text-gray-700 text-center">
               <span class="font-medium text-pink-600">Amount:</span> ₹<span
@@ -297,7 +300,7 @@
             <img
               id="qrImage"
               alt="UPI QR Code"
-              class="w-[170px] h-[170px] rounded-md border-4 border-pink-500"
+              class="w-[240px] h-[240px] rounded-md border-4 border-pink-500"
             />
 
             <button
@@ -315,16 +318,91 @@
             >
               Pay via UPI
             </button>
-
-            <button
-              id="manualPayBtn"
-              type="button"
-              class="text-sm text-pink-600 underline hover:text-pink-700 mt-4"
+          </div>
+          <!-- Trigger Button -->
+          <!-- Animated Trigger Button -->
+          <button
+            onclick="openModal()"
+            id="havingtroublebutton"
+            class="bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 font-medium text-sm px-4 py-2 rounded-lg border border-red-200 transition-all duration-200 shadow-sm hover:shadow-md"
+          >
+            Having trouble with QR Payment? Click here for help!
+          </button>
+          <!-- Modal Overlay -->
+          <div
+            id="infoModal"
+            class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4"
+          >
+            <!-- Modal Content -->
+            <div
+              class="bg-white border border-red-200 rounded-xl w-full max-w-md p-5 shadow-lg text-sm text-red-700"
             >
-              Alternatively, pay manually via UPI
-            </button>
+              <!-- Close Button -->
+              <div class="flex justify-end">
+                <button
+                  onclick="closeModal()"
+                  class="text-red-500 hover:text-red-700 text-lg font-bold"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <!-- Modal Title -->
+              <div class="font-semibold text-red-800 mb-3 text-base">
+                Trouble with QR Code?
+              </div>
+
+              <!-- Modal Message -->
+              <p class="mb-3">
+                Sometimes, apps may not support auto-generated QR codes, which
+                can cause payments to fail or prevent you from adding a note to
+                your transaction.
+              </p>
+              <p class="mb-4">
+                If that happens, please make a
+                <strong>manual payment</strong> to ensure your Booking ID is
+                included.
+              </p>
+
+              <!-- CTA Buttons -->
+              <div class="flex flex-col gap-2">
+                <button
+                  id="manualPayBtn"
+                  type="button"
+                  onclick="window.open('YOUR_MANUAL_PAYMENT_LINK', '_blank');"
+                  class="block w-full text-center bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
+                >
+                  Manual Payment Instructions
+                </button>
+
+                <a
+                  href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                  target="_blank"
+                  class="block text-center border border-red-400 text-red-700 px-4 py-2 rounded-lg font-medium hover:bg-red-50 transition"
+                >
+                  Contact Support
+                </a>
+              </div>
+            </div>
           </div>
 
+          <!-- Modal Script -->
+          <script>
+            function openModal() {
+              document.getElementById("infoModal").classList.remove("hidden");
+            }
+            function closeModal() {
+              document.getElementById("infoModal").classList.add("hidden");
+            }
+          </script>
+
+          <!--<button
+            id="manualPayBtn"
+            type="button"
+            class="text-sm text-pink-600 underline hover:text-pink-700 mt-0"
+          >
+            Alternatively, pay manually via UPI
+          </button>-->
           <!-- continue -->
           <button
             id="paidButton"
@@ -335,15 +413,15 @@
           </button>
         </div>
         <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Note:</strong> Use the same email and seat count throughout
-          the booking. After payment, our team will verify and confirm your
-          ticket. You’ll receive a confirmation email once it's done.
+          <strong>Note:</strong> Use the same details throughout the booking.
+          After payment, our team will verify and confirm your ticket. You'll
+          receive a confirmation email once it's done.
         </p>
         <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Refunds:</strong> If your preferred slot isn’t available, you
+          <strong>Refunds:</strong> If your preferred slot isn't available, you
           can request a refund within 2 hours via
           <a
-            href="https://forms.gle/YOUR_FORM_ID"
+            href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
             target="_blank"
             class="text-blue-600 underline hover:text-blue-800"
             >this form</a
@@ -364,6 +442,47 @@
         <h4 class="text-base font-semibold text-gray-800 text-center">
           Manual UPI Payment Details
         </h4>
+        <h5 class="text-sm font-semibold text-gray-800 text-center">
+          Please pay manually according to the following details:
+        </h5>
+        <div class="text-sm text-gray-700 space-y-2">
+          <details class="p-2 bg-gray-50 rounded-lg border border-gray-200">
+            <summary class="cursor-pointer font-medium text-pink-700">
+              GPay Instructions
+            </summary>
+            <p class="mt-1 pl-4">
+              Tap <strong>“Pay Anyone”</strong>, enter the UPI ID given below,
+              press <strong>Continue</strong>, then <strong>Pay</strong>. Enter
+              the amount and Booking ID in the note before proceeding.
+            </p>
+          </details>
+
+          <details class="p-2 bg-gray-50 rounded-lg border border-gray-200">
+            <summary class="cursor-pointer font-medium text-pink-700">
+              Paytm Instructions
+            </summary>
+            <p class="mt-1 pl-4">
+              Tap <strong>“To Bank A/c”</strong> →
+              <strong>“Enter UPI ID/Mobile Number”</strong>, enter the UPI
+              address, tap <strong>Pay</strong>, and enter the amount and
+              Booking ID in the note before paying.
+            </p>
+          </details>
+
+          <details class="p-2 bg-gray-50 rounded-lg border border-gray-200">
+            <summary class="cursor-pointer font-medium text-pink-700">
+              PhonePe Instructions
+            </summary>
+            <p class="mt-1 pl-4">
+              Tap <strong>“To Bank & Self A/c”</strong> →
+              <strong>“To Any UPI App”</strong>, click
+              <strong>+ UPI ID</strong>, enter the UPI address, then proceed.
+              Add the amount and Booking ID in the note before paying. The note
+              icon may be tricky to find here, it's a paper icon in the text
+              box, towards the left of the pay button.
+            </p>
+          </details>
+        </div>
 
         <!-- rows -->
         <div class="space-y-2">
@@ -438,8 +557,8 @@
 
         /* ---------- constants ---------- */
         const HEADER_OFFSET = 60;
-        const UPI_ID = "Q838463056@ybl",
-          PAYEE = "PhonePeMerchant"; // appears in some UPI apps
+        const UPI_ID = "8758610922@ptsbi",
+          PAYEE = "Kanishk Kumar"; // appears in some UPI apps
 
         /* ---------- elements ---------- */
         const seatCount = document.getElementById("seatCount");
@@ -481,21 +600,20 @@
           location.replace("initiatepayment.html");
         }
 
-        const amount = seats * 500;
+        const amount = seats * 1;
 
         /* ---------- helpers ---------- */
 
-        const buildUPI = (e, s, a, tr) =>
+        const buildUPI = (e, s, a) =>
           "upi://pay?" +
           new URLSearchParams({
             pa: UPI_ID,
             pn: PAYEE,
-            mc: "0000",
-            mode: "02",
-            purpose: "00",
+            //mc: "0000",
+            //mode: "02",
+            //purpose: "00",
             am: a,
             cu: "INR",
-            tr, // transaction reference (code)
           });
 
         const copy = async (text, btn) => {
@@ -539,15 +657,22 @@
         bookingIdVal.textContent = code;
         bookingIdTextModal.textContent = code;
 
-        const upiURL = buildUPI(email, seats, amount, code);
+        const upiURL = buildUPI(email, seats, amount);
 
         // Disable buttons initially
         downloadQRBtn.disabled = true;
         upiIntentBtn.disabled = true;
         manualPayBtn.disabled = true;
         paidBtn.disabled = true;
-        [downloadQRBtn, upiIntentBtn, manualPayBtn, paidBtn].forEach((btn) => {
-          btn.classList.add("opacity-50", "cursor-not-allowed");
+        havingtroublebutton.disabled = true;
+        [
+          downloadQRBtn,
+          upiIntentBtn,
+          manualPayBtn,
+          paidBtn,
+          havingtroublebutton,
+        ].forEach((btn) => {
+          btn.classList.add("opacity-20", "cursor-not-allowed");
         });
 
         const qrPlaceholder = "assets/qrdekinai.png"; // placeholder image
@@ -564,13 +689,17 @@
             qrImg.src = qrPlaceholder;
           }
 
-          [downloadQRBtn, upiIntentBtn, manualPayBtn, paidBtn].forEach(
-            (btn) => {
-              btn.disabled = !isChecked;
-              btn.classList.toggle("opacity-50", !isChecked);
-              btn.classList.toggle("cursor-not-allowed", !isChecked);
-            }
-          );
+          [
+            downloadQRBtn,
+            upiIntentBtn,
+            manualPayBtn,
+            paidBtn,
+            havingtroublebutton,
+          ].forEach((btn) => {
+            btn.disabled = !isChecked;
+            btn.classList.toggle("opacity-20", !isChecked);
+            btn.classList.toggle("cursor-not-allowed", !isChecked);
+          });
         });
 
         /* ---------- events ---------- */
@@ -587,7 +716,7 @@
 
         paidBtn.onclick = async () => {
           const formUrl =
-            "https://docs.google.com/forms/d/e/1FAIpQLScXHt7y5f9QG-0iynf1xjbEU6AkKHSRzpDjPOakjWv3iOZXDA/formResponse"; // replace YOUR_FORM_ID with your form's ID
+            "https://docs.google.com/forms/d/e/1FAIpQLSfbGZ2i3oJTEhSm15EJ7IPmIz6G29lzze4P2da-cXLYGn0xLg/formResponse"; // replace YOUR_FORM_ID with your form's ID
           const formData = new FormData();
           formData.append("entry.2106234876", code); // entry ID provided by you
 

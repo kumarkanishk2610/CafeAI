@@ -71,16 +71,19 @@
       class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
       <div class="flex items-center h-14 px-4">
-        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
-        <h1
-          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-        >
-          Cafe Kyaa!
-        </h1>
+        <a href="index.html" class="flex items-center hover:opacity-80">
+          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+          >
+            Cafe Kyaa!
+          </h1>
+        </a>
         <span
           class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
-          >Anime India 2025 · Mumbai</span
         >
+          Anime India 2025 · Mumbai
+        </span>
       </div>
     </header>
 
@@ -278,7 +281,7 @@
           <strong>Refunds:</strong> If your preferred slot isn’t available, you
           can request a refund within 2 hours via
           <a
-            href="https://forms.gle/YOUR_FORM_ID"
+            href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
             target="_blank"
             class="text-blue-600 underline hover:text-blue-800"
             >this form</a
@@ -322,15 +325,35 @@
       // Copy helper function
       const copy = async (text, btn) => {
         try {
-          await (navigator.clipboard?.writeText(text) ?? Promise.reject());
-          btn.classList.add("ring-2", "ring-offset-1", "ring-green-400");
-          setTimeout(
-            () =>
-              btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400"),
-            1100
+          // 1) Preferred: Clipboard API on secure contexts
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            // 2) Fallback: hidden textarea + execCommand
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+
+          // visual feedback
+          btn.classList.add(
+            "ring-2",
+            "ring-offset-1",
+            "ring-green-400",
+            "transition",
+            "duration-150"
           );
-        } catch {
-          alert("Copy failed");
+          setTimeout(() => {
+            btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+          }, 1100);
+        } catch (err) {
+          alert("Copy failed: " + err);
         }
       };
 

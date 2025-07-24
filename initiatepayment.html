@@ -99,9 +99,19 @@
             <li>
               Enter your email, mobile number, and number of seats (max 12).
             </li>
-            <li>Proceed to payment using the QR code in the next step.</li>
+            <li>Proceed to payment using the UPI QR code in the next step.</li>
             <li>After payment, choose your preferred time slot.</li>
           </ol>
+        </div>
+        <!-- Booking ID Reminder Modal -->
+        <div
+          class="bg-red-50 border border-red-300 rounded-xl p-4 shadow-sm w-full max-w-4xl mx-auto mt-6 text-center"
+        >
+          <p class="text-sm text-red-700 font-medium">
+            Make sure to keep your <strong>Booking ID</strong> handy (provided
+            in the next step), as it is required for the Payment & Reservation
+            process.
+          </p>
         </div>
 
         <form id="bookingForm" class="space-y-6">
@@ -148,7 +158,7 @@
             id="submitBtn"
             class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow"
           >
-            Generate QR Code & Proceed
+            Proceed for Payment
           </button>
         </form>
 
@@ -180,7 +190,7 @@
     <!-- script -->
     <script>
       const FORM_URL =
-        "https://docs.google.com/forms/d/e/1FAIpQLScXHt7y5f9QG-0iynf1xjbEU6AkKHSRzpDjPOakjWv3iOZXDA/formResponse";
+        "https://docs.google.com/forms/d/e/1FAIpQLSfbGZ2i3oJTEhSm15EJ7IPmIz6G29lzze4P2da-cXLYGn0xLg/formResponse";
       const EMAIL_ENTRY = "entry.455194028";
       const SEATS_ENTRY = "entry.1255659046";
       const MOBILE_ENTRY = "entry.1424067072";

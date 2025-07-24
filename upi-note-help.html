@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPI Note Help – Cafe Kyaa!</title>
+
+    <!-- Quicksand + Tailwind -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0);
+        --sab: env(safe-area-inset-bottom, 0);
+      }
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        padding: var(--sat) 0 var(--sab);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- header -->
+    <header
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <a href="index.html" class="flex items-center hover:opacity-80">
+          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+          >
+            Cafe Kyaa!
+          </h1>
+        </a>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+        >
+          Help & Guide
+        </span>
+      </div>
+    </header>
+
+    <!-- main -->
+    <main class="pt-20 p-4 max-w-3xl mx-auto space-y-6">
+      <section
+        class="bg-white rounded-2xl shadow-xl p-6 border border-pink-200 space-y-4"
+      >
+        <h2 class="text-xl font-bold text-gray-800">
+          How to Add Note in UPI Apps
+        </h2>
+        <p class="text-sm text-gray-700">
+          Adding the Booking ID in the UPI payment note is crucial for your
+          payment to be processed correctly. Below are examples showing where to
+          enter the note in popular UPI apps:
+        </p>
+
+        <!-- Example Blocks -->
+        <div class="space-y-4">
+          <!-- GPay -->
+          <div
+            class="bg-pink-50 p-4 rounded-xl border border-pink-100 shadow-sm"
+          >
+            <h3 class="font-semibold text-pink-700 mb-2">Google Pay</h3>
+            <img
+              src="assets/payment_examples/gpay.png"
+              alt="Google Pay Example"
+              class="w-full rounded-md border border-pink-200 shadow"
+            />
+            <p class="text-xs text-gray-600 mt-1">
+              Add the Booking ID in the "Note" section before confirming
+              payment.
+            </p>
+          </div>
+
+          <!-- PhonePe -->
+          <div
+            class="bg-pink-50 p-4 rounded-xl border border-pink-100 shadow-sm"
+          >
+            <h3 class="font-semibold text-pink-700 mb-2">PhonePe</h3>
+            <img
+              src="assets/payment_examples/phonepe.png"
+              alt="PhonePe Example"
+              class="w-full rounded-md border border-pink-200 shadow"
+            />
+            <p class="text-xs text-gray-600 mt-1">
+              Locate the "Add Note" field and enter your Booking ID.
+            </p>
+          </div>
+
+          <!-- Paytm -->
+          <div
+            class="bg-pink-50 p-4 rounded-xl border border-pink-100 shadow-sm"
+          >
+            <h3 class="font-semibold text-pink-700 mb-2">Paytm</h3>
+            <img
+              src="assets/payment_examples/paytm.png"
+              alt="Paytm Example"
+              class="w-full rounded-md border border-pink-200 shadow"
+            />
+            <p class="text-xs text-gray-600 mt-1">
+              Enter your Booking ID in the note section before proceeding.
+            </p>
+          </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div
+          class="bg-red-50 border border-red-300 rounded-xl p-4 shadow-sm text-sm text-red-700 mt-4"
+        >
+          <div class="flex items-center gap-2 font-semibold text-red-800 mb-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 shrink-0"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.257 3.099c.366-.756 1.42-.756 1.786 0l6.447 13.318A1 1 0 0 1 15.553 18H4.447a1 1 0 0 1-.894-1.583L10 3.1zM9 7a1 1 0 1 1 2 0v4a1 1 0 0 1-2 0V7zm1 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>QR not recognized or Note option missing?</span>
+          </div>
+          <p>
+            Some apps may not allow adding a note if scanning a QR code. In such
+            cases,
+            <strong>please use manual payment</strong> (see last option on the
+            QR page) to ensure your Booking ID is included and payment is valid.
+          </p>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center">
+          <button
+            onclick="window.close()"
+            class="mt-6 bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg font-semibold shadow"
+          >
+            Back to Payment Page
+          </button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
