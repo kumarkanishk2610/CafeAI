@@ -556,7 +556,24 @@
         copyBookingIdModalBtn.onclick = () =>
           copy(bookingId, copyBookingIdModalBtn);
 
-        paidBtn.onclick = () => {
+        paidBtn.onclick = async () => {
+          const formUrl =
+            "https://docs.google.com/forms/d/e/1FAIpQLScXHt7y5f9QG-0iynf1xjbEU6AkKHSRzpDjPOakjWv3iOZXDA/formResponse"; // replace YOUR_FORM_ID with your form's ID
+          const formData = new FormData();
+          formData.append("entry.2106234876", bookingId); // entry ID provided by you
+
+          try {
+            await fetch(formUrl, {
+              method: "POST",
+              mode: "no-cors",
+              body: formData,
+            });
+          } catch (err) {
+            console.error("Form submission failed:", err);
+            // optionally alert the user or retry logic here
+          }
+
+          // Redirect after form submission
           location.href = `luma.html?${new URLSearchParams({ email, seats })}`;
         };
 
