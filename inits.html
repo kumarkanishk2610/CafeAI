@@ -133,6 +133,20 @@
       const FORM_URL =
         "https://docs.google.com/forms/d/e/1FAIpQLScXHt7y5f9QG-0iynf1xjbEU6AkKHSRzpDjPOakjWv3iOZXDA/formResponse";
 
+      const EMAIL_ENTRY = "entry.455194028";
+      const SEATS_ENTRY = "entry.1255659046";
+      const CODE_ENTRY = "entry.152647991"; // Booking Code field
+
+      // Generate a 5-digit hash from email + append seat count
+      function generateCode(email, seats) {
+        let hash = 0;
+        for (let i = 0; i < email.length; i++) {
+          hash = (hash * 31 + email.charCodeAt(i)) % 100000; // Ensure 5 digits
+        }
+        const hashStr = hash.toString().padStart(5, "0");
+        return `${hashStr}${seats}`; // Final 6-digit code
+      }
+
       document
         .getElementById("bookingForm")
         .addEventListener("submit", async (e) => {
@@ -140,14 +154,18 @@
           const email = document.getElementById("email").value.trim();
           const seats = +document.getElementById("seats").value;
 
-          if (!email || seats < 1 || seats > 12) {
-            alert("Please enter valid details");
+          if (!email || seats < 1 || seats > 9) {
+            alert("Please enter valid details (seats 1–9)");
             return;
           }
 
+          const code = generateCode(email.toLowerCase(), seats);
+          console.log("Generated Booking Code:", code);
+
           const formData = new FormData();
-          formData.append("entry.455194028", email); // Email
-          formData.append("entry.1255659046", seats); // Seats
+          formData.append(EMAIL_ENTRY, email);
+          formData.append(SEATS_ENTRY, seats);
+          formData.append(CODE_ENTRY, code);
 
           try {
             await fetch(FORM_URL, {
@@ -156,11 +174,8 @@
               body: formData,
             });
 
-            // Redirect after submission
-            location.href = `payment.html?${new URLSearchParams({
-              email,
-              seats,
-            })}`;
+            const params = new URLSearchParams({ email, seats, code });
+            location.href = `payment.html?${params}`;
           } catch (err) {
             console.error(err);
             alert("Failed to save booking. Please try again.");
