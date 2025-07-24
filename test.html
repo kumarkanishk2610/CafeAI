@@ -1,66 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Generate Payment Key</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seat Booking</title>
   </head>
   <body>
-    <h2>Payment Key Generatorrrr</h2>
-    <form id="keyForm">
+    <h2>Reserve Your Seat</h2>
+    <form id="seatForm">
       <label>Email: <input type="email" id="email" required /></label
       ><br /><br />
       <label
-        >Seat (1-12):
-        <input type="number" id="seat" min="1" max="12" required /></label
+        >Seats:
+        <input type="number" id="seats" min="1" max="12" required /></label
       ><br /><br />
-      <button type="submit">Generate Key</button>
+      <button type="submit">Submit</button>
     </form>
-
-    <h3 id="result"></h3>
+    <p id="response"></p>
 
     <script>
-      async function generateSHA256(input) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(input);
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
-        return hashHex.toUpperCase();
-      }
+      const form = document.getElementById("seatForm");
+      const responseEl = document.getElementById("response");
 
-      document
-        .getElementById("keyForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-          const email = document
-            .getElementById("email")
-            .value.trim()
-            .toLowerCase();
-          const seat = document.getElementById("seat").value.trim();
-          const inputStr = `${email}-${seat}`;
-          const hash = await generateSHA256(inputStr);
-          const shortHash = hash.slice(0, 6);
-          const key = `PAY-${shortHash}`;
-          document.getElementById(
-            "result"
-          ).innerText = `Your Payment Key: ${key}`;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-          // Send data as plain text to avoid CORS preflight
-          const scriptURL =
-            "https://script.google.com/macros/s/AKfycbxC8DoHIrCbzi4fmwrF7bRdXi0x24d-odPHzjT2hGM/dev"; // Replace with your real URL
-          const payload = `email=${encodeURIComponent(
-            email
-          )}&seat=${encodeURIComponent(seat)}&key=${encodeURIComponent(key)}`;
-          fetch(scriptURL, {
-            method: "POST",
-            body: payload,
-            headers: { "Content-Type": "text/plain" },
+        const email = document.getElementById("email").value;
+        const seats = document.getElementById("seats").value;
+
+        fetch("YOUR_WEB_APP_URL_HERE", {
+          method: "POST",
+          body: JSON.stringify({ email: email, seats: seats }),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.text())
+          .then((data) => {
+            responseEl.innerText = "Submission successful!";
+            form.reset();
           })
-            .then((response) => response.text())
-            .then((data) => alert("Key saved to database!"))
-            .catch((error) => alert("Error saving key: " + error));
-        });
+          .catch((err) => {
+            responseEl.innerText = "Error submitting data.";
+            console.error(err);
+          });
+      });
     </script>
   </body>
 </html>
