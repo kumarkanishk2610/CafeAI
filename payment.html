@@ -256,6 +256,34 @@
               <img src="assets/icons/upi.svg" class="max-h-6" alt="UPI" />
             </div>
           </div>
+
+          <!-- Booking ID Warning – Full Width, Centered Text -->
+          <div
+            class="bg-red-50 border border-red-300 rounded-xl p-4 shadow-sm w-full mx-auto text-xs text-center text-red-700 mt-0 px-4"
+          >
+            <div
+              class="flex justify-center items-center gap-2 font-semibold text-red-800 mb-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 shrink-0"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8.257 3.099c.366-.756 1.42-.756 1.786 0l6.447 13.318A1 1 0 0 1 15.553 18H4.447a1 1 0 0 1-.894-1.583L10 3.1zM9 7a1 1 0 1 1 2 0v4a1 1 0 0 1-2 0V7zm1 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>Booking ID is Mandatory</span>
+            </div>
+            <p>
+              Please include your <strong>Booking ID</strong> (mentioned above
+              in this page) in the UPI payment note. Bookings/Payments without
+              it will be rejected and refunded unless a valid appeal is filed.
+            </p>
+          </div>
           <!-- QR card -->
           <div
             class="bg-white rounded-3xl shadow-lg/20 p-0 w-72 flex flex-col items-center"
@@ -265,11 +293,13 @@
                 id="amountDisplay"
               ></span>
             </p>
+            <p> </p>
             <img
               id="qrImage"
               alt="UPI QR Code"
               class="w-[170px] h-[170px] rounded-md border-4 border-pink-500"
             />
+
             <button
               id="downloadQRBtn"
               type="button"
@@ -445,9 +475,9 @@
         const email = params.get("email")?.trim() || "";
         const mobile = params.get("mobile")?.trim() || "";
         const seats = +params.get("seats") || 0;
-        const bookingId = params.get("code")?.trim() || "";
+        const code = params.get("code")?.trim() || "";
 
-        if (!email || !mobile || seats < 1 || !bookingId) {
+        if (!email || !mobile || seats < 1 || !code) {
           location.replace("initiatepayment.html");
         }
 
@@ -465,7 +495,7 @@
             purpose: "00",
             am: a,
             cu: "INR",
-            tr, // transaction reference (bookingId)
+            tr, // transaction reference (code)
           });
 
         const copy = async (text, btn) => {
@@ -506,10 +536,10 @@
 
         emailVal.textContent = email;
         mobileVal.textContent = mobile;
-        bookingIdVal.textContent = bookingId;
-        bookingIdTextModal.textContent = bookingId;
+        bookingIdVal.textContent = code;
+        bookingIdTextModal.textContent = code;
 
-        const upiURL = buildUPI(email, seats, amount, bookingId);
+        const upiURL = buildUPI(email, seats, amount, code);
 
         // Disable buttons initially
         downloadQRBtn.disabled = true;
@@ -552,15 +582,14 @@
 
         copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
         copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
-        copyBookingIdBtn.onclick = () => copy(bookingId, copyBookingIdBtn);
-        copyBookingIdModalBtn.onclick = () =>
-          copy(bookingId, copyBookingIdModalBtn);
+        copyBookingIdBtn.onclick = () => copy(code, copyBookingIdBtn);
+        copyBookingIdModalBtn.onclick = () => copy(code, copyBookingIdModalBtn);
 
         paidBtn.onclick = async () => {
           const formUrl =
             "https://docs.google.com/forms/d/e/1FAIpQLScXHt7y5f9QG-0iynf1xjbEU6AkKHSRzpDjPOakjWv3iOZXDA/formResponse"; // replace YOUR_FORM_ID with your form's ID
           const formData = new FormData();
-          formData.append("entry.2106234876", bookingId); // entry ID provided by you
+          formData.append("entry.2106234876", code); // entry ID provided by you
 
           try {
             await fetch(formUrl, {
@@ -574,7 +603,12 @@
           }
 
           // Redirect after form submission
-          location.href = `luma.html?${new URLSearchParams({ email, seats })}`;
+          location.href = `luma.html?${new URLSearchParams({
+            email,
+            seats,
+            code,
+            mobile,
+          })}`;
         };
 
         document
@@ -591,7 +625,7 @@
             const url = URL.createObjectURL(blob);
             const a = Object.assign(document.createElement("a"), {
               href: url,
-              download: `CafeKyaa_QR_${bookingId}.png`,
+              download: `CafeKyaa_QR_${code}.png`,
             });
             document.body.appendChild(a);
             a.click();
