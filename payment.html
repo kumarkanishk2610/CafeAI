@@ -139,56 +139,16 @@
 
           <!-- INFO (stacked for narrow screens) -->
           <div class="mt-6 space-y-4 text-xs text-gray-700">
-            <!-- EMAIL -->
+            <!-- CONTACT INFO (email | mobile) -->
             <div class="space-y-1">
-              <span class="font-medium text-gray-600">Email</span>
-              <div class="flex items-start gap-2">
-                <span id="emailVal" class="break-words min-w-0 flex-1"></span>
-                <button
-                  type="button"
-                  id="copyEmailBtn"
-                  class="shrink-0 rounded-md p-1 text-pink-700 hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
-                  aria-label="Copy Booking ID"
-                >
-                  <!-- copy icon -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M8 16h13V3H8v13zm-2 2V1h17v17H6z" />
-                    <path d="M1 8h13v13H1V8zm2 2v9h9v-9H3z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- BOOKING ID -->
-            <div class="space-y-1">
-              <span class="font-medium text-gray-600">Booking ID</span>
-              <div class="flex items-start gap-2">
-                <span
-                  id="bookingIdVal"
-                  class="break-words min-w-0 flex-1"
-                ></span>
-                <button
-                  type="button"
-                  id="copyBookingIdBtn"
-                  class="shrink-0 rounded-md p-1 text-pink-700 hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
-                  aria-label="Copy email"
-                >
-                  <!-- copy icon -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M8 16h13V3H8v13zm-2 2V1h17v17H6z" />
-                    <path d="M1 8h13v13H1V8zm2 2v9h9v-9H3z" />
-                  </svg>
-                </button>
+              <span class="font-medium text-gray-600"
+                >Your Contact Details:</span
+              >
+              <div>
+                <span class="break-words min-w-0 flex-1">
+                  <span id="emailVal"></span> | <span id="mobileVal"></span>
+                </span>
+                <p> </p>
               </div>
             </div>
           </div>
@@ -220,10 +180,82 @@
               <img src="assets/icons/upi.svg" class="max-h-6" alt="UPI" />
             </div>
           </div>
+          <!-- Add this style block inside your <head> -->
+          <style>
+            @keyframes glow {
+              0% {
+                box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
+              }
+              50% {
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+              }
+              100% {
+                box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
+              }
+            }
+            .glow-animation {
+              animation: glow 1.5s ease-in-out infinite;
+            }
+          </style>
+
+          <div
+            class="relative ring-2 ring-red-400 ring-offset-2 ring-offset-white bg-gradient-to-br from-red-50 via-white to-red-100 rounded-xl p-5 shadow-lg space-y-3 glow-box"
+          >
+            <div class="flex items-center gap-2">
+              <span class="text-red-600 text-xl animate-bounce">⚠️</span>
+              <h3 class="text-red-700 font-extrabold text-xl">
+                Booking ID Required in UPI Note
+              </h3>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <span
+                id="bookingIdVal"
+                class="bg-white border border-red-400 text-red-800 font-mono text-base px-3 py-1 rounded-full shadow-md glow-animation"
+              ></span>
+              <button
+                type="button"
+                id="copyBookingIdBtn"
+                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+                aria-label="Copy Booking ID"
+              >
+                Copy Booking ID
+              </button>
+            </div>
+
+            <p class="text-sm text-red-700 leading-relaxed">
+              Please <strong>mention this Booking ID</strong> in your UPI
+              payment’s <u>note/comment section</u>. Payments made
+              <strong>without this Booking ID</strong> will be
+              <u>refunded within 24 hours</u>.
+            </p>
+
+            <div class="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="ackCheckbox"
+                class="h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+              />
+              <label for="ackCheckbox" class="text-sm text-gray-700">
+                I have read and understood instructions related to Booking ID
+              </label>
+            </div>
+
+            <p class="text-xs text-red-600 pt-2 border-t border-red-200 mt-3">
+              Unsure how to add Booking ID in UPI note?
+              <a
+                href="upi-note-help.html"
+                target="_blank"
+                class="underline font-medium hover:text-red-800"
+              >
+                Click here for help
+              </a>
+            </p>
+          </div>
 
           <!-- QR card -->
           <div
-            class="bg-white rounded-3xl shadow-lg/20 p-4 w-72 flex flex-col items-center"
+            class="bg-white rounded-3xl shadow-lg/20 p-0 w-72 flex flex-col items-center"
           >
             <p class="mb-2 text-gray-700 text-center">
               <span class="font-medium text-pink-600">Amount:</span> ₹<span
@@ -358,178 +390,201 @@
       </div>
     </div>
 
-    <!-- script -->
-    <!-- script -->
     <script>
-      /* ---------- viewport helper ---------- */
-      const setVH = () =>
-        document.documentElement.style.setProperty(
-          "--vh",
-          `${innerHeight * 0.01}px`
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- all your current script code goes inside here ---
+
+        /* ---------- viewport helper ---------- */
+        const setVH = () =>
+          document.documentElement.style.setProperty(
+            "--vh",
+            `${innerHeight * 0.01}px`
+          );
+        setVH();
+        addEventListener("resize", setVH);
+
+        /* ---------- constants ---------- */
+        const HEADER_OFFSET = 60;
+        const UPI_ID = "Q838463056@ybl",
+          PAYEE = "PhonePeMerchant"; // appears in some UPI apps
+
+        /* ---------- elements ---------- */
+        const seatCount = document.getElementById("seatCount");
+        const amtTitle = document.getElementById("amtTitle");
+        const amtDisp = document.getElementById("amountDisplay");
+        const manualAmt = document.getElementById("manualAmountText");
+
+        const emailVal = document.getElementById("emailVal");
+        const mobileVal = document.getElementById("mobileVal");
+        const bookingIdVal = document.getElementById("bookingIdVal");
+        const bookingIdTextModal =
+          document.getElementById("bookingIdTextModal");
+
+        const qrImg = document.getElementById("qrImage");
+        const downloadQRBtn = document.getElementById("downloadQRBtn");
+
+        const manualPayBtn = document.getElementById("manualPayBtn");
+        const manualModal = document.getElementById("manualModal");
+        const closeModal = document.getElementById("closeModal");
+
+        const copyAmtBtn = document.getElementById("copyAmtBtn");
+        const copyUpiBtn = document.getElementById("copyUpiBtn");
+        const copyBookingIdBtn = document.getElementById("copyBookingIdBtn");
+        const copyBookingIdModalBtn = document.getElementById(
+          "copyBookingIdModalBtn"
         );
-      setVH();
-      addEventListener("resize", setVH);
 
-      /* ---------- constants ---------- */
-      const HEADER_OFFSET = 60;
-      const UPI_ID = "Q838463056@ybl",
-        PAYEE = "PhonePeMerchant"; // will appear in some UPI apps
+        const paidBtn = document.getElementById("paidButton");
+        const ackCheckbox = document.getElementById("ackCheckbox");
 
-      /* ---------- elements ---------- */
-      const seatCount = document.getElementById("seatCount");
-      const amtTitle = document.getElementById("amtTitle");
-      const amtDisp = document.getElementById("amountDisplay");
-      const manualAmt = document.getElementById("manualAmountText");
+        /* ---------- read query‑params ---------- */
+        const params = new URLSearchParams(location.search);
+        const email = params.get("email")?.trim() || "";
+        const mobile = params.get("mobile")?.trim() || "";
+        const seats = +params.get("seats") || 0;
+        const bookingId = params.get("code")?.trim() || "";
 
-      const emailVal = document.getElementById("emailVal");
-      const bookingIdVal = document.getElementById("bookingIdVal");
-      const bookingIdTextModal = document.getElementById("bookingIdTextModal");
+        if (!email || !mobile || seats < 1 || !bookingId) {
+          location.replace("initiatepayment.html");
+        }
 
-      const qrImg = document.getElementById("qrImage");
-      const downloadQRBtn = document.getElementById("downloadQRBtn");
+        const amount = seats * 500;
 
-      const manualPayBtn = document.getElementById("manualPayBtn");
-      const manualModal = document.getElementById("manualModal");
-      const closeModal = document.getElementById("closeModal");
+        /* ---------- helpers ---------- */
 
-      const copyAmtBtn = document.getElementById("copyAmtBtn");
-      const copyUpiBtn = document.getElementById("copyUpiBtn");
-      const copyEmailBtn = document.getElementById("copyEmailBtn");
-      const copyBookingIdBtn = document.getElementById("copyBookingIdBtn");
-      const copyBookingIdModalBtn = document.getElementById(
-        "copyBookingIdModalBtn"
-      );
+        const buildUPI = (e, s, a, tr) =>
+          "upi://pay?" +
+          new URLSearchParams({
+            pa: UPI_ID,
+            pn: PAYEE,
+            mc: "0000",
+            mode: "02",
+            purpose: "00",
+            am: a,
+            cu: "INR",
+            tr, // transaction reference (bookingId)
+          });
 
-      const paidBtn = document.getElementById("paidButton");
+        const copy = async (text, btn) => {
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const ta = document.createElement("textarea");
+              ta.value = text;
+              ta.style.position = "fixed";
+              ta.style.opacity = "0";
+              document.body.appendChild(ta);
+              ta.focus();
+              ta.select();
+              document.execCommand("copy");
+              document.body.removeChild(ta);
+            }
+            btn.classList.add(
+              "ring-2",
+              "ring-offset-1",
+              "ring-green-400",
+              "transition",
+              "duration-150"
+            );
+            setTimeout(() => {
+              btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+            }, 1100);
+          } catch (err) {
+            alert("Copy failed: " + err);
+          }
+        };
 
-      /* ---------- read query‑params ---------- */
-      const params = new URLSearchParams(location.search);
-      const email = params.get("email")?.trim() || "";
-      const seats = +params.get("seats") || 0;
+        /* ---------- initialise UI ---------- */
+        seatCount.textContent = seats;
+        amtTitle.textContent = amount;
+        amtDisp.textContent = amount;
+        manualAmt.textContent = amount;
 
-      if (!email || seats < 1) location.replace("initiatepayment.html");
+        emailVal.textContent = email;
+        mobileVal.textContent = mobile;
+        bookingIdVal.textContent = bookingId;
+        bookingIdTextModal.textContent = bookingId;
 
-      const amount = seats * 5;
+        const upiURL = buildUPI(email, seats, amount, bookingId);
 
-      /* ---------- helpers ---------- */
-
-      /* Booking‑ID / tr  = emailUserPart + seats + yyMMddHHmmss  (≤ 35 chars) */
-      const buildTxnRef = (emailStr, seatsNum) => {
-        const userPart = emailStr.split("@")[0].replace(/[^a-zA-Z0-9]/g, "");
-        const ts = new Date()
-          .toISOString() // 2025-07-13T13:05:22.123Z
-          .replace(/\D/g, "") // 20250713130522123
-          .slice(2, 14); // yyMMddHHmmss → 2507131305
-        return `${userPart}${seatsNum}${ts}`.slice(0, 35);
-      };
-
-      const bookingId = buildTxnRef(email, seats); // shown to the user *and* sent as tr
-
-      /* Build UPI deeplink */
-      const buildUPI = (e, s, a, tr) =>
-        "upi://pay?" +
-        new URLSearchParams({
-          pa: UPI_ID, // pay‑to VPA
-          pn: PAYEE, // payee name (optional but nice)
-          mc: "0000",
-          mode: "02",
-          purpose: "00",
-          am: a, // amount
-          cu: "INR", // currency
-          //tn: `${e}-${s}`, // transaction note  (email‑seats)
-          //tr, // transaction reference (bookingId)
+        // Disable buttons initially
+        downloadQRBtn.disabled = true;
+        upiIntentBtn.disabled = true;
+        manualPayBtn.disabled = true;
+        paidBtn.disabled = true;
+        [downloadQRBtn, upiIntentBtn, manualPayBtn, paidBtn].forEach((btn) => {
+          btn.classList.add("opacity-50", "cursor-not-allowed");
         });
 
-      /* Copy helper with non‑destructive feedback */
-      const copy = async (text, btn) => {
-        try {
-          if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(text);
+        const qrPlaceholder = "assets/qrdekinai.png"; // placeholder image
+        qrImg.src = qrPlaceholder;
+
+        ackCheckbox.addEventListener("change", () => {
+          const isChecked = ackCheckbox.checked;
+
+          if (isChecked) {
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+              upiURL
+            )}`;
           } else {
-            const ta = document.createElement("textarea");
-            ta.value = text;
-            ta.style.position = "fixed";
-            ta.style.opacity = "0";
-            document.body.appendChild(ta);
-            ta.focus();
-            ta.select();
-            document.execCommand("copy");
-            document.body.removeChild(ta);
+            qrImg.src = qrPlaceholder;
           }
-          btn.classList.add(
-            "ring-2",
-            "ring-offset-1",
-            "ring-green-400",
-            "transition",
-            "duration-150"
+
+          [downloadQRBtn, upiIntentBtn, manualPayBtn, paidBtn].forEach(
+            (btn) => {
+              btn.disabled = !isChecked;
+              btn.classList.toggle("opacity-50", !isChecked);
+              btn.classList.toggle("cursor-not-allowed", !isChecked);
+            }
           );
-          setTimeout(() => {
-            btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
-          }, 1100);
-        } catch (err) {
-          alert("Copy failed: " + err);
-        }
-      };
+        });
 
-      /* ---------- initialise UI ---------- */
-      seatCount.textContent = seats;
-      amtTitle.textContent = amount;
-      amtDisp.textContent = amount;
-      manualAmt.textContent = amount;
+        /* ---------- events ---------- */
+        manualPayBtn.onclick = () => manualModal.classList.remove("hidden");
+        closeModal.onclick = () => manualModal.classList.add("hidden");
+        manualModal.addEventListener("click", (e) => {
+          if (e.target === manualModal) manualModal.classList.add("hidden");
+        });
 
-      emailVal.textContent = email;
-      bookingIdVal.textContent = bookingId;
-      bookingIdTextModal.textContent = bookingId;
+        copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
+        copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
+        copyBookingIdBtn.onclick = () => copy(bookingId, copyBookingIdBtn);
+        copyBookingIdModalBtn.onclick = () =>
+          copy(bookingId, copyBookingIdModalBtn);
 
-      const upiURL = buildUPI(email, seats, amount, bookingId);
-      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-        upiURL
-      )}`;
+        paidBtn.onclick = () => {
+          location.href = `luma.html?${new URLSearchParams({ email, seats })}`;
+        };
 
-      /* ---------- events ---------- */
-      manualPayBtn.onclick = () => manualModal.classList.remove("hidden");
-      closeModal.onclick = () => manualModal.classList.add("hidden");
-      manualModal.addEventListener("click", (e) => {
-        if (e.target === manualModal) manualModal.classList.add("hidden");
-      });
-
-      copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
-      copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
-      copyEmailBtn.onclick = () => copy(emailVal.textContent, copyEmailBtn);
-      copyBookingIdBtn.onclick = () => copy(bookingId, copyBookingIdBtn);
-      copyBookingIdModalBtn.onclick = () =>
-        copy(bookingId, copyBookingIdModalBtn);
-
-      paidBtn.onclick = () => {
-        location.href = `luma.html?${new URLSearchParams({ email, seats })}`;
-      };
-
-      document.getElementById("upiIntentBtn").addEventListener("click", () => {
-        window.open(upiURL); // or use window.open(upiURL) to open in new tab/window
-      });
-
-      /* ---------- download the QR image ---------- */
-      downloadQRBtn.onclick = async () => {
-        try {
-          const res = await fetch(qrImg.src, { mode: "cors" });
-          const blob = await res.blob();
-
-          const url = URL.createObjectURL(blob);
-          const a = Object.assign(document.createElement("a"), {
-            href: url,
-            download: `CafeKyaa_QR_${bookingId}.png`,
+        document
+          .getElementById("upiIntentBtn")
+          .addEventListener("click", () => {
+            window.open(upiURL);
           });
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        } catch (err) {
-          alert(
-            "Couldn’t download the QR code. Please long‑press or right‑click the image instead."
-          );
-          console.error(err);
-        }
-      };
+
+        downloadQRBtn.onclick = async () => {
+          try {
+            const res = await fetch(qrImg.src, { mode: "cors" });
+            const blob = await res.blob();
+
+            const url = URL.createObjectURL(blob);
+            const a = Object.assign(document.createElement("a"), {
+              href: url,
+              download: `CafeKyaa_QR_${bookingId}.png`,
+            });
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          } catch (err) {
+            alert(
+              "Couldn’t download the QR code. Please long‑press or right‑click the image instead."
+            );
+            console.error(err);
+          }
+        };
+      });
     </script>
   </body>
 </html>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cafe Kyaa! – Start Payment</title>
+    <title>Cafe Kyaa! – Start Payment</title>
 
     <!-- Quicksand + Tailwind -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -48,6 +48,20 @@
           background-position: 0% 50%;
         }
       }
+      @keyframes spinEase {
+        0% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .spinner {
+        animation: spinEase 1s ease-in-out infinite;
+      }
     </style>
   </head>
   <body class="text-gray-800">
@@ -56,16 +70,19 @@
       class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
       <div class="flex items-center h-14 px-4">
-        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
-        <h1
-          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-        >
-          Cafe Kyaa!
-        </h1>
+        <a href="index.html" class="flex items-center hover:opacity-80">
+          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+          >
+            Cafe Kyaa!
+          </h1>
+        </a>
         <span
           class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
-          >Anime India 2025 · Mumbai</span
         >
+          Anime India 2025 · Mumbai
+        </span>
       </div>
     </header>
 
@@ -74,28 +91,19 @@
       <section
         class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border-pink-200"
       >
-        <!-- intro -->
         <div class="text-center space-y-3">
           <h2 class="text-2xl font-semibold text-pink-700">Booking Details</h2>
           <ol
             class="text-gray-700 text-left max-w-md mx-auto space-y-2 list-decimal list-inside"
           >
             <li>
-              Enter a valid email address and choose the number of seats you'd
-              like to reserve (maximum 12).
+              Enter your email, mobile number, and number of seats (max 12).
             </li>
-            <li>
-              In the next step, proceed to payment using the generated UPI QR
-              code.
-            </li>
-            <li>
-              After payment, select your preferred time slot at your
-              convenience, using the form given.
-            </li>
+            <li>Proceed to payment using the QR code in the next step.</li>
+            <li>After payment, choose your preferred time slot.</li>
           </ol>
         </div>
 
-        <!-- form -->
         <form id="bookingForm" class="space-y-6">
           <div class="grid gap-4 sm:grid-cols-2">
             <div class="flex flex-col gap-1">
@@ -109,9 +117,20 @@
               />
             </div>
             <div class="flex flex-col gap-1">
-              <label for="seats" class="font-medium text-gray-700"
-                >Number of seats</label
+              <label for="mobile" class="font-medium text-gray-700"
+                >Mobile</label
               >
+              <input
+                id="mobile"
+                type="tel"
+                required
+                pattern="[0-9]{10}"
+                placeholder="9876543210"
+                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
+              />
+            </div>
+            <div class="flex flex-col gap-1 sm:col-span-2">
+              <label for="seats" class="font-medium text-gray-700">Seats</label>
               <input
                 id="seats"
                 type="number"
@@ -126,73 +145,108 @@
 
           <button
             type="submit"
+            id="submitBtn"
             class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow"
           >
-            Generate QR Code & Proceed
+            Generate QR Code & Proceed
           </button>
         </form>
+
         <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Note:</strong> Use the same email and seat count throughout
-          the booking. After payment, our team will verify and confirm your
-          ticket. You’ll receive a confirmation email once it's done.
-        </p>
-        <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Refunds:</strong> If your preferred slot isn’t available, you
-          can request a refund within 2 hours via
-          <a
-            href="https://forms.gle/YOUR_FORM_ID"
-            target="_blank"
-            class="text-blue-600 underline hover:text-blue-800"
-            >this form</a
-          >. If tickets are sold out, your payment will be refunded
-          automatically within 24 hours.
+          <strong>Note:</strong> Use the same details throughout the booking.
+          Confirmation will be sent after payment.
         </p>
       </section>
     </main>
 
+    <!-- Loading Modal with Spinner -->
+    <div
+      id="loadingModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-xl p-6 shadow-xl text-center max-w-xs flex flex-col items-center"
+      >
+        <div
+          class="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-4"
+        ></div>
+        <h2 class="text-lg font-semibold text-pink-700">
+          Registering your details…
+        </h2>
+        <p class="text-sm text-gray-600 mt-2">Please wait a moment.</p>
+      </div>
+    </div>
+
     <!-- script -->
     <script>
-      /* viewport helper */
-      const setVH = () =>
-        document.documentElement.style.setProperty(
-          "--vh",
-          `${innerHeight * 0.01}px`
-        );
-      setVH();
-      addEventListener("resize", setVH);
+      const FORM_URL =
+        "https://docs.google.com/forms/d/e/1FAIpQLScXHt7y5f9QG-0iynf1xjbEU6AkKHSRzpDjPOakjWv3iOZXDA/formResponse";
+      const EMAIL_ENTRY = "entry.455194028";
+      const SEATS_ENTRY = "entry.1255659046";
+      const MOBILE_ENTRY = "entry.1424067072";
+      const CODE_ENTRY = "entry.152647991";
 
-      /* save to Google Sheets and redirect */
+      function generateBookingCode(email, mobile, seats) {
+        const timestamp = Date.now();
+        const raw = `${email}${mobile}${seats}${timestamp}`;
+        let hash = 0;
+        for (let i = 0; i < raw.length; i++) {
+          hash = (hash * 31 + raw.charCodeAt(i)) >>> 0;
+        }
+        return (hash % 1000000).toString().padStart(6, "0");
+      }
+
       document
         .getElementById("bookingForm")
         .addEventListener("submit", async (e) => {
           e.preventDefault();
           const email = document.getElementById("email").value.trim();
+          const mobile = document.getElementById("mobile").value.trim();
           const seats = +document.getElementById("seats").value;
-          if (!email || seats < 1 || seats > 12) {
-            alert("Please enter valid details");
+
+          if (!email || !mobile.match(/^\d{10}$/) || seats < 1 || seats > 12) {
+            alert("Please enter valid details (10-digit mobile, seats 1–12)");
             return;
           }
 
-          try {
-            await fetch(
-              "https://script.google.com/macros/s/AKfycbwFg4Wi_kjGQr_j_zrjS4xSxy2AVsCEQareedrkikcfYJKQoyJ5Flqq3qBuHmMtdRTDJQ/exec",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, seats }),
-              }
-            );
+          const code = generateBookingCode(email.toLowerCase(), mobile, seats);
+          console.log("Generated Booking Code:", code);
 
-            // Redirect after saving
-            location.href = `payment.html?${new URLSearchParams({
-              email,
-              seats,
-            })}`;
+          const formData = new FormData();
+          formData.append(EMAIL_ENTRY, email);
+          formData.append(SEATS_ENTRY, seats);
+          formData.append(MOBILE_ENTRY, mobile);
+          formData.append(CODE_ENTRY, code);
+
+          // Show modal + disable button
+          document.getElementById("loadingModal").classList.remove("hidden");
+          document.getElementById("submitBtn").disabled = true;
+
+          try {
+            await fetch(FORM_URL, {
+              method: "POST",
+              mode: "no-cors",
+              body: formData,
+            });
+
+            const params = new URLSearchParams({ email, seats, code, mobile });
+            location.href = `payment.html?${params}`;
           } catch (err) {
             console.error(err);
-            alert("Error saving booking. Please try again.");
+            document.getElementById("loadingModal").classList.add("hidden");
+            document.getElementById("submitBtn").disabled = false;
+            alert("Failed to save booking. Please try again.");
           }
         });
+
+      const setVH = () => {
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${innerHeight * 0.01}px`
+        );
+      };
+      setVH();
+      addEventListener("resize", setVH);
     </script>
   </body>
 </html>
