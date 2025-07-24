@@ -4,7 +4,7 @@
     <title>Generate Payment Key</title>
   </head>
   <body>
-    <h2>Payment Key Generator</h2>
+    <h2>Payment Key Generatorrrr</h2>
     <form id="keyForm">
       <label>Email: <input type="email" id="email" required /></label
       ><br /><br />
@@ -46,15 +46,19 @@
             "result"
           ).innerText = `Your Payment Key: ${key}`;
 
-          // Save to Google Sheets (send to Apps Script)
+          // Send data as plain text to avoid CORS preflight
           const scriptURL =
-            "https://script.google.com/macros/s/AKfycbxvXxx1HTM5MmpOzpqC3NbEFtoCNO2msAQzLuGUnYnkk1-ebXCKgimSDnzvWlfmhI0/exec"; // Replace with your Apps Script URL
+            "https://script.google.com/macros/s/AKfycbxC8DoHIrCbzi4fmwrF7bRdXi0x24d-odPHzjT2hGM/dev"; // Replace with your real URL
+          const payload = `email=${encodeURIComponent(
+            email
+          )}&seat=${encodeURIComponent(seat)}&key=${encodeURIComponent(key)}`;
           fetch(scriptURL, {
             method: "POST",
-            body: JSON.stringify({ email, seat, key }),
-            headers: { "Content-Type": "application/json" },
+            body: payload,
+            headers: { "Content-Type": "text/plain" },
           })
-            .then((response) => alert("Key saved to database!"))
+            .then((response) => response.text())
+            .then((data) => alert("Key saved to database!"))
             .catch((error) => alert("Error saving key: " + error));
         });
     </script>
