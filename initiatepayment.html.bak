@@ -161,38 +161,17 @@
       setVH();
       addEventListener("resize", setVH);
 
-      /* save to Google Sheets and redirect */
-      document
-        .getElementById("bookingForm")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const email = document.getElementById("email").value.trim();
-          const seats = +document.getElementById("seats").value;
-          if (!email || seats < 1 || seats > 12) {
-            alert("Please enter valid details");
-            return;
-          }
-
-          try {
-            await fetch(
-              "https://script.google.com/macros/s/AKfycbwFg4Wi_kjGQr_j_zrjS4xSxy2AVsCEQareedrkikcfYJKQoyJ5Flqq3qBuHmMtdRTDJQ/exec",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, seats }),
-              }
-            );
-
-            // Redirect after saving
-            location.href = `payment.html?${new URLSearchParams({
-              email,
-              seats,
-            })}`;
-          } catch (err) {
-            console.error(err);
-            alert("Error saving booking. Please try again.");
-          }
-        });
+      /* redirect to payment.html with query‑string */
+      document.getElementById("bookingForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const seats = +document.getElementById("seats").value;
+        if (!email || seats < 1) {
+          alert("Please enter valid details");
+          return;
+        }
+        location.href = `payment.html?${new URLSearchParams({ email, seats })}`;
+      });
     </script>
   </body>
 </html>
