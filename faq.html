@@ -1,0 +1,158 @@
+<!-- faq.html – post‑booking instructions + FAQ lightbox -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – What Happens Next?</title>
+
+    <!-- Quicksand + Tailwind -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0);
+        --sab: env(safe-area-inset-bottom, 0);
+      }
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        padding: var(--sat) 0 var(--sab);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="text-gray-800">
+    <!-- HEADER -->
+    <header
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+        <h1
+          class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+        >
+          Cafe Kyaa!
+        </h1>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+        >
+          Anime India 2025 · Mumbai
+        </span>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pt-20 p-4 flex flex-col items-center">
+      <section
+        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-pink-200"
+      >
+        <h2 class="text-2xl font-bold text-pink-700 text-center">
+          Thank You for Booking!
+        </h2>
+
+        <!-- generic instructions -->
+        <ol class="list-decimal list-inside space-y-3 text-sm text-gray-700">
+          <li>
+            <strong>Verification&nbsp;in&nbsp;progress:</strong> Our admin team
+            is validating your payment and Luma registration. Expect a
+            confirmation email within <strong>2&nbsp;hours</strong>.
+          </li>
+          <li>
+            <strong>Keep an eye on your inbox</strong> (and spam folder). The
+            email will contain your official ticket and slot time.
+          </li>
+          <li>
+            <strong>Mismatched details?</strong> If the email or seat count you
+            entered on Luma differs from your payment, we’ll contact you for
+            clarification.
+          </li>
+          <li>
+            Need to change your slot or request a refund? Check the full FAQ
+            image below for exact steps and deadlines.
+          </li>
+        </ol>
+
+        <!-- FAQ BUTTON -->
+        <div class="text-center">
+          <button
+            id="openFaqBtn"
+            class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded-lg font-semibold shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
+          >
+            📄 FAQ
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div
+      id="faqModal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    >
+      <div class="relative max-w-full max-h-full p-4">
+        <img
+          src="faq.png"
+          alt="FAQ image"
+          class="max-h-[90vh] w-auto rounded-lg shadow-xl border-4 border-white"
+        />
+        <button
+          id="closeFaqBtn"
+          class="absolute -top-3 -right-3 bg-white text-gray-700 rounded-full shadow p-1 leading-none"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <script>
+      /* mobile vh fix */
+      const setVH = () =>
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${innerHeight * 0.01}px`
+        );
+      setVH();
+      addEventListener("resize", setVH);
+
+      /* modal logic */
+      const faqModal = document.getElementById("faqModal");
+      document.getElementById("openFaqBtn").onclick = () =>
+        faqModal.classList.remove("hidden");
+      document.getElementById("closeFaqBtn").onclick = () =>
+        faqModal.classList.add("hidden");
+      faqModal.addEventListener("click", (e) => {
+        if (e.target === faqModal) faqModal.classList.add("hidden");
+      });
+    </script>
+  </body>
+</html>
