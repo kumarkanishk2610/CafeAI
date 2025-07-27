@@ -614,6 +614,27 @@
               return;
             }
           }
+          // Step 2.5: Lock the slots to prevent overbooking by others
+          const lockFormURL =
+            "https://docs.google.com/forms/d/e/1FAIpQLSdT9FTGvtq2V7F00HBmrMgSczCTFVo5f54fiUsLIBsRBHpmIg/formResponse";
+
+          for (let slotId in selection) {
+            const count = selection[slotId];
+            if (count === 0) continue;
+
+            const formData = new FormData();
+            formData.append("entry.1178870073", bookingId); // Booking ID
+            formData.append("entry.1406053668", count); // Number of seats for this slot
+            formData.append("entry.239115061", slotId); // Slot ID e.g., D1S1
+
+            await fetch(lockFormURL, {
+              method: "POST",
+              mode: "no-cors",
+              body: formData,
+            });
+
+            await new Promise((res) => setTimeout(res, 200)); // avoid rate limit
+          }
 
           // Step 3: Submit form for each selected slot
           const formBaseURL =

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Confirmation</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-50 flex items-center justify-center h-screen">
+    <div class="bg-white p-6 rounded shadow text-center max-w-sm w-full">
+      <h1 class="text-xl font-bold text-pink-700 mb-4">Confirm Payment</h1>
+      <p class="text-sm text-gray-600 mb-4">
+        Click the button below after completing your payment.
+      </p>
+      <button
+        id="paidBtn"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+      >
+        I've Paid
+      </button>
+    </div>
+
+    <script>
+      document.getElementById("paidBtn").onclick = async () => {
+        try {
+          const params = new URLSearchParams(location.search);
+          const bookingId = params.get("code")?.trim();
+
+          if (!bookingId) {
+            alert("Invalid booking ID.");
+            return;
+          }
+
+          const formBaseURL =
+            "https://docs.google.com/forms/d/e/1FAIpQLSdKvVjiL3W356UZsWKy0BBRpqHxoFN7Q_5UQHUKlQDjxpNxBA/formResponse";
+          const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+          const sheetName = "Slot Blocking Sources";
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
+
+          // Fetch existing rows
+          const response = await fetch(url);
+          const data = await response.text();
+          const json = JSON.parse(data.substring(47).slice(0, -2));
+          const rows = json.table.rows;
+
+          // Filter entries: Booking ID match + Status = Processing + Activity = Active
+          const matchingRows = rows.filter((row) => {
+            const rowBookingId = row.c[3]?.v ? String(row.c[3].v).trim() : "";
+            const status = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+            const activity = row.c[6]?.v ? String(row.c[6].v).trim() : "";
+
+            return (
+              rowBookingId === bookingId &&
+              status === "Processing" &&
+              activity === "Active"
+            );
+          });
+
+          if (matchingRows.length === 0) {
+            alert("No matching Processing + Active entries found.");
+            return;
+          }
+
+          // Submit each entry again with Status = Booked
+          for (let row of matchingRows) {
+            const day = row.c[0]?.v ? String(row.c[1].v).trim() : "";
+            const slot = row.c[1]?.v ? String(row.c[2].v).trim() : "";
+
+            const formData = new FormData();
+            formData.append("entry.706936465", day); // Day
+            formData.append("entry.1380648863", slot); // Slot
+            formData.append("entry.1536265716", bookingId); // Booking ID
+            formData.append("entry.38505346", "Booked"); // Status = Booked
+
+            await fetch(formBaseURL, {
+              method: "POST",
+              mode: "no-cors",
+              body: formData,
+            });
+
+            await new Promise((res) => setTimeout(res, 200)); // avoid rate limit
+          }
+
+          // Redirect to paid.html
+          window.location.href = "paid.html";
+        } catch (error) {
+          console.error("Error during booking confirmation:", error);
+          alert(
+            "There was an issue confirming your booking. Please try again."
+          );
+        }
+      };
+    </script>
+  </body>
+</html>
