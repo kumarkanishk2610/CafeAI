@@ -173,7 +173,7 @@
         </div>
 
         <!-- payment section -->
-        <div class="flex flex-col items-center gap-8">
+        <div class="flex flex-col items-center gap-8" style="display: none">
           <div
             class="relative ring-2 ring-red-400 ring-offset-2 ring-offset-white bg-gradient-to-br from-red-50 via-white to-red-100 rounded-xl p-5 shadow-lg space-y-4 glow-box max-w-xl mx-auto"
           >
@@ -184,7 +184,6 @@
               </h3>
             </div>
 
-            <!-- Responsive Booking ID + Button -->
             <div
               class="flex flex-col items-center space-y-3 md:flex-row md:justify-between md:items-center md:space-y-0 md:space-x-4"
             >
@@ -210,7 +209,7 @@
               <strong>without this Booking ID & valid payment</strong> will
               <u>not be processed</u>.
             </p>
-            <!--
+
             <div class="flex items-start gap-2">
               <input
                 type="checkbox"
@@ -233,23 +232,48 @@
               >
                 Click here for help
               </a>
-            </p>-->
+            </p>
           </div>
 
-          <!-- QR card -->
           <span id="amountDisplay" hidden></span>
         </div>
-        <!-- Full-width Luma iframe -->
-        <div class="w-full">
-          <iframe
-            src="https://lu.ma/embed/event/evt-yT0wEPGy2LzOmxf/simple"
-            height="1000"
-            frameborder="0"
-            style="width: 100%; border: 1px solid #bfcbda88; border-radius: 0px"
-            allowfullscreen=""
-            aria-hidden="false"
-            tabindex="0"
-          ></iframe>
+        <div
+          class="flex flex-col md:flex-row items-center justify-between mb-4 space-y-2 md:space-y-0"
+        >
+          <label
+            class="flex items-center gap-2 text-sm text-gray-700 font-medium"
+          >
+            Select Day:
+            <select
+              id="daySelector"
+              class="border border-pink-300 rounded px-2 py-1 text-sm focus:ring-pink-500 focus:border-pink-500"
+            >
+              <option value="1">Day 1</option>
+              <option value="2">Day 2</option>
+              <option value="3">Day 3</option>
+            </select>
+          </label>
+          <button
+            id="refreshTableBtn"
+            class="bg-pink-600 hover:bg-pink-700 text-white text-sm px-4 py-1 rounded-lg font-medium shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-500"
+          >
+            Refresh Availability
+          </button>
+        </div>
+
+        <!-- Availability Table from Google Sheet -->
+        <div class="w-full mt-8">
+          <h3 class="text-lg font-bold mb-4 text-pink-700 text-center">
+            Available Slots Overview
+          </h3>
+          <div id="sheet-data" class="p-4 max-w-xl mx-auto"></div>
+
+          <div
+            id="sheet-data"
+            class="overflow-auto rounded-lg border border-pink-200 shadow-md bg-white"
+          ></div>
+          <!-- Selection Summary Panel -->
+          <div id="selectionSummary" class="mt-4 text-center"></div>
         </div>
 
         <!-- ░ DONE BUTTON ░ -->
@@ -307,6 +331,13 @@
       const mobile = params.get("mobile")?.trim() || "";
       const seats = +params.get("seats") || 0;
       const bookingId = params.get("code")?.trim() || "";
+      // Redirect to payment.html with query params
+      const queryParams = new URLSearchParams({
+        email,
+        mobile,
+        seats,
+        code: bookingId,
+      }).toString();
 
       if (!email || !mobile || seats < 1 || !bookingId)
         location.replace("initiatepayment.html");
@@ -375,6 +406,327 @@
         location.href =
           "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUXbmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXA%3D";
       };
+
+      const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+      const sheetName = "availability";
+      const query = encodeURIComponent("SELECT *");
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
+
+      let allRows = []; // Global data
+      let selection = {}; // slotId => selected count
+      let totalSelected = 0;
+
+      const maxSeats = +new URLSearchParams(location.search).get("seats") || 0;
+
+      const fetchAndRenderTable = () => {
+        fetch(url)
+          .then((response) => response.text())
+          .then((data) => {
+            const json = JSON.parse(data.substring(47).slice(0, -2));
+            allRows = json.table.rows;
+            allRows.columns = json.table.cols;
+
+            // Revalidate selection based on updated availability
+            for (const slotId in selection) {
+              const row = allRows.find((r) => r.c[0]?.v === slotId);
+              const available = +row?.c[1]?.v || 0;
+              if (selection[slotId] > available) {
+                totalSelected -= selection[slotId] - available;
+                selection[slotId] = available;
+              }
+            }
+
+            const currentDay =
+              +document.getElementById("daySelector").value || 1;
+            renderTable(currentDay);
+          })
+          .catch((error) => {
+            console.error("Error loading sheet:", error);
+            document.getElementById("sheet-data").innerHTML =
+              '<p class="text-red-600 text-center">Failed to load availability data.</p>';
+          });
+      };
+
+      const renderTable = (day = 1) => {
+        const startIdx = (day - 1) * 4;
+        const endIdx = startIdx + 4;
+        const visibleRows = allRows.slice(startIdx, endIdx);
+        const dayLabel =
+          visibleRows[0]?.c[0]?.v?.split("Slot")[0]?.replace(/[\s–-]+$/, "") || // remove trailing dash/space
+          `Day ${day}`;
+
+        let html = `
+<div class="text-xl font-semibold text-pink-700 mb-4">${dayLabel}</div>
+<div class="space-y-4">`; // stack slot cards with spacing
+
+        visibleRows.forEach((row, i) => {
+          const slotId = row.c[0]?.v || `Slot${i}`;
+          const freeSlots = +row.c[1]?.v || 0;
+          const processing = +row.c[2]?.v || 0;
+          const booked = +row.c[3]?.v || 0;
+          const selected = selection[slotId] || 0;
+
+          const disableMinus = selected <= 0;
+          const disablePlus =
+            selected >= freeSlots || totalSelected >= maxSeats;
+
+          html += `
+  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div class="text-md font-semibold text-gray-800 mb-2">${slotId}</div>
+    
+    <div class="flex flex-wrap gap-2 text-sm mb-2">
+      <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Free: ${freeSlots}</span>
+      <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Processing: ${processing}</span>
+      <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Booked: ${booked}</span>
+    </div>
+    
+    <div class="flex items-center gap-2 text-sm text-gray-700">
+      <span class="font-medium">Selected: ${selected}</span>
+      <button data-slot="${slotId}" class="decBtn px-2 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-semibold ${
+            disableMinus ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-300"
+          }" ${disableMinus ? "disabled" : ""}>–</button>
+      <button data-slot="${slotId}" class="incBtn px-2 py-1 bg-pink-500 text-white rounded-full text-xs font-semibold ${
+            disablePlus ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-600"
+          }" ${disablePlus ? "disabled" : ""}>+</button>
+    </div>
+  </div>`;
+        });
+
+        html += `</div>`; // close slot cards container
+
+        // Inject into page
+        document.getElementById("sheet-data").innerHTML = html;
+
+        // Attach button event listeners
+        document.querySelectorAll(".incBtn").forEach((btn) => {
+          btn.onclick = () => updateSelection(btn.dataset.slot, 1);
+        });
+
+        document.querySelectorAll(".decBtn").forEach((btn) => {
+          btn.onclick = () => updateSelection(btn.dataset.slot, -1);
+        });
+
+        updateSummary();
+      };
+
+      const updateSelection = (slotId, delta) => {
+        const row = allRows.find((r) => r.c[0]?.v === slotId);
+        const available = +row?.c[1]?.v || 0;
+        const current = selection[slotId] || 0;
+
+        if (delta === 1 && totalSelected < maxSeats && current < available) {
+          selection[slotId] = current + 1;
+          totalSelected++;
+        } else if (delta === -1 && current > 0) {
+          selection[slotId] = current - 1;
+          totalSelected--;
+        }
+
+        renderTable(+document.getElementById("daySelector").value);
+      };
+
+      const updateSummary = () => {
+        const summaryDiv = document.getElementById("selectionSummary");
+        summaryDiv.innerHTML = `
+          <p class="text-sm text-gray-700 mb-2">
+            Selected <strong>${totalSelected}</strong> of <strong>${maxSeats}</strong> seat(s)
+          </p>
+          <button id="confirmBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow ${
+            totalSelected !== maxSeats ? "opacity-50 cursor-not-allowed" : ""
+          }" ${totalSelected !== maxSeats ? "disabled" : ""}>
+            Confirm Slot Selection
+          </button>`;
+
+        const confirmBtn = document.getElementById("confirmBtn");
+        if (confirmBtn) {
+          confirmBtn.onclick = () => confirmSlotSelection();
+        }
+      };
+      const confirmSlotSelection = async () => {
+        try {
+          const bookingId = new URLSearchParams(location.search)
+            .get("code")
+            ?.trim();
+          if (!bookingId) {
+            alert("Invalid booking ID.");
+            return;
+          }
+
+          // Show loading modal
+          document.getElementById("loadingModal").classList.remove("hidden");
+
+          // Step 1: Fetch Slot Blocking Sources to check active status
+          const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+          const blockingSheet = "Slot Blocking Sources";
+          const query = encodeURIComponent("SELECT *");
+          const blockingUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${blockingSheet}&tq=${query}`;
+          const response = await fetch(blockingUrl);
+          const data = await response.text();
+          const json = JSON.parse(data.substring(47).slice(0, -2));
+          const rows = json.table.rows;
+
+          const hasActiveProcessing = rows.some((row) => {
+            const rowBookingId = row.c[3]?.v ? String(row.c[3].v).trim() : "";
+            const status = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+            const activity = row.c[6]?.v ? String(row.c[6].v).trim() : "";
+
+            const match =
+              rowBookingId === bookingId &&
+              status === "Processing" &&
+              activity === "Active";
+            if (match)
+              console.log("MATCH FOUND:", rowBookingId, status, activity);
+            return match;
+          });
+
+          if (hasActiveProcessing) {
+            document.getElementById("loadingModal").classList.add("hidden");
+            document
+              .getElementById("paymentPromptModal")
+              .classList.remove("hidden");
+
+            document.getElementById("proceedToPaymentBtn").onclick = () => {
+              window.location.href = `payment.html?${queryParams}`;
+            };
+
+            return; // ✅ Stop execution, prevent new form submission
+          }
+
+          // Step 2: Fetch slot availability and validate
+          const availabilitySheet = "availability";
+          const availabilityUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${availabilitySheet}&tq=${query}`;
+          const availResponse = await fetch(availabilityUrl);
+          const availData = await availResponse.text();
+          const availJson = JSON.parse(availData.substring(47).slice(0, -2));
+          const latestRows = availJson.table.rows;
+
+          for (let slotId in selection) {
+            const selectedCount = selection[slotId];
+            if (selectedCount === 0) continue;
+
+            const row = latestRows.find((r) => r.c[0]?.v === slotId);
+            const available = +row?.c[1]?.v || 0;
+            if (available < selectedCount) {
+              alert(
+                `Slot ${slotId} no longer has enough availability. Please try again later.`
+              );
+              document.getElementById("loadingModal").classList.add("hidden");
+              return;
+            }
+          }
+
+          // Step 3: Submit form for each selected slot
+          const formBaseURL =
+            "https://docs.google.com/forms/d/e/1FAIpQLSdKvVjiL3W356UZsWKy0BBRpqHxoFN7Q_5UQHUKlQDjxpNxBA/formResponse";
+          const email = new URLSearchParams(location.search)
+            .get("email")
+            ?.trim();
+          const mobile = new URLSearchParams(location.search)
+            .get("mobile")
+            ?.trim();
+          const seats = new URLSearchParams(location.search)
+            .get("seats")
+            ?.trim();
+          const dayVal = document.getElementById("daySelector").value;
+          const dayCode = `D${dayVal}`;
+
+          for (let slotId in selection) {
+            const count = selection[slotId];
+            if (count === 0) continue;
+
+            const slotMatch = slotId.match(/Slot\s*(\d+)/);
+            const slotCode = slotMatch ? `S${slotMatch[1]}` : "S1";
+
+            for (let i = 0; i < count; i++) {
+              const formData = new FormData();
+              formData.append("entry.706936465", dayCode); // Day
+              formData.append("entry.1380648863", slotCode); // Slot
+              formData.append("entry.1536265716", bookingId); // Booking ID
+              formData.append("entry.38505346", "Processing"); // Status
+
+              await fetch(formBaseURL, {
+                method: "POST",
+                mode: "no-cors",
+                body: formData,
+              });
+
+              await new Promise((r) => setTimeout(r, 200)); // avoid rate limit
+            }
+          }
+
+          window.location.href = `payment.html?${queryParams}`;
+        } catch (error) {
+          console.error("Error during slot confirmation:", error);
+          alert(
+            "An error occurred while confirming your slots. Please try again."
+          );
+          document.getElementById("loadingModal").classList.add("hidden");
+        }
+      };
+
+      document.getElementById("daySelector").onchange = (e) => {
+        renderTable(+e.target.value);
+      };
+      document.getElementById("refreshTableBtn").onclick = () => {
+        fetchAndRenderTable();
+      };
+
+      fetchAndRenderTable();
+      setInterval(fetchAndRenderTable, 15000);
     </script>
+
+    <div
+      id="loadingModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-xl p-6 shadow-xl text-center max-w-xs flex flex-col items-center"
+      >
+        <div
+          class="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-4 animate-spin"
+        ></div>
+        <h2 class="text-lg font-semibold text-pink-700">
+          Registering your details…
+        </h2>
+        <p class="text-sm text-gray-600 mt-2">Please wait a moment.</p>
+      </div>
+    </div>
+    <style>
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <div
+      id="paymentPromptModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-xl p-6 shadow-xl text-center max-w-xs flex flex-col items-center"
+      >
+        <h2 class="text-lg font-semibold text-pink-700 mb-2">
+          Proceed to Payment
+        </h2>
+        <p class="text-sm text-gray-600 mb-4">
+          Oops! It seems that you have already selected your slots in a previous
+          booking attempt for your existing Booking ID. Please complete payment
+          for your selected slots on the next page before the timer expires. In
+          case you wish to change your slot, please start a fresh booking.
+        </p>
+        <button
+          id="proceedToPaymentBtn"
+          class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded shadow"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
   </body>
 </html>
