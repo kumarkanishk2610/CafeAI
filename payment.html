@@ -718,14 +718,20 @@
           try {
             const params = new URLSearchParams(location.search);
             const bookingId = params.get("code")?.trim();
-            const email = params.get("email")?.trim();
-            const seats = params.get("seats")?.trim();
-            const mobile = params.get("mobile")?.trim();
 
             if (!bookingId) {
               alert("Invalid booking ID.");
               return;
             }
+
+            // Fetch user details from raw sheet
+            const userDetails = await fetchUserDetails(bookingId);
+            if (!userDetails) {
+              alert("Could not fetch user details. Please try again.");
+              return;
+            }
+
+            const { email, seats, mobile } = userDetails;
 
             // Show loading modal
             const modal = document.getElementById("loadingModal");
@@ -737,6 +743,157 @@
             const sheetName = "Slot Blocking Sources";
             const query = encodeURIComponent("SELECT *");
             const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
+
+            // User details sheet configuration
+            const userDetailsSheetID =
+              "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+            const userDetailsSheetName = "Raw Data";
+
+            // Fetch user details from raw sheet
+            const fetchUserDetails = async (bookingId) => {
+              try {
+                console.log("=== FETCH USER DETAILS START ===");
+                console.log(`Input booking ID: "${bookingId}"`);
+                console.log(`Sheet ID: ${userDetailsSheetID}`);
+                console.log(`Sheet Name: ${userDetailsSheetName}`);
+
+                // Fetch the entire sheet data
+                const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
+                  userDetailsSheetName
+                )}&tq=${encodeURIComponent("SELECT *")}`;
+
+                console.log(`Query URL: ${userUrl}`);
+
+                console.log("Making fetch request...");
+                const response = await fetch(userUrl);
+                console.log(`Response status: ${response.status}`);
+                console.log(`Response ok: ${response.ok}`);
+
+                const data = await response.text();
+                console.log(`Response data length: ${data.length}`);
+                console.log(
+                  `Raw response (first 500 chars): ${data.substring(0, 500)}...`
+                );
+
+                if (!response.ok) {
+                  console.error(
+                    `HTTP Error: ${response.status} ${response.statusText}`
+                  );
+                  return null;
+                }
+
+                console.log("Parsing JSON response...");
+                const json = JSON.parse(data.substring(47).slice(0, -2));
+                console.log("JSON parsed successfully");
+                console.log(`JSON structure:`, Object.keys(json));
+
+                const rows = json.table.rows;
+                console.log(`Total rows in sheet: ${rows.length}`);
+
+                if (rows.length === 0) {
+                  console.warn("No rows found in sheet");
+                  return null;
+                }
+
+                console.log(`Searching for booking ID: "${bookingId}"`);
+                console.log("First few rows for debugging:");
+                for (let i = 0; i < Math.min(3, rows.length); i++) {
+                  const row = rows[i];
+                  console.log(
+                    `Row ${i}:`,
+                    row.c
+                      ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
+                      .join(", ")
+                  );
+                }
+
+                // Search through all rows for the matching booking ID
+                for (let i = 0; i < rows.length; i++) {
+                  const row = rows[i];
+                  const hashValue = row.c[4]?.v || ""; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
+                  const hashValueStr = String(hashValue); // Convert to string to handle both number and string types
+
+                  console.log(
+                    `Row ${i}: Hash value = "${hashValueStr}", looking for "${bookingId}"`
+                  );
+                  console.log(
+                    `Row ${i} comparison: "${hashValueStr}" === "${bookingId}" = ${
+                      hashValueStr === bookingId
+                    }`
+                  );
+
+                  // Detailed character analysis
+                  console.log(
+                    `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
+                      hashValueStr.length
+                    }`
+                  );
+                  console.log(
+                    `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
+                      bookingId.length
+                    }`
+                  );
+                  console.log(
+                    `Row ${i} - hashValue char codes: ${Array.from(hashValueStr)
+                      .map((c) => c.charCodeAt(0))
+                      .join(", ")}`
+                  );
+                  console.log(
+                    `Row ${i} - bookingId char codes: ${Array.from(bookingId)
+                      .map((c) => c.charCodeAt(0))
+                      .join(", ")}`
+                  );
+                  console.log(
+                    `Row ${i} - hashValue trimmed: "${hashValueStr.trim()}"`
+                  );
+                  console.log(
+                    `Row ${i} - bookingId trimmed: "${bookingId.trim()}"`
+                  );
+                  console.log(
+                    `Row ${i} - trimmed comparison: "${hashValueStr.trim()}" === "${bookingId.trim()}" = ${
+                      hashValueStr.trim() === bookingId.trim()
+                    }`
+                  );
+
+                  if (
+                    hashValueStr === bookingId ||
+                    hashValueStr.trim() === bookingId.trim()
+                  ) {
+                    console.log(
+                      `Found matching booking ID in row ${i} (${
+                        hashValueStr === bookingId
+                          ? "exact match"
+                          : "trimmed match"
+                      })`
+                    );
+
+                    const userDetails = {
+                      email: row.c[1]?.v || "", // B column (Email) - 2nd column (0-indexed as 1)
+                      seats: parseInt(row.c[2]?.v) || 0, // C column (Seats) - 3rd column (0-indexed as 2)
+                      mobile: row.c[3]?.v || "", // D column (Mobile Number) - 4th column (0-indexed as 3)
+                      hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
+                    };
+
+                    console.log(`User details found:`, userDetails);
+                    console.log("=== FETCH USER DETAILS SUCCESS ===");
+                    return userDetails;
+                  }
+                }
+
+                console.warn(
+                  `No user details found for booking ID: "${bookingId}"`
+                );
+                console.log("All rows checked, no match found");
+                console.log("=== FETCH USER DETAILS FAILED ===");
+                return null;
+              } catch (error) {
+                console.error("=== ERROR IN FETCH USER DETAILS ===");
+                console.error("Error details:", error);
+                console.error("Error message:", error.message);
+                console.error("Error stack:", error.stack);
+                return null;
+              }
+            };
 
             const response = await fetch(url);
             const data = await response.text();
