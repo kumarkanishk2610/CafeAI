@@ -1,4 +1,4 @@
-<!-- initiatepayment.html -->
+<!-- initiatepayment.html – Redesigned with modern aesthetics -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -48,19 +48,74 @@
           background-position: 0% 50%;
         }
       }
-      @keyframes spinEase {
+
+      @keyframes glow {
         0% {
-          transform: rotate(0deg);
+          box-shadow: 0 0 5px rgba(236, 72, 153, 0.4);
         }
         50% {
-          transform: rotate(180deg);
+          box-shadow: 0 0 20px rgba(236, 72, 153, 0.8);
         }
         100% {
+          box-shadow: 0 0 5px rgba(236, 72, 153, 0.4);
+        }
+      }
+
+      .glow-animation {
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
           transform: rotate(360deg);
         }
       }
-      .spinner {
-        animation: spinEase 1s ease-in-out infinite;
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .input-focus {
+        transition: all 0.3s ease;
+      }
+
+      .input-focus:focus {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
       }
     </style>
   </head>
@@ -79,7 +134,7 @@
           </h1>
         </a>
         <span
-          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap break-words"
         >
           Anime India 2025 · Mumbai
         </span>
@@ -88,102 +143,219 @@
 
     <!-- main -->
     <main class="pt-20 flex flex-col items-center p-4">
-      <section
-        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border-pink-200"
-      >
-        <div class="text-center space-y-3">
-          <h2 class="text-2xl font-semibold text-pink-700">Booking Details</h2>
-          <ol
-            class="text-gray-700 text-left max-w-md mx-auto space-y-2 list-decimal list-inside"
+      <div class="w-full max-w-4xl space-y-6">
+        <!-- Main Booking Card -->
+        <div class="fade-in">
+          <div
+            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
           >
-            <li>
-              Enter your email, mobile number, and number of seats (max 12).
-            </li>
-            <li>Proceed to payment using the UPI QR code in the next step.</li>
-            <li>After payment, choose your preferred time slot.</li>
-          </ol>
-        </div>
-        <!-- Booking ID Reminder Modal -->
-        <div
-          class="bg-red-50 border border-red-300 rounded-xl p-4 shadow-sm w-full max-w-4xl mx-auto mt-6 text-center"
-        >
-          <p class="text-sm text-red-700 font-medium">
-            Make sure to keep your <strong>Booking ID</strong> handy (provided
-            in the next step), as it is required for the Payment & Reservation
-            process.
-          </p>
-        </div>
+            <!-- Decorative elements -->
+            <div
+              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+            <div
+              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
+            ></div>
 
-        <form id="bookingForm" class="space-y-6">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div class="flex flex-col gap-1">
-              <label for="email" class="font-medium text-gray-700">Email</label>
-              <input
-                id="email"
-                type="email"
-                required
-                placeholder="you@example.com"
-                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
-              />
-            </div>
-            <div class="flex flex-col gap-1">
-              <label for="mobile" class="font-medium text-gray-700"
-                >Mobile</label
+            <div class="relative z-10">
+              <!-- Header -->
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
+                >
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold text-gray-800 mb-1">
+                    Start Your Booking
+                  </h2>
+                  <p class="text-gray-600 font-medium">
+                    Cafe Kyaa! Reservation
+                  </p>
+                </div>
+              </div>
+
+              <!-- Booking Steps -->
+              <div
+                class="bg-white rounded-xl p-4 shadow-lg border border-gray-100 mb-6"
               >
-              <input
-                id="mobile"
-                type="tel"
-                required
-                pattern="[0-9]{10}"
-                placeholder="9876543210"
-                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
-              />
-            </div>
-            <div class="flex flex-col gap-1 sm:col-span-2">
-              <label for="seats" class="font-medium text-gray-700">Seats</label>
-              <input
-                id="seats"
-                type="number"
-                min="1"
-                max="12"
-                required
-                placeholder="1"
-                class="px-4 py-2 border rounded-lg focus:ring-pink-500 outline-none"
-              />
+                <h3
+                  class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2"
+                >
+                  <svg
+                    class="w-5 h-5 text-pink-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Booking Process
+                </h3>
+                <ol
+                  class="text-gray-700 space-y-2 list-decimal list-inside text-sm"
+                >
+                  <li class="break-words">
+                    Enter your email, mobile number, and number of seats (max
+                    12).
+                  </li>
+                  <li class="break-words">
+                    Proceed to payment using the UPI QR code in the next step.
+                  </li>
+                  <li class="break-words">
+                    After payment, choose your preferred time slot.
+                  </li>
+                </ol>
+              </div>
+
+              <!-- Important Notice -->
+              <div
+                class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-4 shadow-sm mb-6"
+              >
+                <div class="flex items-start gap-3">
+                  <svg
+                    class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <div>
+                    <h4 class="font-semibold text-red-700 mb-1">Important</h4>
+                    <p class="text-sm text-red-600 break-words">
+                      Make sure to keep your <strong>Booking ID</strong> handy
+                      (provided in the next step), as it is required for the
+                      Payment & Reservation process.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Booking Form -->
+              <form id="bookingForm" class="space-y-4">
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div class="flex flex-col gap-2">
+                    <label
+                      for="email"
+                      class="font-medium text-gray-700 text-sm"
+                    >
+                      Email Address
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      placeholder="you@example.com"
+                      class="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none input-focus bg-white shadow-sm"
+                    />
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <label
+                      for="mobile"
+                      class="font-medium text-gray-700 text-sm"
+                    >
+                      Mobile Number
+                    </label>
+                    <input
+                      id="mobile"
+                      type="tel"
+                      required
+                      pattern="[0-9]{10}"
+                      placeholder="9876543210"
+                      class="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none input-focus bg-white shadow-sm"
+                    />
+                  </div>
+                  <div class="flex flex-col gap-2 sm:col-span-2">
+                    <label
+                      for="seats"
+                      class="font-medium text-gray-700 text-sm"
+                    >
+                      Number of Seats
+                    </label>
+                    <input
+                      id="seats"
+                      type="number"
+                      min="1"
+                      max="12"
+                      required
+                      placeholder="1"
+                      class="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none input-focus bg-white shadow-sm"
+                    />
+                    <p class="text-xs text-gray-500">
+                      Maximum 12 seats per booking
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  id="submitBtn"
+                  class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 rounded-xl font-semibold shadow-lg card-hover glow-animation"
+                >
+                  <span class="flex items-center justify-center gap-2">
+                    <svg
+                      class="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Proceed for Payment
+                  </span>
+                </button>
+              </form>
+
+              <!-- Note -->
+              <div
+                class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200"
+              >
+                <p class="text-sm text-gray-600 break-words">
+                  <strong>Note:</strong> Use the same details throughout the
+                  booking. Confirmation will be sent after payment.
+                </p>
+              </div>
             </div>
           </div>
-
-          <button
-            type="submit"
-            id="submitBtn"
-            class="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:to-pink-700 text-white py-2 rounded-lg font-semibold shadow"
-          >
-            Proceed for Payment
-          </button>
-        </form>
-
-        <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Note:</strong> Use the same details throughout the booking.
-          Confirmation will be sent after payment.
-        </p>
-      </section>
+        </div>
+      </div>
     </main>
 
     <!-- Loading Modal with Spinner -->
     <div
       id="loadingModal"
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
     >
       <div
-        class="bg-white rounded-xl p-6 shadow-xl text-center max-w-xs flex flex-col items-center"
+        class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-sm mx-4"
       >
         <div
-          class="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-4"
+          class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-6 mx-auto"
         ></div>
-        <h2 class="text-lg font-semibold text-pink-700">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">
           Registering your details…
         </h2>
-        <p class="text-sm text-gray-600 mt-2">Please wait a moment.</p>
+        <p class="text-gray-600">Please wait a moment.</p>
       </div>
     </div>
 
@@ -240,7 +412,7 @@
             });
 
             const params = new URLSearchParams({ code });
-            location.href = `luma.html?${params}`;
+            location.href = `slotselection.html?${params}`;
           } catch (err) {
             console.error(err);
             document.getElementById("loadingModal").classList.add("hidden");

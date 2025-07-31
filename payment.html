@@ -1,10 +1,10 @@
-<!-- payment.html – fixed “Copy Booking ID / Email” buttons & unique IDs -->
+<!-- payment.html – Redesigned with modern aesthetics -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cafe Kyaa! – Payment</title>
+    <title>Cafe Kyaa! – Payment</title>
 
     <!-- Quicksand + Tailwind -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -51,17 +51,62 @@
 
       @keyframes glow {
         0% {
-          box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
+          box-shadow: 0 0 5px rgba(236, 72, 153, 0.4);
         }
         50% {
-          box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+          box-shadow: 0 0 20px rgba(236, 72, 153, 0.8);
         }
         100% {
-          box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
+          box-shadow: 0 0 5px rgba(236, 72, 153, 0.4);
         }
       }
+
       .glow-animation {
-        animation: glow 1.5s ease-in-out infinite;
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
@@ -89,347 +134,681 @@
 
     <!-- main -->
     <main class="pt-20 flex flex-col items-center p-4">
-      <section
-        class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-pink-200"
-      >
-        <!-- order-summary | stacked info layout -->
-        <div
-          class="relative isolate overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-6 shadow-lg ring-1 ring-inset ring-rose-100/60"
-        >
-          <!-- decorative blobs -->
-          <span
-            aria-hidden="true"
-            class="absolute -top-8 -left-8 h-32 w-32 rounded-full bg-rose-100/60 blur-3xl"
-          ></span>
-          <span
-            aria-hidden="true"
-            class="absolute -bottom-10 -right-6 h-32 w-32 rounded-full bg-pink-200/60 blur-3xl pointer-events-none"
-          ></span>
-
-          <!-- HEADER -->
-          <header
-            class="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      <div class="w-full max-w-4xl space-y-6">
+        <!-- Order Summary Card -->
+        <div class="fade-in">
+          <div
+            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
           >
-            <!-- icon & title -->
-            <div class="flex items-center gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="h-10 w-10 shrink-0 text-pink-600"
-                aria-hidden="true"
+            <!-- Decorative elements -->
+            <div
+              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+            <div
+              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+
+            <div class="relative z-10">
+              <!-- Header -->
+              <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
               >
-                <title>Ticket icon</title>
-                <path
-                  fill-rule="evenodd"
-                  d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <div>
-                <h2
-                  class="text-xl font-bold tracking-wide text-gray-800 sm:text-2xl"
-                >
-                  Order&nbsp;Summary
-                </h2>
-                <p class="text-xs font-medium text-gray-600">
-                  Cafe Kyaa! Tickets
-                </p>
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">
+                      Reserve Your Slot!
+                    </h2>
+                    <p class="text-gray-600 font-medium">Cafe Kyaa! Tickets</p>
+                  </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="text-right">
+                  <div class="text-2xl font-bold gradient-text mb-1">
+                    ₹<span id="amtTitle">0</span>
+                  </div>
+                  <div class="text-gray-600">
+                    <span id="seatCount">0</span> seat(s) @ ₹500 each
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <!-- price summary -->
-            <dl class="text-right">
-              <dt class="sr-only">Seats</dt>
-              <dd
-                class="text-lg font-semibold text-gray-800 tabular-nums sm:text-2xl"
+              <!-- Contact Details -->
+              <div
+                class="bg-white rounded-xl p-4 shadow-lg border border-gray-100"
               >
-                <span id="seatCount">0</span> seat(s)
-              </dd>
-              <dt class="sr-only">Price per seat</dt>
-              <dd class="text-sm font-medium text-gray-600">@ ₹500 each</dd>
-              <dt class="sr-only">Total</dt>
-              <dd class="text-lg font-extrabold text-pink-700 sm:text-2xl">
-                ₹<span id="amtTitle">0</span>
-              </dd>
-            </dl>
-          </header>
+                <h3
+                  class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2"
+                >
+                  <svg
+                    class="w-5 h-5 text-pink-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+                    ></path>
+                    <path
+                      d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+                    ></path>
+                  </svg>
+                  Your Details
+                </h3>
 
-          <!-- INFO (stacked for narrow screens) -->
-          <div class="mt-6 space-y-4 text-xs text-gray-700">
-            <!-- CONTACT INFO (email | mobile) -->
-            <div class="space-y-1">
-              <span class="font-medium text-gray-600"
-                >Your Contact Details:</span
-              >
-              <div>
-                <span class="break-words min-w-0 flex-1">
-                  <span id="emailVal"></span> | <span id="mobileVal"></span>
-                </span>
-                <p> </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div
+                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
+                  >
+                    <div
+                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-pink-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+                        ></path>
+                        <path
+                          d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-gray-500 font-medium">Email</div>
+                      <div
+                        id="emailVal"
+                        class="text-sm font-semibold text-gray-800 break-words max-w-[40vw]"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
+                  >
+                    <div
+                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-pink-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-gray-500 font-medium">
+                        Mobile
+                      </div>
+                      <div
+                        id="mobileVal"
+                        class="text-sm font-semibold text-gray-800"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Booking ID Section -->
+                <div
+                  class="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-200"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-gray-500 font-medium">
+                        Booking ID
+                      </div>
+                      <div
+                        id="bookingIdValSummary"
+                        class="text-sm font-bold text-gray-800"
+                      ></div>
+                    </div>
+                  </div>
+                  <button
+                    id="copyBookingIdSummaryBtn"
+                    class="bg-pink-500 hover:bg-pink-600 text-white px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 002 2z"
+                      ></path>
+                    </svg>
+                    Copy
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- payment section -->
-        <div class="flex flex-col items-center gap-8">
+        <!-- Payment Section -->
+        <div class="fade-in" style="animation-delay: 0.2s">
           <div
-            class="relative ring-2 ring-red-400 ring-offset-2 ring-offset-white bg-gradient-to-br from-red-50 via-white to-red-100 rounded-xl p-5 shadow-lg space-y-4 glow-box max-w-xl mx-auto"
+            class="bg-white rounded-3xl shadow-2xl p-6 border border-pink-100"
           >
-            <div class="flex items-center gap-2">
-              <span class="text-red-600 text-xl animate-bounce">⚠️</span>
-              <h3 class="text-red-700 font-extrabold text-xl">
-                Booking ID Required in UPI Note
-              </h3>
-            </div>
+            <!-- QR Code Section -->
+            <div class="flex flex-col items-center">
+              <div class="text-center mb-4">
+                <div class="text-xl font-bold gradient-text mb-2 hidden">
+                  ₹<span id="amountDisplay">0</span>
+                </div>
+                <!-- <p class="text-gray-600 font-medium">Scan QR Code to Pay</p> -->
+              </div>
 
-            <!-- Responsive Booking ID + Button -->
-            <div
-              class="flex flex-col items-center space-y-3 md:flex-row md:justify-between md:items-center md:space-y-0 md:space-x-4"
-            >
-              <span
-                id="bookingIdVal"
-                class="bg-white border border-red-400 text-red-800 font-mono text-2xl md:text-lg px-6 py-2 rounded-full shadow-md glow-animation text-center tracking-wide"
-              ></span>
-              <button
-                type="button"
-                id="copyBookingIdBtn"
-                class="bg-red-600 hover:bg-red-700 text-white text-base md:text-sm px-6 py-2 md:px-4 md:py-1 rounded-lg font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
-                aria-label="Copy Booking ID"
+              <!-- Disclaimer -->
+              <div
+                class="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 rounded-2xl p-6 mb-6 border border-amber-200 shadow-lg"
               >
-                Copy Booking ID
+                <!-- Decorative background elements -->
+                <div
+                  class="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full opacity-30 blur-xl"
+                ></div>
+                <div
+                  class="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-orange-200 to-red-200 rounded-full opacity-30 blur-xl"
+                ></div>
+
+                <div class="relative z-10">
+                  <!-- Header with icon -->
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md"
+                    >
+                      <svg
+                        class="w-5 h-5 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h5
+                        class="text-lg font-bold bg-gradient-to-r from-amber-700 to-orange-700 bg-clip-text text-transparent"
+                      >
+                        Important Notice
+                      </h5>
+                      <p class="text-xs text-amber-600 font-medium">
+                        Please read carefully before proceeding
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Main message -->
+                  <div
+                    class="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-4 border border-amber-100 shadow-sm"
+                  >
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                      <span class="font-semibold text-amber-700"
+                        >Please mention the booking ID in your UPI payment
+                        comment.</span
+                      >
+                      This helps us process your booking faster and ensures
+                      accurate tracking of your payment!
+                    </p>
+                  </div>
+
+                  <!-- Checkbox section -->
+                  <div
+                    class="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-amber-100 shadow-sm"
+                  >
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                      <div class="relative">
+                        <input
+                          type="checkbox"
+                          id="qrCheckbox"
+                          class="mt-1 h-5 w-5 text-amber-600 border-amber-300 rounded-lg focus:ring-amber-500 focus:ring-2 focus:ring-offset-2 transition-all duration-200"
+                        />
+                        <div
+                          class="absolute inset-0 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                        ></div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="font-semibold text-gray-800 text-sm mb-1">
+                          I understand and will include the booking ID in my
+                          payment
+                        </div>
+                        <div class="text-xs text-gray-500 leading-relaxed">
+                          This helps us process your booking faster and more
+                          accurately.
+                          <span class="font-medium text-amber-600"
+                            >Your cooperation is greatly appreciated!</span
+                          >
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- UPI Payment Methods -->
+              <div
+                class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6 border border-blue-200"
+              >
+                <h4
+                  class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2"
+                >
+                  <svg
+                    class="w-5 h-5 text-blue-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  Scan and Pay via any UPI App
+                </h4>
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                  <div
+                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <img
+                      src="assets/icons/gpay.svg"
+                      class="h-10 w-10"
+                      alt="GPay"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <img
+                      src="assets/icons/paytm.svg"
+                      class="h-10 w-10"
+                      alt="Paytm"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <img
+                      src="assets/icons/phonepe.svg"
+                      class="h-10 w-10"
+                      alt="PhonePe"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <img
+                      src="assets/icons/amazonpay.svg"
+                      class="h-10 w-10"
+                      alt="Amazon Pay"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <img
+                      src="assets/icons/bhim.svg"
+                      class="h-10 w-10"
+                      alt="BHIM"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <img
+                      src="assets/icons/upi.svg"
+                      class="h-10 w-10"
+                      alt="UPI"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- QR Code -->
+              <div class="flex justify-center mb-4">
+                <div class="relative">
+                  <img
+                    id="qrImage"
+                    alt="UPI QR Code"
+                    class="w-56 h-56 rounded-xl border-4 shadow-lg"
+                  />
+                  <div
+                    class="absolute inset-0 rounded-xl pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Download Button -->
+              <button
+                id="downloadQRBtn"
+                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                Download QR Code
+              </button>
+
+              <!-- Help Button -->
+              <button
+                onclick="openModal()"
+                id="havingtroublebutton"
+                class="mt-4 bg-orange-50 hover:bg-orange-100 text-orange-700 hover:text-orange-800 font-medium px-4 py-2 rounded-lg border border-orange-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                Having trouble with QR Payment?
+              </button>
+
+              <!-- UPI Transaction Confirmation -->
+              <div class="mt-6 w-full max-w-md">
+                <div
+                  class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200 shadow-sm"
+                >
+                  <div class="flex items-center gap-2 mb-3">
+                    <div
+                      class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-800">
+                      Confirm Your Payment
+                    </h4>
+                  </div>
+
+                  <div class="space-y-3">
+                    <!-- UPI Transaction Number -->
+                    <div>
+                      <label
+                        for="upiTransactionNumber"
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                      >
+                        UPI Transaction Number
+                      </label>
+                      <input
+                        type="text"
+                        id="upiTransactionNumber"
+                        placeholder="Enter your UPI transaction number"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+
+                    <!-- Confirm UPI Transaction Number -->
+                    <div>
+                      <label
+                        for="confirmUpiTransactionNumber"
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                      >
+                        Confirm UPI Transaction Number
+                      </label>
+                      <input
+                        type="text"
+                        id="confirmUpiTransactionNumber"
+                        placeholder="Re-enter your UPI transaction number"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+
+                    <!-- Validation Message -->
+                    <div
+                      id="transactionValidationMessage"
+                      class="text-xs hidden"
+                    >
+                      <div
+                        id="transactionValidationSuccess"
+                        class="text-green-600 font-medium hidden"
+                      >
+                        ✓ Transaction numbers match!
+                      </div>
+                      <div
+                        id="transactionValidationError"
+                        class="text-red-600 font-medium hidden"
+                      >
+                        ✗ Transaction numbers do not match
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Continue Button -->
+              <button
+                id="paidButton"
+                disabled
+                class="mt-4 w-full max-w-md bg-gradient-to-r from-gray-400 to-gray-500 text-white py-3 px-6 rounded-lg font-bold text-base shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-not-allowed"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                I've Paid – Continue to Slot Selection
               </button>
             </div>
-
-            <p
-              class="text-sm text-red-700 leading-relaxed text-center md:text-left"
-            >
-              Please <strong>mention this Booking ID</strong> in your UPI
-              payment’s <u>note/comment section</u>. Payments made
-              <strong>without this Booking ID</strong> will be
-              <u>refunded within 24 hours</u>.
-            </p>
-
-            <div class="flex items-start gap-2">
-              <input
-                type="checkbox"
-                id="ackCheckbox"
-                class="h-4 w-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
-              />
-              <label for="ackCheckbox" class="text-sm text-gray-700">
-                I have read and understood instructions related to Booking ID
-              </label>
-            </div>
-
-            <p
-              class="text-xs text-red-600 pt-2 border-t border-red-200 mt-3 text-center md:text-left"
-            >
-              Unsure how to add Booking ID in UPI note?
-              <a
-                href="upi-note-help.html"
-                target="_blank"
-                class="underline font-medium hover:text-red-800"
-              >
-                Click here for help
-              </a>
-            </p>
           </div>
-          <!-- UPI strip -->
-          <div
-            class="bg-white rounded-2xl shadow-lg/20 p-2 flex flex-col gap-4 w-full max-w-lg"
-          >
-            <h3 class="text-gray-800 font-semibold text-xl">
-              Scan & Pay via UPI
-            </h3>
-            <div class="grid grid-cols-3 gap-4 place-items-center">
-              <img src="assets/icons/gpay.svg" class="max-h-6" alt="GPay" />
-              <img src="assets/icons/paytm.svg" class="max-h-6" alt="Paytm" />
-              <img
-                src="assets/icons/phonepe.svg"
-                class="max-h-6"
-                alt="PhonePe"
-              />
-              <img
-                src="assets/icons/amazonpay.svg"
-                class="max-h-6"
-                alt="Amazon Pay"
-              />
-              <img src="assets/icons/bhim.svg" class="max-h-6" alt="BHIM" />
-              <img src="assets/icons/upi.svg" class="max-h-6" alt="UPI" />
-            </div>
-          </div>
+        </div>
 
-          <!-- Booking ID Warning – Full Width, Centered Text -->
-          <div
-            class="bg-red-50 border border-red-300 rounded-xl p-4 shadow-sm w-full mx-auto text-xs text-center text-red-700 mt-0 px-4"
-          >
+        <!-- Information Cards -->
+        <div class="fade-in" style="animation-delay: 0.4s">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Note Card -->
             <div
-              class="flex justify-center items-center gap-2 font-semibold text-red-800 mb-1"
+              class="bg-white rounded-2xl p-6 shadow-lg border border-blue-100"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 shrink-0"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M8.257 3.099c.366-.756 1.42-.756 1.786 0l6.447 13.318A1 1 0 0 1 15.553 18H4.447a1 1 0 0 1-.894-1.583L10 3.1zM9 7a1 1 0 1 1 2 0v4a1 1 0 0 1-2 0V7zm1 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>Booking ID is Mandatory</span>
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <svg
+                    class="w-5 h-5 text-blue-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-2">
+                    Important Note
+                  </h4>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    Use the same details throughout the booking. After payment,
+                    our team will verify and confirm your ticket. You'll receive
+                    a confirmation email once it's done.
+                  </p>
+                </div>
+              </div>
             </div>
-            <p>
-              Please include your <strong>Booking ID</strong> (mentioned above
-              in this page) in the UPI payment note. Bookings/Payments without
-              it will be rejected and refunded unless a valid appeal is filed.
-            </p>
-          </div>
-          <!-- QR card -->
-          <div
-            class="bg-white rounded-3xl shadow-lg/20 p-0 w-144 flex flex-col items-center"
-          >
-            <p class="mb-2 text-gray-700 text-center">
-              <span class="font-medium text-pink-600">Amount:</span> ₹<span
-                id="amountDisplay"
-              ></span>
-            </p>
-            <p> </p>
-            <img
-              id="qrImage"
-              alt="UPI QR Code"
-              class="w-[240px] h-[240px] rounded-md border-4 border-pink-500"
-            />
 
-            <button
-              id="downloadQRBtn"
-              type="button"
-              class="mt-3 w-[170px] rounded-lg bg-pink-600 py-2 text-sm font-semibold text-white shadow hover:bg-pink-700"
-            >
-              Download QR Code
-            </button>
-
-            <button
-              id="upiIntentBtn"
-              type="button"
-              class="mt-2 w-[170px] rounded-lg bg-pink-600 py-2 text-sm font-semibold text-white shadow hover:bg-pink-700"
-            >
-              Pay via UPI
-            </button>
-          </div>
-          <!-- Trigger Button -->
-          <!-- Animated Trigger Button -->
-          <button
-            onclick="openModal()"
-            id="havingtroublebutton"
-            class="bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 font-medium text-sm px-4 py-2 rounded-lg border border-red-200 transition-all duration-200 shadow-sm hover:shadow-md"
-          >
-            Having trouble with QR Payment? Click here for help!
-          </button>
-          <!-- Modal Overlay -->
-          <div
-            id="infoModal"
-            class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4"
-          >
-            <!-- Modal Content -->
+            <!-- Refund Card -->
             <div
-              class="bg-white border border-red-200 rounded-xl w-full max-w-md p-5 shadow-lg text-sm text-red-700"
+              class="bg-white rounded-2xl p-6 shadow-lg border border-green-100"
             >
-              <!-- Close Button -->
-              <div class="flex justify-end">
-                <button
-                  onclick="closeModal()"
-                  class="text-red-500 hover:text-red-700 text-lg font-bold"
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0"
                 >
-                  &times;
-                </button>
-              </div>
-
-              <!-- Modal Title -->
-              <div class="font-semibold text-red-800 mb-3 text-base">
-                Trouble with QR Code?
-              </div>
-
-              <!-- Modal Message -->
-              <p class="mb-3">
-                Sometimes, apps may not support auto-generated QR codes, which
-                can cause payments to fail or prevent you from adding a note to
-                your transaction.
-              </p>
-              <p class="mb-4">
-                If that happens, please make a
-                <strong>manual payment</strong> to ensure your Booking ID is
-                included.
-              </p>
-
-              <!-- CTA Buttons -->
-              <div class="flex flex-col gap-2">
-                <button
-                  id="manualPayBtn"
-                  type="button"
-                  onclick="window.open('YOUR_MANUAL_PAYMENT_LINK', '_blank');"
-                  class="block w-full text-center bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
-                >
-                  Manual Payment Instructions
-                </button>
-
-                <a
-                  href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
-                  target="_blank"
-                  class="block text-center border border-red-400 text-red-700 px-4 py-2 rounded-lg font-medium hover:bg-red-50 transition"
-                >
-                  Contact Support
-                </a>
+                  <svg
+                    class="w-5 h-5 text-green-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-2">
+                    Refund Policy
+                  </h4>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    If your preferred slot isn't available, you can request a
+                    refund within 2 hours via
+                    <a
+                      href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                      target="_blank"
+                      class="text-blue-600 underline hover:text-blue-800 font-medium"
+                      >this form</a
+                    >. If tickets are sold out, your payment will be refunded
+                    automatically within 24 hours.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </main>
 
-          <!-- Modal Script -->
-          <script>
-            function openModal() {
-              document.getElementById("infoModal").classList.remove("hidden");
-            }
-            function closeModal() {
-              document.getElementById("infoModal").classList.add("hidden");
-            }
-          </script>
-
-          <!--<button
-            id="manualPayBtn"
-            type="button"
-            class="text-sm text-pink-600 underline hover:text-pink-700 mt-0"
-          >
-            Alternatively, pay manually via UPI
-          </button>-->
-          <!-- continue -->
+    <!-- Modal Overlay -->
+    <div
+      id="infoModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4"
+    >
+      <!-- Modal Content -->
+      <div
+        class="bg-white border border-red-200 rounded-xl w-full max-w-md p-5 shadow-lg text-sm text-red-700"
+      >
+        <!-- Close Button -->
+        <div class="flex justify-end">
           <button
-            id="paidButton"
-            type="button"
-            class="w-full max-w-lg bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold shadow"
+            onclick="closeModal()"
+            class="text-red-500 hover:text-red-700 text-lg font-bold"
           >
-            I’ve Paid – Continue to Slot Selection
+            &times;
           </button>
         </div>
-        <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Note:</strong> Use the same details throughout the booking.
-          After payment, our team will verify and confirm your ticket. You'll
-          receive a confirmation email once it's done.
+
+        <!-- Modal Title -->
+        <div class="font-semibold text-red-800 mb-3 text-base">
+          Trouble with QR Code?
+        </div>
+
+        <!-- Modal Message -->
+        <p class="mb-3">
+          Sometimes, apps may not support auto-generated QR codes, which can
+          cause payments to fail or prevent you from adding a note to your
+          transaction.
         </p>
-        <p class="text-sm text-gray-600 border-t pt-4">
-          <strong>Refunds:</strong> If your preferred slot isn't available, you
-          can request a refund within 2 hours via
+        <p class="mb-4">
+          If that happens, please make a
+          <strong>manual payment</strong> to ensure your Booking ID is included.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col gap-2">
+          <button
+            id="manualPayBtn"
+            type="button"
+            onclick="window.open('YOUR_MANUAL_PAYMENT_LINK', '_blank');"
+            class="block w-full text-center bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
+          >
+            Manual Payment Instructions
+          </button>
+
           <a
             href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
             target="_blank"
-            class="text-blue-600 underline hover:text-blue-800"
-            >this form</a
-          >. If tickets are sold out, your payment will be refunded
-          automatically within 24 hours.
-        </p>
-      </section>
-    </main>
+            class="block text-center border border-red-400 text-red-700 px-4 py-2 rounded-lg font-medium hover:bg-red-50 transition"
+          >
+            Contact Support
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Script -->
+    <script>
+      function openModal() {
+        document.getElementById("infoModal").classList.remove("hidden");
+      }
+      function closeModal() {
+        document.getElementById("infoModal").classList.add("hidden");
+      }
+    </script>
 
     <!-- manual payment modal -->
     <div
@@ -568,7 +947,6 @@
 
         const emailVal = document.getElementById("emailVal");
         const mobileVal = document.getElementById("mobileVal");
-        const bookingIdVal = document.getElementById("bookingIdVal");
         const bookingIdTextModal =
           document.getElementById("bookingIdTextModal");
 
@@ -581,26 +959,323 @@
 
         const copyAmtBtn = document.getElementById("copyAmtBtn");
         const copyUpiBtn = document.getElementById("copyUpiBtn");
-        const copyBookingIdBtn = document.getElementById("copyBookingIdBtn");
         const copyBookingIdModalBtn = document.getElementById(
           "copyBookingIdModalBtn"
         );
 
         const paidBtn = document.getElementById("paidButton");
-        const ackCheckbox = document.getElementById("ackCheckbox");
+        const qrCheckbox = document.getElementById("qrCheckbox");
 
         /* ---------- read query‑params ---------- */
         const params = new URLSearchParams(location.search);
-        const email = params.get("email")?.trim() || "";
-        const mobile = params.get("mobile")?.trim() || "";
-        const seats = +params.get("seats") || 0;
         const code = params.get("code")?.trim() || "";
 
-        if (!email || !mobile || seats < 1 || !code) {
-          location.replace("initiatepayment.html");
+        // Debug logging
+        console.log("=== URL PARAMETERS DEBUG ===");
+        console.log("Raw URL:", window.location.href);
+        console.log("URL search params:", location.search);
+        console.log("Code:", code, "| Valid:", !!code);
+
+        if (!code) {
+          console.error("=== REDIRECTING DUE TO MISSING BOOKING ID ===");
+          alert("Missing booking ID. Redirecting to initiate payment page...");
+          setTimeout(() => {
+            location.replace("initiatepayment.html");
+          }, 2000);
+          return;
         }
 
-        const amount = seats * 1;
+        // ===== USER DETAILS SHEET CONFIGURATION =====
+        const userDetailsSheetID =
+          "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const userDetailsSheetName = "Raw Data";
+
+        // ===== FETCH USER DETAILS BY BOOKING ID =====
+        /**
+         * Fetches user details from the Google Sheet using booking ID
+         * @param {string} bookingId - The booking ID to search for
+         * @returns {Promise<Object|null>} - User details object or null if not found
+         */
+        const fetchUserDetailsByBookingId = async (bookingId) => {
+          try {
+            console.log("=== FETCH USER DETAILS START ===");
+            console.log(`Input booking ID: "${bookingId}"`);
+            console.log(`Sheet ID: ${userDetailsSheetID}`);
+            console.log(`Sheet Name: ${userDetailsSheetName}`);
+
+            // Fetch the entire sheet data
+            const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
+              userDetailsSheetName
+            )}&tq=${encodeURIComponent("SELECT *")}`;
+
+            console.log(`Query URL: ${userUrl}`);
+
+            console.log("Making fetch request...");
+            const response = await fetch(userUrl);
+            console.log(`Response status: ${response.status}`);
+            console.log(`Response ok: ${response.ok}`);
+
+            const data = await response.text();
+            console.log(`Response data length: ${data.length}`);
+            console.log(
+              `Raw response (first 500 chars): ${data.substring(0, 500)}...`
+            );
+
+            if (!response.ok) {
+              console.error(
+                `HTTP Error: ${response.status} ${response.statusText}`
+              );
+              return null;
+            }
+
+            console.log("Parsing JSON response...");
+            const json = JSON.parse(data.substring(47).slice(0, -2));
+            console.log("JSON parsed successfully");
+            console.log(`JSON structure:`, Object.keys(json));
+
+            const rows = json.table.rows;
+            console.log(`Total rows in sheet: ${rows.length}`);
+
+            if (rows.length === 0) {
+              console.warn("No rows found in sheet");
+              return null;
+            }
+
+            console.log(`Searching for booking ID: "${bookingId}"`);
+            console.log("First few rows for debugging:");
+            for (let i = 0; i < Math.min(3, rows.length); i++) {
+              const row = rows[i];
+              console.log(
+                `Row ${i}:`,
+                row.c
+                  ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
+                  .join(", ")
+              );
+            }
+
+            // Search through all rows for the matching booking ID
+            for (let i = 0; i < rows.length; i++) {
+              const row = rows[i];
+              const hashValue = row.c[4]?.v || ""; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
+              const hashValueStr = String(hashValue); // Convert to string to handle both number and string types
+
+              console.log(
+                `Row ${i}: Hash value = "${hashValueStr}", looking for "${bookingId}"`
+              );
+              console.log(
+                `Row ${i} comparison: "${hashValueStr}" === "${bookingId}" = ${
+                  hashValueStr === bookingId
+                }`
+              );
+
+              // Detailed character analysis
+              console.log(
+                `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
+                  hashValueStr.length
+                }`
+              );
+              console.log(
+                `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
+                  bookingId.length
+                }`
+              );
+              console.log(
+                `Row ${i} - hashValue char codes: ${Array.from(hashValueStr)
+                  .map((c) => c.charCodeAt(0))
+                  .join(", ")}`
+              );
+              console.log(
+                `Row ${i} - bookingId char codes: ${Array.from(bookingId)
+                  .map((c) => c.charCodeAt(0))
+                  .join(", ")}`
+              );
+              console.log(
+                `Row ${i} - hashValue trimmed: "${hashValueStr.trim()}"`
+              );
+              console.log(
+                `Row ${i} - bookingId trimmed: "${bookingId.trim()}"`
+              );
+              console.log(
+                `Row ${i} - trimmed comparison: "${hashValueStr.trim()}" === "${bookingId.trim()}" = ${
+                  hashValueStr.trim() === bookingId.trim()
+                }`
+              );
+
+              if (
+                hashValueStr === bookingId ||
+                hashValueStr.trim() === bookingId.trim()
+              ) {
+                console.log(
+                  `Found matching booking ID in row ${i} (${
+                    hashValueStr === bookingId ? "exact match" : "trimmed match"
+                  })`
+                );
+
+                const userDetails = {
+                  email: row.c[1]?.v || "", // B column (Email) - 2nd column (0-indexed as 1)
+                  seats: parseInt(row.c[2]?.v) || 0, // C column (Seats) - 3rd column (0-indexed as 2)
+                  mobile: row.c[3]?.v || "", // D column (Mobile Number) - 4th column (0-indexed as 3)
+                  hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
+                };
+
+                console.log(`User details found:`, userDetails);
+                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                return userDetails;
+              }
+            }
+
+            console.warn(
+              `No user details found for booking ID: "${bookingId}"`
+            );
+            console.log("All rows checked, no match found");
+            console.log("=== FETCH USER DETAILS FAILED ===");
+            return null;
+          } catch (error) {
+            console.error("=== ERROR IN FETCH USER DETAILS ===");
+            console.error("Error details:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
+            return null;
+          }
+        };
+
+        // ===== INITIALIZE USER DETAILS =====
+        const initializeUserDetails = async () => {
+          try {
+            console.log("=== INITIALIZE USER DETAILS START ===");
+            console.log(`Booking ID from URL: "${code}"`);
+            console.log(`Sheet ID: ${userDetailsSheetID}`);
+            console.log(`Sheet Name: ${userDetailsSheetName}`);
+
+            // Show loading state
+            document.getElementById("loadingModal").classList.remove("hidden");
+
+            // Wait 2 seconds before fetching user details from Raw Data
+            console.log("Waiting 2 seconds before fetching...");
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            console.log(
+              "2-second wait completed, now fetching user details..."
+            );
+
+            // Fetch user details from sheet
+            const userDetails = await fetchUserDetailsByBookingId(code);
+
+            console.log("User details returned:", userDetails);
+
+            if (!userDetails) {
+              console.error(
+                "No user details found - redirecting to initiatepayment.html"
+              );
+              alert("Invalid booking ID. Please try again.");
+              location.replace("initiatepayment.html");
+              return;
+            }
+
+            // Validate user details
+            console.log("Validating user details:");
+            console.log(`Email: "${userDetails.email}"`);
+            console.log(`Mobile: "${userDetails.mobile}"`);
+            console.log(`Seats: ${userDetails.seats}`);
+
+            if (
+              !userDetails.email ||
+              !userDetails.mobile ||
+              userDetails.seats < 1
+            ) {
+              console.error(
+                "Invalid user details - redirecting to initiatepayment.html"
+              );
+              console.error(`Email valid: ${!!userDetails.email}`);
+              console.error(`Mobile valid: ${!!userDetails.mobile}`);
+              console.error(`Seats valid: ${userDetails.seats >= 1}`);
+              alert("Invalid user details. Please try again.");
+              location.replace("initiatepayment.html");
+              return;
+            }
+
+            console.log("User details validation passed");
+
+            // Set global variables
+            const email = userDetails.email;
+            const mobile = userDetails.mobile;
+            const seats = userDetails.seats;
+            const amount = seats * 500;
+
+            console.log("Global variables set:");
+            console.log(`Email: ${email}`);
+            console.log(`Mobile: ${mobile}`);
+            console.log(`Seats: ${seats}`);
+            console.log(`Amount: ${amount}`);
+
+            // Update UI elements
+            document.getElementById("seatCount").textContent = seats;
+            document.getElementById("amtTitle").textContent = amount;
+            document.getElementById("amountDisplay").textContent = amount;
+            document.getElementById("manualAmountText").textContent = amount;
+            document.getElementById("emailVal").textContent = email;
+            document.getElementById("mobileVal").textContent = mobile;
+            document.getElementById("bookingIdValSummary").textContent = code;
+            document.getElementById("bookingIdTextModal").textContent = code;
+
+            console.log("UI elements updated successfully");
+
+            // Build UPI URL
+            upiURL = buildUPI(email, seats, amount);
+            console.log("UPI URL built:", upiURL);
+
+            // Set up QR checkbox event listener
+            qrCheckbox.addEventListener("change", () => {
+              const isChecked = qrCheckbox.checked;
+
+              if (isChecked) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+                  upiURL
+                )}`;
+              } else {
+                qrImg.src = qrPlaceholder;
+              }
+
+              [
+                downloadQRBtn,
+                manualPayBtn,
+                paidBtn,
+                havingtroublebutton,
+              ].forEach((btn) => {
+                btn.disabled = !isChecked;
+                btn.classList.toggle("opacity-20", !isChecked);
+                btn.classList.toggle("cursor-not-allowed", !isChecked);
+              });
+            });
+
+            // Show placeholder image initially
+            qrImg.src = qrPlaceholder;
+
+            // Disable buttons initially until checkbox is checked
+            [downloadQRBtn, manualPayBtn, paidBtn, havingtroublebutton].forEach(
+              (btn) => {
+                btn.disabled = true;
+                btn.classList.add("opacity-20", "cursor-not-allowed");
+              }
+            );
+
+            // Hide loading modal
+            document.getElementById("loadingModal").classList.add("hidden");
+
+            console.log("Loading modal hidden, starting application...");
+
+            console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
+          } catch (error) {
+            console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
+            console.error("Error details:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
+            alert("Failed to load user details. Please try again.");
+            location.replace("initiatepayment.html");
+          }
+        };
+
+        // Initialize user details and start the application
+        initializeUserDetails();
 
         /* ---------- helpers ---------- */
 
@@ -646,61 +1321,15 @@
           }
         };
 
-        /* ---------- initialise UI ---------- */
-        seatCount.textContent = seats;
-        amtTitle.textContent = amount;
-        amtDisp.textContent = amount;
-        manualAmt.textContent = amount;
+        /* ---------- UI will be initialized by initializeUserDetails() ---------- */
 
-        emailVal.textContent = email;
-        mobileVal.textContent = mobile;
-        bookingIdVal.textContent = code;
-        bookingIdTextModal.textContent = code;
-
-        const upiURL = buildUPI(email, seats, amount);
-
-        // Disable buttons initially
-        downloadQRBtn.disabled = true;
-        upiIntentBtn.disabled = true;
-        manualPayBtn.disabled = true;
-        paidBtn.disabled = true;
-        havingtroublebutton.disabled = true;
-        [
-          downloadQRBtn,
-          upiIntentBtn,
-          manualPayBtn,
-          paidBtn,
-          havingtroublebutton,
-        ].forEach((btn) => {
-          btn.classList.add("opacity-20", "cursor-not-allowed");
-        });
+        // UPI URL will be built after user details are loaded
+        let upiURL = "";
 
         const qrPlaceholder = "assets/qrdekinai.png"; // placeholder image
         qrImg.src = qrPlaceholder;
 
-        ackCheckbox.addEventListener("change", () => {
-          const isChecked = ackCheckbox.checked;
-
-          if (isChecked) {
-            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-              upiURL
-            )}`;
-          } else {
-            qrImg.src = qrPlaceholder;
-          }
-
-          [
-            downloadQRBtn,
-            upiIntentBtn,
-            manualPayBtn,
-            paidBtn,
-            havingtroublebutton,
-          ].forEach((btn) => {
-            btn.disabled = !isChecked;
-            btn.classList.toggle("opacity-20", !isChecked);
-            btn.classList.toggle("cursor-not-allowed", !isChecked);
-          });
-        });
+        // Checkbox event listener will be set up after user details are loaded
 
         /* ---------- events ---------- */
         manualPayBtn.onclick = () => manualModal.classList.remove("hidden");
@@ -711,8 +1340,66 @@
 
         copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
         copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
-        copyBookingIdBtn.onclick = () => copy(code, copyBookingIdBtn);
         copyBookingIdModalBtn.onclick = () => copy(code, copyBookingIdModalBtn);
+        document.getElementById("copyBookingIdSummaryBtn").onclick = () =>
+          copy(code, document.getElementById("copyBookingIdSummaryBtn"));
+
+        // UPI Transaction Validation
+        const upiTransactionNumber = document.getElementById(
+          "upiTransactionNumber"
+        );
+        const confirmUpiTransactionNumber = document.getElementById(
+          "confirmUpiTransactionNumber"
+        );
+        const transactionValidationMessage = document.getElementById(
+          "transactionValidationMessage"
+        );
+        const transactionValidationSuccess = document.getElementById(
+          "transactionValidationSuccess"
+        );
+        const transactionValidationError = document.getElementById(
+          "transactionValidationError"
+        );
+
+        function validateTransactionNumbers() {
+          const transaction1 = upiTransactionNumber.value.trim();
+          const transaction2 = confirmUpiTransactionNumber.value.trim();
+
+          if (transaction1 === "" || transaction2 === "") {
+            transactionValidationMessage.classList.add("hidden");
+            paidBtn.disabled = true;
+            paidBtn.className =
+              "mt-4 w-full max-w-md bg-gradient-to-r from-gray-400 to-gray-500 text-white py-3 px-6 rounded-lg font-bold text-base shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-not-allowed";
+            return false;
+          }
+
+          if (transaction1 === transaction2) {
+            transactionValidationMessage.classList.remove("hidden");
+            transactionValidationSuccess.classList.remove("hidden");
+            transactionValidationError.classList.add("hidden");
+            paidBtn.disabled = false;
+            paidBtn.className =
+              "mt-4 w-full max-w-md bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-3 px-6 rounded-lg font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2";
+            return true;
+          } else {
+            transactionValidationMessage.classList.remove("hidden");
+            transactionValidationSuccess.classList.add("hidden");
+            transactionValidationError.classList.remove("hidden");
+            paidBtn.disabled = true;
+            paidBtn.className =
+              "mt-4 w-full max-w-md bg-gradient-to-r from-gray-400 to-gray-500 text-white py-3 px-6 rounded-lg font-bold text-base shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-not-allowed";
+            return false;
+          }
+        }
+
+        upiTransactionNumber.addEventListener(
+          "input",
+          validateTransactionNumbers
+        );
+        confirmUpiTransactionNumber.addEventListener(
+          "input",
+          validateTransactionNumbers
+        );
 
         paidBtn.onclick = async () => {
           try {
@@ -724,18 +1411,45 @@
               return;
             }
 
-            // Fetch user details from raw sheet
-            const userDetails = await fetchUserDetails(bookingId);
-            if (!userDetails) {
-              alert("Could not fetch user details. Please try again.");
+            // Get UPI transaction number
+            const upiTransactionNumberValue = upiTransactionNumber.value.trim();
+
+            if (!upiTransactionNumberValue) {
+              alert("Please enter your UPI transaction number.");
               return;
             }
 
-            const { email, seats, mobile } = userDetails;
+            // User details are already loaded from the sheet during initialization
+            // We can access them from the UI elements or store them globally
+            const email = document.getElementById("emailVal").textContent;
+            const mobile = document.getElementById("mobileVal").textContent;
+            const seats = parseInt(
+              document.getElementById("seatCount").textContent
+            );
 
             // Show loading modal
             const modal = document.getElementById("loadingModal");
             modal.classList.remove("hidden");
+
+            // Submit UPI transaction data to Google Form
+            const upiFormURL =
+              "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfuSCJ_RNotyMM4JXItNzn-PODSrM8RjBj1xOFDrec3mxs8bQ/formResponse";
+
+            const upiFormData = new FormData();
+            upiFormData.append("entry.1522002465", bookingId); // Booking ID
+            upiFormData.append("entry.1130423461", upiTransactionNumberValue); // UPI Transaction Number
+
+            try {
+              await fetch(upiFormURL, {
+                method: "POST",
+                mode: "no-cors",
+                body: upiFormData,
+              });
+              console.log("UPI transaction data submitted successfully");
+            } catch (upiError) {
+              console.error("Error submitting UPI transaction data:", upiError);
+              // Continue with the process even if UPI form submission fails
+            }
 
             const formBaseURL =
               "https://docs.google.com/forms/d/e/1FAIpQLSdKvVjiL3W356UZsWKy0BBRpqHxoFN7Q_5UQHUKlQDjxpNxBA/formResponse";
@@ -744,156 +1458,7 @@
             const query = encodeURIComponent("SELECT *");
             const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
 
-            // User details sheet configuration
-            const userDetailsSheetID =
-              "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
-            const userDetailsSheetName = "Raw Data";
-
-            // Fetch user details from raw sheet
-            const fetchUserDetails = async (bookingId) => {
-              try {
-                console.log("=== FETCH USER DETAILS START ===");
-                console.log(`Input booking ID: "${bookingId}"`);
-                console.log(`Sheet ID: ${userDetailsSheetID}`);
-                console.log(`Sheet Name: ${userDetailsSheetName}`);
-
-                // Fetch the entire sheet data
-                const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
-                  userDetailsSheetName
-                )}&tq=${encodeURIComponent("SELECT *")}`;
-
-                console.log(`Query URL: ${userUrl}`);
-
-                console.log("Making fetch request...");
-                const response = await fetch(userUrl);
-                console.log(`Response status: ${response.status}`);
-                console.log(`Response ok: ${response.ok}`);
-
-                const data = await response.text();
-                console.log(`Response data length: ${data.length}`);
-                console.log(
-                  `Raw response (first 500 chars): ${data.substring(0, 500)}...`
-                );
-
-                if (!response.ok) {
-                  console.error(
-                    `HTTP Error: ${response.status} ${response.statusText}`
-                  );
-                  return null;
-                }
-
-                console.log("Parsing JSON response...");
-                const json = JSON.parse(data.substring(47).slice(0, -2));
-                console.log("JSON parsed successfully");
-                console.log(`JSON structure:`, Object.keys(json));
-
-                const rows = json.table.rows;
-                console.log(`Total rows in sheet: ${rows.length}`);
-
-                if (rows.length === 0) {
-                  console.warn("No rows found in sheet");
-                  return null;
-                }
-
-                console.log(`Searching for booking ID: "${bookingId}"`);
-                console.log("First few rows for debugging:");
-                for (let i = 0; i < Math.min(3, rows.length); i++) {
-                  const row = rows[i];
-                  console.log(
-                    `Row ${i}:`,
-                    row.c
-                      ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
-                      .join(", ")
-                  );
-                }
-
-                // Search through all rows for the matching booking ID
-                for (let i = 0; i < rows.length; i++) {
-                  const row = rows[i];
-                  const hashValue = row.c[4]?.v || ""; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
-                  const hashValueStr = String(hashValue); // Convert to string to handle both number and string types
-
-                  console.log(
-                    `Row ${i}: Hash value = "${hashValueStr}", looking for "${bookingId}"`
-                  );
-                  console.log(
-                    `Row ${i} comparison: "${hashValueStr}" === "${bookingId}" = ${
-                      hashValueStr === bookingId
-                    }`
-                  );
-
-                  // Detailed character analysis
-                  console.log(
-                    `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
-                      hashValueStr.length
-                    }`
-                  );
-                  console.log(
-                    `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
-                      bookingId.length
-                    }`
-                  );
-                  console.log(
-                    `Row ${i} - hashValue char codes: ${Array.from(hashValueStr)
-                      .map((c) => c.charCodeAt(0))
-                      .join(", ")}`
-                  );
-                  console.log(
-                    `Row ${i} - bookingId char codes: ${Array.from(bookingId)
-                      .map((c) => c.charCodeAt(0))
-                      .join(", ")}`
-                  );
-                  console.log(
-                    `Row ${i} - hashValue trimmed: "${hashValueStr.trim()}"`
-                  );
-                  console.log(
-                    `Row ${i} - bookingId trimmed: "${bookingId.trim()}"`
-                  );
-                  console.log(
-                    `Row ${i} - trimmed comparison: "${hashValueStr.trim()}" === "${bookingId.trim()}" = ${
-                      hashValueStr.trim() === bookingId.trim()
-                    }`
-                  );
-
-                  if (
-                    hashValueStr === bookingId ||
-                    hashValueStr.trim() === bookingId.trim()
-                  ) {
-                    console.log(
-                      `Found matching booking ID in row ${i} (${
-                        hashValueStr === bookingId
-                          ? "exact match"
-                          : "trimmed match"
-                      })`
-                    );
-
-                    const userDetails = {
-                      email: row.c[1]?.v || "", // B column (Email) - 2nd column (0-indexed as 1)
-                      seats: parseInt(row.c[2]?.v) || 0, // C column (Seats) - 3rd column (0-indexed as 2)
-                      mobile: row.c[3]?.v || "", // D column (Mobile Number) - 4th column (0-indexed as 3)
-                      hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
-                    };
-
-                    console.log(`User details found:`, userDetails);
-                    console.log("=== FETCH USER DETAILS SUCCESS ===");
-                    return userDetails;
-                  }
-                }
-
-                console.warn(
-                  `No user details found for booking ID: "${bookingId}"`
-                );
-                console.log("All rows checked, no match found");
-                console.log("=== FETCH USER DETAILS FAILED ===");
-                return null;
-              } catch (error) {
-                console.error("=== ERROR IN FETCH USER DETAILS ===");
-                console.error("Error details:", error);
-                console.error("Error message:", error.message);
-                console.error("Error stack:", error.stack);
-                return null;
-              }
-            };
+            // User details are already loaded from the sheet, no need to fetch again
 
             const response = await fetch(url);
             const data = await response.text();
@@ -914,7 +1479,9 @@
 
             if (matchingRows.length === 0) {
               modal.classList.add("hidden");
-              alert("No matching Processing + Active entries found.");
+              alert(
+                "Your have either timed out or the seat is no longer available. Please contact support to claim refund or book another slot. No matching Processing + Active entries found."
+              );
               return;
             }
 
@@ -938,7 +1505,7 @@
             }
 
             // Redirect after successful submission
-            window.location.href = "paid.html";
+            window.location.href = paid.html`payment.html?code=${bookingId}`;
           } catch (error) {
             console.error("Booking confirmation failed:", error);
             alert(
@@ -947,12 +1514,6 @@
             document.getElementById("loadingModal").classList.add("hidden");
           }
         };
-
-        document
-          .getElementById("upiIntentBtn")
-          .addEventListener("click", () => {
-            window.open(upiURL);
-          });
 
         downloadQRBtn.onclick = async () => {
           try {
@@ -977,20 +1538,23 @@
         };
       });
     </script>
+    <!-- Loading Modal -->
     <div
       id="loadingModal"
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 hidden"
     >
       <div
-        class="bg-white rounded-xl p-6 shadow-xl text-center max-w-xs flex flex-col items-center"
+        class="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-sm mx-4"
       >
         <div
-          class="w-10 h-10 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-4 animate-spin"
+          class="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full spinner mx-auto mb-6"
         ></div>
-        <h2 class="text-lg font-semibold text-pink-700">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">
           Confirming your booking…
         </h2>
-        <p class="text-sm text-gray-600 mt-2">Please wait a moment.</p>
+        <p class="text-gray-600">
+          Please wait a moment while we process your payment.
+        </p>
       </div>
     </div>
   </body>

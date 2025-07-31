@@ -1,0 +1,1314 @@
+<!-- order.html – Food & Beverage Selection -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – Order Selection</title>
+
+    <!-- Quicksand + Tailwind -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0);
+        --sab: env(safe-area-inset-bottom, 0);
+      }
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        padding: var(--sat) 0 var(--sab);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .menu-item {
+        transition: all 0.3s ease;
+      }
+
+      .menu-item:hover {
+        transform: translateY(-2px);
+      }
+
+      .menu-item.selected {
+        border-color: #ec4899;
+        background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+      }
+
+      .seat-card {
+        transition: all 0.3s ease;
+      }
+
+      .seat-card:hover {
+        transform: translateY(-1px);
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- header -->
+    <header
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <a href="index.html" class="flex items-center hover:opacity-80">
+          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+          >
+            Cafe Kyaa!
+          </h1>
+        </a>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+        >
+          Anime India 2025 · Mumbai
+        </span>
+      </div>
+    </header>
+
+    <!-- main -->
+    <main class="pt-20 flex flex-col items-center p-4">
+      <section
+        class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-pink-200"
+      >
+        <!-- User Details Section -->
+        <div class="fade-in">
+          <div
+            class="relative isolate overflow-hidden rounded-2xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-lg ring-1 ring-inset ring-pink-100/60"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+            <div
+              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+
+            <div class="relative z-10">
+              <!-- Header -->
+              <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">
+                      Your Order Details
+                    </h2>
+                    <p class="text-gray-600 font-medium">
+                      Cafe Kyaa! Food Selection
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Booking Summary -->
+                <div class="text-right">
+                  <div class="text-2xl font-bold gradient-text mb-1">
+                    <span id="totalSeats">0</span> seat(s)
+                  </div>
+                  <div class="text-gray-600">
+                    <span id="selectedCount">0</span> of
+                    <span id="totalSelections">0</span> items selected
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contact Details -->
+              <div
+                class="bg-white rounded-xl p-4 shadow-lg border border-gray-100"
+              >
+                <h3
+                  class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2"
+                >
+                  <svg
+                    class="w-5 h-5 text-pink-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+                    ></path>
+                    <path
+                      d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+                    ></path>
+                  </svg>
+                  Your Details
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div
+                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
+                  >
+                    <div
+                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-pink-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+                        ></path>
+                        <path
+                          d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-gray-500 font-medium">Email</div>
+                      <div
+                        id="emailVal"
+                        class="text-sm font-semibold text-gray-800 break-words max-w-[40vw]"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
+                  >
+                    <div
+                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-pink-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-gray-500 font-medium">
+                        Mobile
+                      </div>
+                      <div
+                        id="mobileVal"
+                        class="text-sm font-semibold text-gray-800 break-words"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Booking ID Section -->
+                <div
+                  class="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-200"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-gray-500 font-medium">
+                        Booking ID
+                      </div>
+                      <div
+                        id="bookingIdValSummary"
+                        class="text-sm font-bold text-gray-800 break-words"
+                      ></div>
+                    </div>
+                  </div>
+                  <button
+                    id="copyBookingIdSummaryBtn"
+                    class="bg-pink-500 hover:bg-pink-600 text-white px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 002 2z"
+                      ></path>
+                    </svg>
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seat Selection -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 mb-4">
+            <div
+              class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-4 h-4 text-pink-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 14v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                ></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Seat Orders</h3>
+          </div>
+
+          <!-- Helper Note -->
+          <div
+            class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center"
+          >
+            <p class="text-sm text-blue-800 font-medium">
+              💡 <strong>Tip:</strong> Click on each seat to select the items.
+            </p>
+          </div>
+
+          <div
+            id="seatContainer"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            <!-- Seat cards will be generated here -->
+          </div>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="flex justify-center pt-6">
+          <button
+            id="continueBtn"
+            class="w-full max-w-md bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+          >
+            Continue to Payment
+          </button>
+        </div>
+
+        <!-- Instructions -->
+        <div
+          class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center"
+        >
+          <p class="text-sm text-blue-800 font-medium">
+            💡 <strong>Tip:</strong> Each seat can have one food item and one
+            beverage. Click on each seat to open the selection modal.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Loading Modal -->
+    <div
+      id="loadingModal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-sm mx-4"
+      >
+        <div
+          class="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full spinner mx-auto mb-6"
+        ></div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">
+          Loading your details…
+        </h2>
+        <p class="text-gray-600">
+          Please wait while we fetch your booking information.
+        </p>
+      </div>
+    </div>
+
+    <!-- Selection Modal -->
+    <div
+      id="selectionModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"
+      >
+        <!-- Modal Header -->
+        <div
+          class="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-6 rounded-t-2xl"
+        >
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-bold">
+              Select Items for <span id="modalSeatTitle">Seat 1</span>
+            </h3>
+            <button
+              id="closeModal"
+              class="text-white hover:text-gray-200 transition-colors"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-6 space-y-6">
+          <!-- Food Selection -->
+          <div class="space-y-3">
+            <h4
+              class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+            >
+              <div
+                class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-3 h-3 text-orange-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              </div>
+              Food Item
+            </h4>
+            <div class="space-y-2">
+              <label
+                class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              >
+                <input
+                  type="radio"
+                  name="food"
+                  value="omurice"
+                  class="mr-3 text-pink-600 focus:ring-pink-500"
+                />
+                <div class="flex-1">
+                  <div class="font-medium text-gray-800">Omurice</div>
+                  <div class="text-sm text-gray-600">
+                    Japanese omelette rice with ketchup
+                  </div>
+                </div>
+              </label>
+              <label
+                class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              >
+                <input
+                  type="radio"
+                  name="food"
+                  value="curry-rice"
+                  class="mr-3 text-pink-600 focus:ring-pink-500"
+                />
+                <div class="flex-1">
+                  <div class="font-medium text-gray-800">Curry Rice</div>
+                  <div class="text-sm text-gray-600">
+                    Japanese curry with rice and vegetables
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Beverage Selection -->
+          <div class="space-y-3">
+            <h4
+              class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+            >
+              <div
+                class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-3 h-3 text-blue-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              Beverage
+            </h4>
+            <div class="space-y-2">
+              <label
+                class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              >
+                <input
+                  type="radio"
+                  name="beverage"
+                  value="iced-tea"
+                  class="mr-3 text-pink-600 focus:ring-pink-500"
+                />
+                <div class="flex-1">
+                  <div class="font-medium text-gray-800">Iced Tea</div>
+                  <div class="text-sm text-gray-600">
+                    Refreshing iced black tea
+                  </div>
+                </div>
+              </label>
+              <label
+                class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              >
+                <input
+                  type="radio"
+                  name="beverage"
+                  value="lemon-tea"
+                  class="mr-3 text-pink-600 focus:ring-pink-500"
+                />
+                <div class="flex-1">
+                  <div class="font-medium text-gray-800">Lemon Tea</div>
+                  <div class="text-sm text-gray-600">
+                    Hot tea with fresh lemon
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-6 py-4 rounded-b-2xl flex gap-3">
+          <button
+            id="saveSelection"
+            class="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2 px-4 rounded-lg font-semibold transition-colors"
+          >
+            Save Selection
+          </button>
+          <button
+            id="cancelSelection"
+            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ===== REFERRER CHECK =====
+      const allowedReferrer = window.location.origin + "/slotselection.html";
+      const urlParams = new URLSearchParams(window.location.search);
+      const hasCode = urlParams.has("code");
+
+      // Extract base URL from referrer (remove query parameters)
+      const referrerUrl = new URL(document.referrer);
+      const baseReferrer = referrerUrl.origin + referrerUrl.pathname;
+
+      if (baseReferrer !== allowedReferrer || !hasCode) {
+        console.log(
+          "Access denied: Invalid referrer or missing code parameter"
+        );
+        console.log("Expected referrer:", allowedReferrer);
+        console.log("Actual referrer:", document.referrer);
+        console.log("Base referrer:", baseReferrer);
+        console.log("Has code parameter:", hasCode);
+        alert("Please access this page through the proper booking flow.");
+        window.location.href = "initiatepayment.html";
+      }
+
+      // ===== ORDER TRACKING CONFIGURATION =====
+      const orderFormURL =
+        "https://docs.google.com/forms/d/e/1FAIpQLSc98yaLaB8GrnXKEo-gXUiGLsGVbXH7XHktNUt9arN850hrTQ/formResponse";
+      const orderSheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+      const orderSheetName = "TabBlocking";
+
+      // Function to check if Order already exists for a booking ID
+      const checkOrderExists = async (bookingId) => {
+        try {
+          console.log("=== CHECKING ORDER STATUS ===");
+          console.log(`Checking booking ID: "${bookingId}"`);
+
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${orderSheetID}/gviz/tq?sheet=${encodeURIComponent(
+            orderSheetName
+          )}&tq=${query}`;
+
+          console.log("Making fetch request to check order...");
+          const response = await fetch(url);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.text();
+          const jsonStart = data.indexOf("{");
+          const jsonEnd = data.lastIndexOf("}") + 1;
+          const jsonData = data.substring(jsonStart, jsonEnd);
+          const json = JSON.parse(jsonData);
+
+          const rows = json.table.rows;
+          console.log(`Total rows in sheet: ${rows.length}`);
+
+          // Search for the booking ID in column B (index 1) and check if Order exists in column C (index 2)
+          for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const bookingIdInSheet = row.c[1]?.v
+              ? String(row.c[1].v).trim()
+              : ""; // Column B (index 1)
+            const tabToBlock = row.c[2]?.v ? String(row.c[2].v).trim() : ""; // Column C (index 2)
+
+            console.log(
+              `Row ${i}: Booking ID = "${bookingIdInSheet}", Tab To Block = "${tabToBlock}"`
+            );
+
+            if (bookingIdInSheet === bookingId) {
+              console.log(`Found booking ID "${bookingId}" in row ${i}`);
+
+              if (tabToBlock === "Order") {
+                console.log(`Order found in row ${i} - User should be blocked`);
+                return true;
+              } else {
+                console.log(
+                  `Booking ID found but Tab To Block is "${tabToBlock}" (not Order)`
+                );
+              }
+            }
+          }
+
+          console.log(
+            `Booking ID "${bookingId}" not found in sheet or no Order recorded`
+          );
+          return false;
+        } catch (error) {
+          console.error("Error checking order status:", error);
+          return false;
+        }
+      };
+
+      // Function to write Order to form
+      const writeOrder = async (bookingId) => {
+        try {
+          console.log("=== WRITING ORDER ===");
+          console.log(`Writing booking ID: "${bookingId}"`);
+
+          const formData = new FormData();
+          formData.append("entry.1737294711", bookingId); // Booking ID
+          formData.append("entry.1621765122", "Order"); // Order
+
+          const response = await fetch(orderFormURL, {
+            method: "POST",
+            mode: "no-cors",
+            body: formData,
+          });
+
+          console.log("Order data written successfully");
+          return true;
+        } catch (error) {
+          console.error("Error writing order:", error);
+          return false;
+        }
+      };
+
+      // Function to initialize order tracking
+      const initializeOrderTracking = async (bookingId) => {
+        try {
+          console.log("=== INITIALIZING ORDER TRACKING ===");
+
+          if (!bookingId) {
+            console.log("No booking ID provided");
+            return;
+          }
+
+          // Check if Order already exists
+          const orderExists = await checkOrderExists(bookingId);
+
+          if (orderExists) {
+            console.log("Order already exists - Reload/Forward/Back detected");
+            alert(
+              "Reload/Forward/Back was detected. Please start booking again."
+            );
+            window.location.href = "initiatepayment.html";
+            return;
+          }
+
+          // Write Order to form
+          console.log("Order not found - writing to form");
+          const writeSuccess = await writeOrder(bookingId);
+
+          if (writeSuccess) {
+            console.log("Order tracking initialized successfully");
+          } else {
+            console.log("Failed to write order data");
+          }
+        } catch (error) {
+          console.error("Error in order tracking:", error);
+        }
+      };
+
+      // Global variables for user details
+      let userEmail = "";
+      let userMobile = "";
+      let userSeats = 0;
+      let userBookingId = "";
+
+      // Google Sheet configuration for user details
+      const userDetailsSheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+      const userDetailsSheetName = "Raw Data";
+
+      // Function to fetch user details from Google Sheet
+      async function fetchUserDetails(bookingId) {
+        console.log("=== FETCH USER DETAILS START ===");
+        console.log("Input booking ID:", JSON.stringify(bookingId));
+        console.log("Sheet ID:", userDetailsSheetID);
+        console.log("Sheet Name:", userDetailsSheetName);
+
+        try {
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${userDetailsSheetName}&tq=${query}`;
+
+          console.log("Query URL:", url);
+          console.log("Making fetch request...");
+
+          const response = await fetch(url);
+          console.log("Response status:", response.status);
+          console.log("Response ok:", response.ok);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.text();
+          console.log("Response data length:", data.length);
+          console.log(
+            "Raw response (first 500 chars):",
+            data.substring(0, 500)
+          );
+
+          // Parse the response
+          const jsonStart = data.indexOf("{");
+          const jsonEnd = data.lastIndexOf("}") + 1;
+          const jsonData = data.substring(jsonStart, jsonEnd);
+
+          console.log("Parsing JSON response...");
+          const json = JSON.parse(jsonData);
+          console.log("JSON parsed successfully");
+          console.log("JSON structure:", Object.keys(json));
+
+          const rows = json.table.rows;
+          console.log("Total rows in sheet:", rows.length);
+
+          // Search for the booking ID
+          console.log("Searching for booking ID:", JSON.stringify(bookingId));
+          console.log("First few rows for debugging:");
+
+          for (let i = 0; i < Math.min(3, rows.length); i++) {
+            const row = rows[i];
+            const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+            console.log(
+              `Row ${i}: col0="${row.c[0]?.v || ""}", col1="${
+                row.c[1]?.v || ""
+              }", col2="${row.c[2]?.v || ""}", col3="${
+                row.c[3]?.v || ""
+              }", col4="${hashValue}", col5="${row.c[5]?.v || ""}", col6="${
+                row.c[6]?.v || ""
+              }", col7="${row.c[7]?.v || ""}", col8="${
+                row.c[8]?.v || ""
+              }", col9="${row.c[9]?.v || ""}", col10="${row.c[10]?.v || ""}"`
+            );
+          }
+
+          for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+
+            console.log(
+              `Row ${i}: Hash value = "${hashValue}", looking for "${bookingId}"`
+            );
+
+            if (hashValue === bookingId) {
+              console.log(
+                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = true`
+              );
+
+              // Additional debugging for type checking
+              console.log(
+                `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
+                  hashValue.length
+                }`
+              );
+              console.log(
+                `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
+                  bookingId.length
+                }`
+              );
+              console.log(
+                `Row ${i} - hashValue char codes: ${Array.from(hashValue)
+                  .map((c) => c.charCodeAt(0))
+                  .join(", ")}`
+              );
+              console.log(
+                `Row ${i} - bookingId char codes: ${Array.from(bookingId)
+                  .map((c) => c.charCodeAt(0))
+                  .join(", ")}`
+              );
+
+              // Try trimming both values
+              const trimmedHash = hashValue.trim();
+              const trimmedBookingId = bookingId.trim();
+              console.log(`Row ${i} - hashValue trimmed: "${trimmedHash}"`);
+              console.log(
+                `Row ${i} - bookingId trimmed: "${trimmedBookingId}"`
+              );
+              console.log(
+                `Row ${i} - trimmed comparison: "${trimmedHash}" === "${trimmedBookingId}" = ${
+                  trimmedHash === trimmedBookingId
+                }`
+              );
+
+              if (trimmedHash === trimmedBookingId) {
+                console.log(
+                  `Found matching booking ID in row ${i} (exact match)`
+                );
+
+                const userDetails = {
+                  email: row.c[1]?.v || "",
+                  seats: parseInt(row.c[2]?.v) || 0,
+                  mobile: row.c[3]?.v || "",
+                  hash: row.c[4]?.v || "",
+                };
+
+                console.log("User details found:", userDetails);
+                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                return userDetails;
+              }
+            } else {
+              console.log(
+                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = false`
+              );
+            }
+          }
+
+          console.log("No matching booking ID found");
+          console.log("=== FETCH USER DETAILS FAILED ===");
+          return null;
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+          console.log("=== FETCH USER DETAILS FAILED ===");
+          return null;
+        }
+      }
+
+      // Function to initialize user details
+      async function initializeUserDetails() {
+        console.log("=== INITIALIZE USER DETAILS START ===");
+
+        try {
+          const params = new URLSearchParams(location.search);
+          const bookingId = params.get("code")?.trim();
+
+          console.log("Booking ID from URL:", JSON.stringify(bookingId));
+          console.log("Sheet ID:", userDetailsSheetID);
+          console.log("Sheet Name:", userDetailsSheetName);
+
+          if (!bookingId) {
+            console.log("No booking ID found in URL parameters");
+
+            // Hide loading modal
+            const loadingModal = document.getElementById("loadingModal");
+            if (loadingModal) {
+              loadingModal.classList.add("hidden");
+            }
+
+            alert("No booking ID found. Please start from the beginning.");
+            window.location.href = "index.html";
+            return;
+          }
+
+          console.log("Waiting 2 seconds before fetching...");
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          console.log("2-second wait completed, now fetching user details...");
+
+          const userDetails = await fetchUserDetails(bookingId);
+
+          if (!userDetails) {
+            console.log("Failed to fetch user details");
+
+            // Hide loading modal
+            const loadingModal = document.getElementById("loadingModal");
+            if (loadingModal) {
+              loadingModal.classList.add("hidden");
+            }
+
+            alert("Failed to load user details. Please try again.");
+            window.location.href = "initiatepayment.html";
+            return;
+          }
+
+          console.log("User details returned:", userDetails);
+
+          // Validate user details
+          console.log("Validating user details:");
+          console.log("Email:", JSON.stringify(userDetails.email));
+          console.log("Mobile:", JSON.stringify(userDetails.mobile));
+          console.log("Seats:", userDetails.seats);
+
+          if (
+            !userDetails.email ||
+            !userDetails.mobile ||
+            userDetails.seats <= 0
+          ) {
+            console.log("User details validation failed");
+
+            // Hide loading modal
+            const loadingModal = document.getElementById("loadingModal");
+            if (loadingModal) {
+              loadingModal.classList.add("hidden");
+            }
+
+            alert("Invalid user details. Please try again.");
+            window.location.href = "initiatepayment.html";
+            return;
+          }
+
+          console.log("User details validation passed");
+
+          // Set global variables
+          userEmail = userDetails.email;
+          userMobile = userDetails.mobile;
+          userSeats = userDetails.seats;
+          userBookingId = bookingId;
+
+          console.log("Global variables set:");
+          console.log("Email:", userEmail);
+          console.log("Mobile:", userMobile);
+          console.log("Seats:", userSeats);
+          console.log("Amount:", userSeats * 500);
+          console.log("Max Seats:", userSeats);
+
+          // Update UI elements
+          document.getElementById("emailVal").textContent = userEmail;
+          document.getElementById("mobileVal").textContent = userMobile;
+          document.getElementById("bookingIdValSummary").textContent =
+            userBookingId;
+          document.getElementById("totalSeats").textContent = userSeats;
+          document.getElementById("totalSelections").textContent =
+            userSeats * 2; // 2 items per seat (food + beverage)
+
+          console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
+
+          // Hide loading modal after successful initialization
+          const loadingModal = document.getElementById("loadingModal");
+          if (loadingModal) {
+            loadingModal.classList.add("hidden");
+          }
+        } catch (error) {
+          console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
+          console.error("Error details:", error);
+          console.error("Error message:", error.message);
+          console.error("Error stack:", error.stack);
+
+          // Hide loading modal on error
+          const loadingModal = document.getElementById("loadingModal");
+          if (loadingModal) {
+            loadingModal.classList.add("hidden");
+          }
+
+          alert("Failed to load user details. Please try again.");
+          window.location.href = "initiatepayment.html";
+        }
+      }
+
+      // Copy function
+      const copy = async (text, btn) => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+          btn.classList.add(
+            "ring-2",
+            "ring-offset-1",
+            "ring-green-400",
+            "transition",
+            "duration-150"
+          );
+          setTimeout(() => {
+            btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+          }, 1100);
+        } catch (err) {
+          alert("Copy failed: " + err);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Show loading modal initially
+        const loadingModal = document.getElementById("loadingModal");
+        loadingModal.classList.remove("hidden");
+
+        // Get booking ID from URL for order tracking
+        const params = new URLSearchParams(location.search);
+        const bookingId = params.get("code")?.trim();
+
+        // ===== ORDER TRACKING INITIALIZATION =====
+        // Initialize order tracking first
+        initializeOrderTracking(bookingId);
+
+        // Initialize user details first
+        await initializeUserDetails();
+
+        // Get URL parameters (now using the fetched user data)
+        const seats = userSeats; // Use fetched seats instead of URL parameter
+        const userBookingIdFromData = userBookingId; // Use fetched booking ID
+
+        // Initialize state
+        let selectedItems = {};
+        let currentSeat = 1;
+        let totalSelections = seats * 2; // 1 food + 1 beverage per seat
+
+        // Modal elements
+        const modal = document.getElementById("selectionModal");
+        const modalSeatTitle = document.getElementById("modalSeatTitle");
+        const closeModal = document.getElementById("closeModal");
+        const saveSelection = document.getElementById("saveSelection");
+        const cancelSelection = document.getElementById("cancelSelection");
+
+        // Update header
+        document.getElementById("totalSeats").textContent = seats;
+        document.getElementById("totalSelections").textContent =
+          totalSelections;
+        document.getElementById("selectedCount").textContent = "0";
+
+        // Generate seat cards
+        const seatContainer = document.getElementById("seatContainer");
+
+        for (let i = 1; i <= seats; i++) {
+          const seatCard = document.createElement("div");
+          seatCard.className =
+            "seat-card bg-white border-2 border-gray-200 rounded-xl p-4 hover:shadow-md cursor-pointer";
+          seatCard.innerHTML = `
+             <div class="flex items-center justify-between mb-3">
+               <h4 class="font-semibold text-gray-800">Seat ${i}</h4>
+               <div class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center">
+                 <span class="text-xs font-bold text-pink-600">${i}</span>
+               </div>
+             </div>
+             <div class="space-y-2">
+               <div class="flex items-center gap-2">
+                 <span class="text-xs font-medium text-gray-500">Food:</span>
+                 <span class="text-sm text-gray-700 font-medium" id="seat${i}Food">Not selected</span>
+               </div>
+               <div class="flex items-center gap-2">
+                 <span class="text-xs font-medium text-gray-500">Beverage:</span>
+                 <span class="text-sm text-gray-700 font-medium" id="seat${i}Beverage">Not selected</span>
+               </div>
+             </div>
+           `;
+          seatContainer.appendChild(seatCard);
+        }
+
+        // Seat click handlers - open modal
+        document.querySelectorAll(".seat-card").forEach((card, index) => {
+          card.addEventListener("click", () => {
+            currentSeat = index + 1;
+            openModal(currentSeat);
+          });
+        });
+
+        // Modal functions
+        function openModal(seatNumber) {
+          modalSeatTitle.textContent = `Seat ${seatNumber}`;
+
+          // Set current selections in modal
+          const currentSelections = selectedItems[seatNumber] || {};
+
+          // Reset radio buttons
+          document.querySelectorAll('input[name="food"]').forEach((radio) => {
+            radio.checked = radio.value === currentSelections.food;
+          });
+
+          document
+            .querySelectorAll('input[name="beverage"]')
+            .forEach((radio) => {
+              radio.checked = radio.value === currentSelections.beverage;
+            });
+
+          modal.classList.remove("hidden");
+        }
+
+        function closeModalFunc() {
+          modal.classList.add("hidden");
+        }
+
+        // Modal event listeners
+        closeModal.addEventListener("click", closeModalFunc);
+        cancelSelection.addEventListener("click", closeModalFunc);
+
+        // Close modal when clicking outside
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            closeModalFunc();
+          }
+        });
+
+        // Save selection
+        saveSelection.addEventListener("click", () => {
+          const selectedFood = document.querySelector(
+            'input[name="food"]:checked'
+          );
+          const selectedBeverage = document.querySelector(
+            'input[name="beverage"]:checked'
+          );
+
+          if (selectedFood && selectedBeverage) {
+            // Save selections
+            selectedItems[currentSeat] = {
+              food: selectedFood.value,
+              beverage: selectedBeverage.value,
+            };
+
+            updateSeatDisplay();
+            updateProgress();
+            updateContinueButton();
+            closeModalFunc();
+          } else {
+            // Show error or alert
+            alert("Please select both a food item and a beverage.");
+          }
+        });
+
+        function updateSeatDisplay() {
+          for (let i = 1; i <= seats; i++) {
+            const foodElement = document.getElementById(`seat${i}Food`);
+            const beverageElement = document.getElementById(`seat${i}Beverage`);
+
+            if (selectedItems[i]) {
+              foodElement.textContent = selectedItems[i].food
+                ? getItemDisplayName(selectedItems[i].food)
+                : "Not selected";
+              beverageElement.textContent = selectedItems[i].beverage
+                ? getItemDisplayName(selectedItems[i].beverage)
+                : "Not selected";
+            } else {
+              foodElement.textContent = "Not selected";
+              beverageElement.textContent = "Not selected";
+            }
+          }
+        }
+
+        function updateProgress() {
+          let totalSelected = 0;
+          for (let i = 1; i <= seats; i++) {
+            if (selectedItems[i]) {
+              totalSelected += Object.keys(selectedItems[i]).length;
+            }
+          }
+          document.getElementById("selectedCount").textContent = totalSelected;
+        }
+
+        function updateContinueButton() {
+          const continueBtn = document.getElementById("continueBtn");
+          let allComplete = true;
+
+          for (let i = 1; i <= seats; i++) {
+            if (
+              !selectedItems[i] ||
+              !selectedItems[i].food ||
+              !selectedItems[i].beverage
+            ) {
+              allComplete = false;
+              break;
+            }
+          }
+
+          continueBtn.disabled = !allComplete;
+
+          if (allComplete) {
+            continueBtn.textContent = "Continue to Payment";
+          } else {
+            continueBtn.textContent = `Complete ${seats} seat(s) selection`;
+          }
+        }
+
+        function getItemDisplayName(itemKey) {
+          const displayNames = {
+            omurice: "Omurice",
+            "curry-rice": "Curry Rice",
+            "iced-tea": "Iced Tea",
+            "lemon-tea": "Lemon Tea",
+          };
+          return displayNames[itemKey] || itemKey;
+        }
+
+        // Copy booking ID button handler
+        document.getElementById("copyBookingIdSummaryBtn").onclick = () =>
+          copy(
+            userBookingId,
+            document.getElementById("copyBookingIdSummaryBtn")
+          );
+
+        // Continue button handler
+        document
+          .getElementById("continueBtn")
+          .addEventListener("click", async () => {
+            if (Object.keys(selectedItems).length === seats) {
+              // Show loading modal
+              const loadingModal = document.getElementById("loadingModal");
+              loadingModal.classList.remove("hidden");
+
+              // Update loading modal text for food submission
+              const loadingTitle = loadingModal.querySelector("h2");
+              const loadingText = loadingModal.querySelector("p");
+              loadingTitle.textContent = "Submitting your food choices…";
+              loadingText.textContent =
+                "Please wait while we save your selections.";
+
+              try {
+                // Google Form URL for food choices
+                const foodFormURL =
+                  "https://docs.google.com/forms/d/e/1FAIpQLSfAJIyMEWNSuoY1Ltqd7nxy1AMvo6-WICBMEa8Vx_S97WnjJw/formResponse";
+
+                // Submit data for each seat
+                for (let seatNumber = 1; seatNumber <= seats; seatNumber++) {
+                  const seatData = selectedItems[seatNumber];
+                  if (seatData && seatData.food && seatData.beverage) {
+                    const formData = new FormData();
+                    formData.append("entry.1027873371", userBookingId); // Booking ID
+                    formData.append(
+                      "entry.1770511778",
+                      getItemDisplayName(seatData.food)
+                    ); // Food
+                    formData.append(
+                      "entry.296635150",
+                      getItemDisplayName(seatData.beverage)
+                    ); // Beverage
+
+                    try {
+                      await fetch(foodFormURL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        body: formData,
+                      });
+                      console.log(
+                        `Food data submitted successfully for seat ${seatNumber}`
+                      );
+
+                      // Add a small delay between submissions
+                      await new Promise((resolve) => setTimeout(resolve, 200));
+                    } catch (error) {
+                      console.error(
+                        `Error submitting food data for seat ${seatNumber}:`,
+                        error
+                      );
+                    }
+                  }
+                }
+
+                console.log("All food choices submitted successfully");
+
+                // Hide loading modal
+                loadingModal.classList.add("hidden");
+
+                // Prepare order data for payment page
+                const orderData = {
+                  bookingId: userBookingId,
+                  seats: userSeats,
+                  orders: selectedItems,
+                };
+
+                // Redirect to payment page with order data
+                const orderParam = encodeURIComponent(
+                  JSON.stringify(orderData)
+                );
+                window.location.href = `payment.html?code=${userBookingId}`;
+              } catch (error) {
+                console.error("Error submitting food choices:", error);
+
+                // Hide loading modal
+                loadingModal.classList.add("hidden");
+
+                alert(
+                  "There was an issue saving your food choices. Please try again."
+                );
+              }
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
