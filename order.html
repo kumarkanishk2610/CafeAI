@@ -117,9 +117,73 @@
 
     <!-- main -->
     <main class="pt-20 flex flex-col items-center p-4">
-      <section
-        class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-pink-200"
-      >
+      <div class="w-full max-w-4xl space-y-6">
+        <!-- Countdown Timer -->
+        <div id="countdownContainer" class="fade-in sticky top-20 z-30">
+          <!-- Full-width frosted glass backdrop -->
+          <div
+            class="absolute inset-x-0 -top-6 -bottom-6 -mx-4 pointer-events-none"
+            style="
+              background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.95) 20%,
+                rgba(255, 255, 255, 0.3) 40%,
+                rgba(255, 255, 255, 0) 80%
+              );
+            "
+          ></div>
+
+          <div
+            class="bg-gradient-to-r from-orange-50/90 to-red-50/90 backdrop-blur-md border border-orange-200/80 rounded-xl p-4 shadow-xl relative overflow-hidden"
+          >
+            <!-- Decorative blur elements -->
+            <div
+              class="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-orange-200 to-red-200 rounded-full opacity-30 blur-xl"
+            ></div>
+            <div
+              class="absolute -bottom-8 -left-8 w-12 h-12 bg-gradient-to-br from-red-200 to-orange-200 rounded-full opacity-30 blur-xl"
+            ></div>
+
+            <div class="relative z-10 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-md"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-gray-800">
+                    Complete your booking
+                  </h3>
+                  <p class="text-xs text-gray-600">before time runs out</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <div
+                  id="countdownTimer"
+                  class="text-2xl font-bold text-orange-600 font-mono"
+                >
+                  Loading...
+                </div>
+                <div class="text-xs text-gray-500">minutes:seconds</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section
+          class="w-full bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-pink-200"
+        >
         <!-- User Details Section -->
         <div class="fade-in">
           <div
@@ -533,9 +597,9 @@
                   class="mr-3 text-pink-600 focus:ring-pink-500"
                 />
                 <div class="flex-1">
-                  <div class="font-medium text-gray-800">Lemon Tea</div>
+                  <div class="font-medium text-gray-800">Plain Water</div>
                   <div class="text-sm text-gray-600">
-                    Hot tea with fresh lemon
+                    It's just water. H₂O. Mizu.
                   </div>
                 </div>
               </label>
@@ -582,6 +646,195 @@
         alert("Please access this page through the proper booking flow.");
         window.location.href = "initiatepayment.html";
       }
+
+      // ===== COUNTDOWN TIMER CONFIGURATION =====
+      let countdownInterval;
+      let timeoutOccurred = false;
+
+      const initializeCountdownTimer = async (bookingId) => {
+        try {
+          console.log("=== INITIALIZING COUNTDOWN TIMER ===");
+          console.log("Booking ID:", bookingId);
+
+          // Fetch data from Slot Blocking Sources sheet
+          const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+          const sheetName = "Slot Blocking Sources";
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${encodeURIComponent(
+            sheetName
+          )}&tq=${query}`;
+
+          console.log("Fetching data from:", url);
+
+          const response = await fetch(url);
+          const data = await response.text();
+          const json = JSON.parse(data.substring(47).slice(0, -2));
+          const rows = json.table.rows;
+
+          console.log("Total rows fetched:", rows.length);
+
+          // Find the last occurrence of the booking ID with status "Processing"
+          let lastProcessingEntry = null;
+          for (let i = rows.length - 1; i >= 0; i--) {
+            const row = rows[i];
+            const rowBookingId = row.c[3]?.v ? String(row.c[3].v).trim() : "";
+            const status = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+
+            if (rowBookingId === bookingId && status === "Processing") {
+              lastProcessingEntry = row;
+              break;
+            }
+          }
+
+          if (!lastProcessingEntry) {
+            console.error(
+              "No Processing entry found for booking ID:",
+              bookingId
+            );
+            document.getElementById("countdownTimer").textContent = "N/A";
+            return;
+          }
+
+          // Extract timestamp from the first column
+          const timestampStr = lastProcessingEntry.c[0]?.v;
+          if (!timestampStr) {
+            console.error("No timestamp found in Processing entry");
+            document.getElementById("countdownTimer").textContent = "N/A";
+            return;
+          }
+
+          console.log("Found Processing entry timestamp:", timestampStr);
+
+          // Parse the timestamp from Google Sheets format
+          let timestamp;
+          if (
+            typeof timestampStr === "string" &&
+            timestampStr.startsWith("Date(")
+          ) {
+            // Parse Google Sheets Date format: "Date(2025,7,1,10,19,16)"
+            const match = timestampStr.match(
+              /Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/
+            );
+            if (match) {
+              const [, year, month, day, hour, minute, second] = match;
+              // Note: Google Sheets months are 1-indexed, JavaScript is 0-indexed
+              // But it seems the month values are already 0-indexed in the data
+              timestamp = new Date(
+                parseInt(year),
+                parseInt(month),
+                parseInt(day),
+                parseInt(hour),
+                parseInt(minute),
+                parseInt(second)
+              );
+            } else {
+              console.error(
+                "Could not parse timestamp format:",
+                timestampStr
+              );
+              document.getElementById("countdownTimer").textContent = "N/A";
+              return;
+            }
+          } else {
+            // Try direct Date constructor as fallback
+            timestamp = new Date(timestampStr);
+          }
+
+          if (isNaN(timestamp.getTime())) {
+            console.error("Invalid timestamp after parsing:", timestampStr);
+            document.getElementById("countdownTimer").textContent = "N/A";
+            return;
+          }
+
+          const tPlus10 = new Date(timestamp.getTime() + 10 * 60 * 1000); // T + 10 minutes
+
+          console.log("Original timestamp:", timestamp);
+          console.log("T+10 deadline:", tPlus10);
+
+          // Start countdown
+          updateCountdown(tPlus10);
+        } catch (error) {
+          console.error("Error initializing countdown timer:", error);
+          document.getElementById("countdownTimer").textContent = "Error";
+        }
+      };
+
+      const updateCountdown = (deadline) => {
+        const updateTimer = () => {
+          if (timeoutOccurred) return;
+
+          const now = new Date();
+          const timeLeft = deadline - now;
+
+          if (timeLeft <= 0) {
+            // Timeout occurred
+            timeoutOccurred = true;
+            clearInterval(countdownInterval);
+
+            console.log("=== TIMEOUT OCCURRED ===");
+            console.log("Current time:", now);
+            console.log("Deadline:", deadline);
+            console.log("Time left:", timeLeft);
+
+            // Show timeout message
+            document.getElementById("countdownTimer").textContent = "00:00";
+            document
+              .getElementById("countdownTimer")
+              .classList.add("text-red-600");
+
+            // Notify user and redirect
+            alert(
+              "Payment timeout occurred. Your booking has expired. You will be redirected to the booking failed page."
+            );
+            window.location.href = "bookingfailed.html";
+            return;
+          }
+
+          // Calculate minutes and seconds
+          const minutes = Math.floor(timeLeft / (1000 * 60));
+          const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+          // Check for valid numbers
+          if (isNaN(minutes) || isNaN(seconds)) {
+            console.error("Invalid time calculation:", {
+              timeLeft,
+              minutes,
+              seconds,
+            });
+            document.getElementById("countdownTimer").textContent = "Error";
+            return;
+          }
+
+          // Update display
+          const displayText = `${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+          document.getElementById("countdownTimer").textContent = displayText;
+
+          // Change color when less than 2 minutes remaining
+          if (timeLeft < 2 * 60 * 1000) {
+            document
+              .getElementById("countdownTimer")
+              .classList.add("text-red-600");
+          } else if (timeLeft < 5 * 60 * 1000) {
+            document
+              .getElementById("countdownTimer")
+              .classList.add("text-orange-600");
+          } else {
+            document
+              .getElementById("countdownTimer")
+              .classList.remove("text-red-600", "text-orange-600");
+          }
+
+          console.log("Countdown updated:", displayText);
+        };
+
+        // Update immediately
+        updateTimer();
+
+        // Update every second
+        countdownInterval = setInterval(updateTimer, 1000);
+      };
 
       // ===== ORDER TRACKING CONFIGURATION =====
       const orderFormURL =
@@ -1031,6 +1284,9 @@
 
         // Initialize user details first
         await initializeUserDetails();
+
+        // Initialize countdown timer
+        initializeCountdownTimer(bookingId);
 
         // Get URL parameters (now using the fetched user data)
         const seats = userSeats; // Use fetched seats instead of URL parameter
