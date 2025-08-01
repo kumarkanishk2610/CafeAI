@@ -427,10 +427,14 @@
                   <h4 class="font-semibold text-gray-800 mb-1">
                     Important Note
                   </h4>
-                  <p class="text-sm text-gray-600 leading-relaxed">
-                    Use the same email and seat count throughout the booking.
-                    After payment, our team will verify and confirm your ticket.
-                    You'll receive a confirmation email once it's done.
+                  <p class="text-sm text-gray-600 break-words">
+                    In case of any issues or queries, please raise a ticket via
+                    <a
+                      href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                      target="_blank"
+                      class="text-blue-600 underline hover:text-blue-800 font-medium"
+                      >this form</a
+                    >. We will try to get back to you as soon as possible.
                   </p>
                 </div>
               </div>
@@ -461,15 +465,9 @@
                     Refund Policy
                   </h4>
                   <p class="text-sm text-gray-600 leading-relaxed">
-                    If your preferred slot isn't available, you can request a
-                    refund within 2 hours via
-                    <a
-                      href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
-                      target="_blank"
-                      class="text-blue-600 underline hover:text-blue-800 font-medium"
-                      >this form</a
-                    >. If tickets are sold out, your payment will be refunded
-                    automatically within 24 hours.
+                    In case your booking fails but your payment is completed,
+                    please raise a ticket at the link given above and we will
+                    issue a refund.
                   </p>
                 </div>
               </div>
@@ -539,14 +537,14 @@
     <!-- JavaScript -->
     <script>
       // ===== REFERRER CHECK =====
-      const allowedReferrer = window.location.origin + "/initiatepayment.html";
+      /*<const allowedReferrer = window.location.origin + "/initiatebooking.html";
       if (document.referrer !== allowedReferrer) {
         console.log("Access denied: Invalid referrer");
         console.log("Expected referrer:", allowedReferrer);
         console.log("Actual referrer:", document.referrer);
         alert("Please access this page through the proper booking flow.");
-        window.location.href = "initiatepayment.html";
-      }
+        window.location.href = "initiatebooking.html";
+      }*/
 
       // ===== SLOT SELECTION TRACKING =====
       const slotSelectionFormURL =
@@ -675,7 +673,7 @@
             alert(
               "Reload/Forward/Back was detected. Please start booking again."
             );
-            window.location.href = "initiatepayment.html";
+            window.location.href = "initiatebooking.html";
             return;
           }
 
@@ -911,7 +909,7 @@
 
       // Validate booking ID parameter
       if (!bookingId) {
-        location.replace("initiatepayment.html");
+        location.replace("initiatebooking.html");
       }
 
       // ===== SLOT SELECTION TRACKING INITIALIZATION =====
@@ -941,10 +939,10 @@
 
           if (!userDetails) {
             console.error(
-              "No user details found - redirecting to initiatepayment.html"
+              "No user details found - redirecting to initiatebooking.html"
             );
             alert("Invalid booking ID. Please try again.");
-            location.replace("initiatepayment.html");
+            location.replace("initiatebooking.html");
             return;
           }
 
@@ -960,13 +958,13 @@
             userDetails.seats < 1
           ) {
             console.error(
-              "Invalid user details - redirecting to initiatepayment.html"
+              "Invalid user details - redirecting to initiatebooking.html"
             );
             console.error(`Email valid: ${!!userDetails.email}`);
             console.error(`Mobile valid: ${!!userDetails.mobile}`);
             console.error(`Seats valid: ${userDetails.seats >= 1}`);
             alert("Invalid user details. Please try again.");
-            location.replace("initiatepayment.html");
+            location.replace("initiatebooking.html");
             return;
           }
 
@@ -1011,7 +1009,7 @@
           console.error("Error message:", error.message);
           console.error("Error stack:", error.stack);
           alert("Failed to load user details. Please try again.");
-          location.replace("initiatepayment.html");
+          location.replace("initiatebooking.html");
         }
       };
 

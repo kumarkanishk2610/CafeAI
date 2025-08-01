@@ -97,29 +97,57 @@
         }
       }
 
-      #logo {
-        width: clamp(12rem, 100vmin, 40rem);
-        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s;
+      .slide-in {
+        animation: slideIn 0.6s ease-out;
       }
-      #logo:hover {
-        transform: scale(1.08) rotate(8deg);
-        filter: drop-shadow(0 8px 12px rgb(251 113 133 / 0.5));
-      }
-      #logo.clicked {
-        animation: spinOut 0.9s ease forwards;
-      }
-      @keyframes spinOut {
-        0% {
-          transform: scale(1) rotate(0);
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
-        40% {
-          transform: scale(1.2) rotate(180deg);
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .bounce-in {
+        animation: bounceIn 0.8s ease-out;
+      }
+
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        70% {
+          transform: scale(0.9);
         }
         100% {
-          transform: scale(0.1) rotate(540deg);
-          opacity: 0;
+          opacity: 1;
+          transform: scale(1);
         }
       }
+
+      .pulse-glow {
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+        }
+      }
+
       .fade {
         opacity: 0;
         transform: translateY(24px);
@@ -167,11 +195,25 @@
           background-position: 0 0;
         }
       }
+
+      .floating {
+        animation: floating 3s ease-in-out infinite;
+      }
+
+      @keyframes floating {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
     </style>
   </head>
 
   <body
-    class="bubbles relative flex flex-col items-center justify-center overflow-hidden"
+    class="bubbles relative flex flex-col items-center justify-center overflow-x-hidden"
   >
     <!-- HEADER -->
     <header
@@ -198,248 +240,293 @@
     <!-- WELCOME -->
     <section
       id="welcome"
-      class="flex flex-col items-center justify-center text-center px-4 min-h-screen"
+      class="flex flex-col items-center justify-center text-center px-4 min-h-screen py-8"
     >
-      <img
-        id="logo"
-        src="logo.png"
-        alt="Cafe Kyaa! logo"
-        class="rounded-full cursor-pointer select-none"
-      />
-      <p class="mt-8 text-pink-700 font-medium animate-pulse px-4 break-words">
-        Tap the logo to Begin!✨
-      </p>
+      <!-- Hero Section -->
+      <div class="relative z-10 max-w-4xl mx-auto">
+        <!-- Logo with floating animation -->
+        <div class="mb-12 floating">
+          <img
+            src="logo.png"
+            alt="Cafe Kyaa! logo"
+            class="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto shadow-2xl"
+          />
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 gradient-text">
+          Welcome to Cafe Kyaa!
+        </h1>
+
+        <!-- Subtitle -->
+        <p
+          class="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
+        >
+          Experience the magic of anime culture at Mumbai's premier maid café.
+          Book your slot and immerse yourself in kawaii wonder! ✨
+        </p>
+
+        <!-- Call to Action Buttons -->
+        <div class="space-y-4 max-w-md mx-auto">
+          <button
+            id="startBookingBtn"
+            class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-4 px-8 rounded-2xl font-bold text-lg shadow-xl card-hover pulse-glow transition-all duration-300 transform hover:scale-105"
+          >
+            <span class="flex items-center justify-center gap-3">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Book Now!
+            </span>
+          </button>
+
+          <button
+            id="viewRulesBtn"
+            class="hidden w-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-700 py-3 px-6 rounded-xl font-semibold shadow-lg card-hover border border-pink-200 transition-all duration-300"
+          >
+            <span class="flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              View House Rules
+            </span>
+          </button>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="mt-12 text-sm text-gray-500 max-w-2xl mx-auto">
+          <p class="mb-2">
+            📍 <span class="font-medium">Location:</span> Anime India 2025,
+            Mumbai
+          </p>
+          <p class="mb-2">
+            ⏰ <span class="font-medium">Duration:</span> 30-minute slots
+          </p>
+          <p>💰 <span class="font-medium">Price:</span> ₹500 per person</p>
+        </div>
+      </div>
+
+      <!-- Decorative Elements -->
+      <div
+        class="absolute top-20 left-4 w-20 h-20 bg-pink-200 rounded-full opacity-30 blur-xl"
+      ></div>
+      <div
+        class="absolute bottom-20 right-4 w-16 h-16 bg-rose-200 rounded-full opacity-30 blur-xl"
+      ></div>
+      <div
+        class="absolute top-1/2 left-2 w-12 h-12 bg-pink-300 rounded-full opacity-20 blur-lg"
+      ></div>
+      <div
+        class="absolute top-1/3 right-2 w-10 h-10 bg-rose-300 rounded-full opacity-20 blur-lg"
+      ></div>
     </section>
 
     <!-- MAIN -->
     <main
       id="content"
-      class="hidden pt-20 flex flex-col items-center w-full text-gray-800"
+      class="hidden pt-20 flex flex-col items-center w-full text-gray-800 overflow-x-hidden"
     >
       <!-- RULES -->
       <section
         id="rules"
-        class="hidden fade w-full max-w-4xl px-6 py-0 space-y-6"
+        class="hidden fade w-full max-w-4xl px-6 py-0 space-y-6 overflow-x-hidden"
       >
         <div class="fade-in">
+          <!-- Decorative elements -->
           <div
-            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
-          >
-            <!-- Decorative elements -->
+            class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
+          ></div>
+          <div
+            class="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
+          ></div>
+
+          <div class="relative z-10">
+            <!-- Header -->
+
+            <!-- Rules List -->
             <div
-              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
-            ></div>
-            <div
-              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
-            ></div>
-
-            <div class="relative z-10">
-              <!-- Header -->
-              <div class="flex items-center gap-4 mb-6">
-                <div
-                  class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <svg
-                    class="w-6 h-6 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h2 class="text-xl font-bold text-gray-800 mb-1">
-                    House Rules & Guest Consent
-                  </h2>
-                  <p class="text-gray-600 font-medium">
-                    Please read the rules carefully to ensure a safe and
-                    enchanting experience for everyone. 🌸
-                  </p>
-                </div>
+              class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 mb-6"
+            >
+              <div class="text-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-1">
+                  House Rules & Guest Consent
+                </h2>
+                <p class="text-gray-600 font-medium">
+                  Please read the rules carefully to ensure a safe and
+                  enchanting experience for everyone. 🌸
+                </p>
               </div>
-
-              <!-- Rules List -->
-              <div
-                class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 mb-6"
+              <ol
+                class="space-y-4 text-gray-700 leading-relaxed text-sm sm:text-base"
               >
-                <ol
-                  class="space-y-4 text-gray-700 leading-relaxed text-sm sm:text-base"
-                >
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >1</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Respect & Courtesy:</span
-                      >
-                      Treat maids, staff, and fellow guests with kindness.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >2</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Consent First:</span
-                      >
-                      No physical contact or photography without permission.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >3</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Voice Level:</span
-                      >
-                      Keep conversations at a gentle indoor volume.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >4</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Food & Drinks:</span
-                      >
-                      No outside consumables inside.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >5</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Health & Safety:</span
-                      >
-                      Follow staff guidance at all times.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >6</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Slot Timing:</span
-                      >
-                      Arrive 5 min early; 30‑min slots are strict.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >7</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Payment Verification:</span
-                      >
-                      Show your QR confirmation at entry.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >8</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Refund Policy:</span
-                      >
-                      50 % refund up to 24 h before; none after slot chosen.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >9</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Prohibited Items:</span
-                      >
-                      Weapons, alcohol, illicit substances.
-                    </div>
-                  </li>
-                  <li class="flex items-start gap-3 break-words">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                      >10</span
-                    >
-                    <div>
-                      <span class="font-medium text-pink-600"
-                        >Have Fun! 🎀</span
-                      >
-                      Immerse yourself in the kawaii spirit!
-                    </div>
-                  </li>
-                </ol>
-              </div>
-
-              <!-- Agreement Section -->
-              <div
-                class="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
-              >
-                <div class="space-y-4">
-                  <label
-                    class="inline-flex items-start gap-3 text-sm text-gray-700 cursor-pointer"
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >1</span
                   >
-                    <input
-                      id="agree"
-                      type="checkbox"
-                      class="mt-1 h-5 w-5 text-pink-600 rounded focus:ring-pink-500 focus:ring-2"
-                    />
-                    <span class="break-words">
-                      I have read and agree to the Maid Café Expo rules.
-                    </span>
-                  </label>
-
-                  <button
-                    id="continue"
-                    type="button"
-                    class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 rounded-xl font-semibold shadow-lg card-hover glow-animation opacity-50 cursor-not-allowed"
-                  >
-                    <span class="flex items-center justify-center gap-2">
-                      <svg
-                        class="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      Accept & Continue
-                    </span>
-                  </button>
-
-                  <div id="timerText" class="text-center">
-                    <p class="text-sm text-pink-600 mb-2">
-                      You can accept after
-                      <span id="count" class="font-bold">30</span>s.
-                    </p>
-                    <p class="text-xs text-gray-500 break-words">
-                      Please take a moment to read the rules!
-                    </p>
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Respect & Courtesy:</span
+                    >
+                    Treat maids, staff, and fellow guests with kindness.
                   </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >2</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Consent First:</span
+                    >
+                    No physical contact or photography without permission.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >3</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600">Voice Level:</span>
+                    Keep conversations at a gentle indoor volume.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >4</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Food & Drinks:</span
+                    >
+                    No outside consumables inside.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >5</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Health & Safety:</span
+                    >
+                    Follow staff guidance at all times.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >6</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600">Slot Timing:</span>
+                    Arrive 5 min early; 30‑min slots are strict.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >7</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Payment Verification:</span
+                    >
+                    Show your QR confirmation at entry.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >8</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Refund Policy:</span
+                    >
+                    50 % refund up to 24 h before; none after slot chosen.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >9</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600"
+                      >Prohibited Items:</span
+                    >
+                    Weapons, alcohol, illicit substances.
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 break-words">
+                  <span
+                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                    >10</span
+                  >
+                  <div>
+                    <span class="font-medium text-pink-600">Have Fun! 🎀</span>
+                    Immerse yourself in the kawaii spirit!
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <!-- Agreement Section -->
+            <div
+              class="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
+            >
+              <div class="space-y-4">
+                <label
+                  class="inline-flex items-start gap-3 text-sm text-gray-700 cursor-pointer"
+                >
+                  <input id="agree" type="checkbox" class="mt-1 h-5 w-5" />
+                  <span class="break-words">
+                    I have read and agree to the Maid Café Expo rules.
+                  </span>
+                </label>
+
+                <button
+                  id="continue"
+                  type="button"
+                  class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 rounded-xl font-semibold shadow-lg card-hover glow-animation opacity-50 cursor-not-allowed"
+                >
+                  <span class="flex items-center justify-center gap-2">
+                    <svg
+                      class="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Accept & Continue
+                  </span>
+                </button>
+
+                <div id="timerText" class="text-center">
+                  <p class="text-sm text-pink-600 mb-2">
+                    You can accept after
+                    <span id="count" class="font-bold">30</span>s.
+                  </p>
+                  <p class="text-xs text-gray-500 break-words">
+                    Please take a moment to read the rules!
+                  </p>
                 </div>
               </div>
             </div>
@@ -459,7 +546,8 @@
       setVH();
       window.addEventListener("resize", setVH);
 
-      const logo = document.getElementById("logo"),
+      const startBookingBtn = document.getElementById("startBookingBtn"),
+        viewRulesBtn = document.getElementById("viewRulesBtn"),
         welcome = document.getElementById("welcome"),
         rules = document.getElementById("rules"),
         agree = document.getElementById("agree"),
@@ -468,20 +556,30 @@
         timerTxt = document.getElementById("timerText"),
         countEl = document.getElementById("count");
 
-      logo.addEventListener("click", () => {
-        logo.classList.add("clicked");
-        setTimeout(() => {
-          welcome.classList.add("hidden");
-          rules.classList.remove("hidden");
-          rules.classList.add("show");
-          topBar.classList.remove("hidden");
-          document.getElementById("content").classList.remove("hidden");
-          document.body.classList.remove("bubbles", "justify-center");
-          document.body.classList.add("bg-gray-50", "text-gray-800");
-          document.body.classList.remove("overflow-hidden");
-          window.scrollTo({ top: 0, behavior: "auto" });
-          startTimer();
-        }, 800);
+      // Start Booking Button - shows rules first, then allows booking
+      startBookingBtn.addEventListener("click", () => {
+        welcome.classList.add("hidden");
+        rules.classList.remove("hidden");
+        rules.classList.add("show");
+        topBar.classList.remove("hidden");
+        document.getElementById("content").classList.remove("hidden");
+        document.body.classList.remove("bubbles", "justify-center");
+        document.body.classList.add("bg-gray-50", "text-gray-800");
+        window.scrollTo({ top: 0, behavior: "auto" });
+        startTimer();
+      });
+
+      // View Rules Button - shows the rules section
+      viewRulesBtn.addEventListener("click", () => {
+        welcome.classList.add("hidden");
+        rules.classList.remove("hidden");
+        rules.classList.add("show");
+        topBar.classList.remove("hidden");
+        document.getElementById("content").classList.remove("hidden");
+        document.body.classList.remove("bubbles", "justify-center");
+        document.body.classList.add("bg-gray-50", "text-gray-800");
+        window.scrollTo({ top: 0, behavior: "auto" });
+        startTimer();
       });
 
       let remaining = 0,
@@ -515,7 +613,7 @@
           );
           return;
         }
-        location.href = "initiatepayment.html";
+        location.href = "initiatebooking.html";
       });
     </script>
   </body>

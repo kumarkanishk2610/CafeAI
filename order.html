@@ -430,6 +430,80 @@
             beverage. Click on each seat to open the selection modal.
           </p>
         </div>
+        <!-- Information Cards -->
+<div class="fade-in" style="animation-delay: 0.4s">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Note Card -->
+    <div
+      class="bg-white rounded-xl p-4 shadow-lg border border-blue-100"
+    >
+      <div class="flex items-start gap-3">
+        <div
+          class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+        >
+          <svg
+            class="w-5 h-5 text-blue-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-800 mb-1">
+            Important Note
+          </h4>
+          <p class="text-sm text-gray-600 break-words">
+            In case of any issues or queries, please raise a ticket via
+            <a
+              href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+              target="_blank"
+              class="text-blue-600 underline hover:text-blue-800 font-medium"
+              >this form</a
+            >. We will try to get back to you as soon as possible.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Refund Card -->
+    <div
+      class="bg-white rounded-xl p-4 shadow-lg border border-green-100"
+    >
+      <div class="flex items-start gap-3">
+        <div
+          class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0"
+        >
+          <svg
+            class="w-5 h-5 text-green-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-800 mb-1">
+            Refund Policy
+          </h4>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            In case your booking fails but your payment is completed,
+            please raise a ticket at the link given above and we will
+            issue a refund.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       </section>
     </main>
 
@@ -627,7 +701,7 @@
 
     <script>
       // ===== REFERRER CHECK =====
-      const allowedReferrer = window.location.origin + "/slotselection.html";
+      /*const allowedReferrer = window.location.origin + "/slotselection.html";
       const urlParams = new URLSearchParams(window.location.search);
       const hasCode = urlParams.has("code");
 
@@ -644,8 +718,8 @@
         console.log("Base referrer:", baseReferrer);
         console.log("Has code parameter:", hasCode);
         alert("Please access this page through the proper booking flow.");
-        window.location.href = "initiatepayment.html";
-      }
+        window.location.href = "initiatebooking.html";
+      }*/
 
       // ===== COUNTDOWN TIMER CONFIGURATION =====
       let countdownInterval;
@@ -947,7 +1021,7 @@
             alert(
               "Reload/Forward/Back was detected. Please start booking again."
             );
-            window.location.href = "initiatepayment.html";
+            window.location.href = "initiatebooking.html";
             return;
           }
 
@@ -1160,7 +1234,7 @@
             }
 
             alert("Failed to load user details. Please try again.");
-            window.location.href = "initiatepayment.html";
+            window.location.href = "initiatebooking.html";
             return;
           }
 
@@ -1186,7 +1260,7 @@
             }
 
             alert("Invalid user details. Please try again.");
-            window.location.href = "initiatepayment.html";
+            window.location.href = "initiatebooking.html";
             return;
           }
 
@@ -1234,7 +1308,7 @@
           }
 
           alert("Failed to load user details. Please try again.");
-          window.location.href = "initiatepayment.html";
+          window.location.href = "initiatebooking.html";
         }
       }
 
