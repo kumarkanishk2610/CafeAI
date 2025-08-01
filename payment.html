@@ -506,62 +506,14 @@
                   </svg>
                   Scan and Pay via any UPI App
                 </h4>
-                <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
-                  <div
-                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <img
-                      src="assets/icons/gpay.svg"
-                      class="h-10 w-10"
-                      alt="GPay"
-                    />
-                  </div>
-                  <div
-                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <img
-                      src="assets/icons/paytm.svg"
-                      class="h-10 w-10"
-                      alt="Paytm"
-                    />
-                  </div>
-                  <div
-                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <img
-                      src="assets/icons/phonepe.svg"
-                      class="h-10 w-10"
-                      alt="PhonePe"
-                    />
-                  </div>
-                  <div
-                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <img
-                      src="assets/icons/amazonpay.svg"
-                      class="h-10 w-10"
-                      alt="Amazon Pay"
-                    />
-                  </div>
-                  <div
-                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <img
-                      src="assets/icons/bhim.svg"
-                      class="h-10 w-10"
-                      alt="BHIM"
-                    />
-                  </div>
-                  <div
-                    class="flex flex-col items-center gap-2 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <img
-                      src="assets/icons/upi.svg"
-                      class="h-10 w-10"
-                      alt="UPI"
-                    />
-                  </div>
-                </div>
+                <p class="text-xs text-gray-600 mb-4">
+                  You need to open your UPI app of choice, and scan the QR code
+                  manually to pay.
+                </p>
+                <p class="text-xs text-gray-600 mb-4">
+                  You can either take a screenshot, or use the download QR
+                  button.
+                </p>
               </div>
               <!-- QR Code -->
               <div class="flex justify-center mb-4">
@@ -577,13 +529,40 @@
                 </div>
               </div>
 
-              <!-- Download Button -->
+              <!-- Disclaimer -->
+              <div
+                class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200"
+              >
+                <p class="text-sm text-blue-800 leading-relaxed">
+                  <span class="font-semibold">💡 Tip:</span> Use the button
+                  below to copy your booking ID onto your clipboard, and
+                  download your QR. Now, open your UPI app, upload this QR to
+                  scan, then paste your booking ID from clipboard onto the UPI
+                  note.
+                </p>
+              </div>
+
+              <!-- Combined Copy Booking ID & Download QR Button -->
               <button
-                id="downloadQRBtn"
-                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                id="copyAndDownloadBtn"
+                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                type="button"
               >
                 <svg
-                  class="w-4 h-4"
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 002 2z"
+                  />
+                </svg>
+                <svg
+                  class="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -593,9 +572,9 @@
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  ></path>
+                  />
                 </svg>
-                Download QR Code
+                <span>Copy Booking ID & Download QR</span>
               </button>
 
               <!-- Help Button -->
@@ -619,7 +598,6 @@
                 </svg>
                 Having trouble with QR Payment?
               </button>
-
               <!-- UPI Transaction Confirmation -->
               <div class="mt-6 w-full max-w-md">
                 <div
@@ -870,6 +848,101 @@
       function closeModal() {
         document.getElementById("infoModal").classList.add("hidden");
       }
+
+      function openUPIApp(appType) {
+        let appUrl = "";
+        let appName = "";
+
+        switch (appType) {
+          case "gpay":
+            appUrl = "googlepay://";
+            appName = "Google Pay";
+            break;
+          case "paytm":
+            appUrl = "paytmmp://";
+            appName = "Paytm";
+            break;
+          case "phonepe":
+            appUrl = "phonepe://";
+            appName = "PhonePe";
+            break;
+          case "amazonpay":
+            appUrl = "amazonpay://";
+            appName = "Amazon Pay";
+            break;
+          case "bhim":
+            appUrl = "bhim://";
+            appName = "BHIM";
+            break;
+          case "upi":
+            appUrl = "upi://";
+            appName = "UPI";
+            break;
+          default:
+            showError("Invalid UPI app selected");
+            return;
+        }
+
+        // Check if user is on mobile
+        const isMobile =
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          );
+
+        if (!isMobile) {
+          showError(
+            `${appName} can only be opened on mobile devices. Please use the QR code to scan and pay.`
+          );
+          return;
+        }
+
+        // Try to open the app
+        try {
+          window.location.href = appUrl;
+
+          // Set a timeout to check if the app opened successfully
+          setTimeout(() => {
+            // If we're still on the same page after 2 seconds, the app probably didn't open
+            if (document.hidden || document.webkitHidden) {
+              // App opened successfully
+              console.log(`${appName} opened successfully`);
+            } else {
+              // App didn't open, show fallback
+              showError(
+                `${appName} is not installed on your device. Please install the app or use the QR code to scan and pay.`
+              );
+            }
+          }, 2000);
+        } catch (error) {
+          showError(
+            `Failed to open ${appName}. Please use the QR code to scan and pay.`
+          );
+        }
+      }
+
+      function showError(message) {
+        // Create error modal
+        const errorModal = document.createElement("div");
+        errorModal.className =
+          "fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50";
+        errorModal.innerHTML = `
+          <div class="bg-white rounded-xl p-6 w-80 max-w-sm shadow-xl relative">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800">App Not Available</h3>
+            </div>
+            <p class="text-gray-600 mb-6">${message}</p>
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+              OK
+            </button>
+          </div>
+        `;
+        document.body.appendChild(errorModal);
+      }
     </script>
 
     <!-- manual payment modal -->
@@ -881,7 +954,7 @@
         class="bg-white rounded-xl p-6 w-80 space-y-4 shadow-xl relative text-xs"
       >
         <h4 class="text-base font-semibold text-gray-800 text-center">
-          Manual UPI Payment Details
+          Manual UPI Payment Details
         </h4>
         <h5 class="text-sm font-semibold text-gray-800 text-center">
           Please pay manually according to the following details:
@@ -892,9 +965,9 @@
               GPay Instructions
             </summary>
             <p class="mt-1 pl-4">
-              Tap <strong>“Pay Anyone”</strong>, enter the UPI ID given below,
-              press <strong>Continue</strong>, then <strong>Pay</strong>. Enter
-              the amount and Booking ID in the note before proceeding.
+              Tap "Pay Anyone", enter the UPI ID given below, press Continue,
+              then Pay. Enter the amount and Booking ID in the note before
+              proceeding.
             </p>
           </details>
 
@@ -903,10 +976,10 @@
               Paytm Instructions
             </summary>
             <p class="mt-1 pl-4">
-              Tap <strong>“To Bank A/c”</strong> →
-              <strong>“Enter UPI ID/Mobile Number”</strong>, enter the UPI
-              address, tap <strong>Pay</strong>, and enter the amount and
-              Booking ID in the note before paying.
+              Tap "To Bank A/c" →
+              <strong>"Enter UPI ID/Mobile Number"</strong>, enter the UPI
+              address, tap Pay, and enter the amount and Booking ID in the note
+              before paying.
             </p>
           </details>
 
@@ -915,8 +988,8 @@
               PhonePe Instructions
             </summary>
             <p class="mt-1 pl-4">
-              Tap <strong>“To Bank & Self A/c”</strong> →
-              <strong>“To Any UPI App”</strong>, click
+              Tap "To Bank & Self A/c" →
+              <strong>"To Any UPI App"</strong>, click
               <strong>+ UPI ID</strong>, enter the UPI address, then proceed.
               Add the amount and Booking ID in the note before paying. The note
               icon may be tricky to find here, it's a paper icon in the text
@@ -1013,7 +1086,8 @@
           document.getElementById("bookingIdTextModal");
 
         const qrImg = document.getElementById("qrImage");
-        const downloadQRBtn = document.getElementById("downloadQRBtn");
+        const copyAndDownloadBtn =
+          document.getElementById("copyAndDownloadBtn");
 
         const manualPayBtn = document.getElementById("manualPayBtn");
         const manualModal = document.getElementById("manualModal");
@@ -1487,7 +1561,7 @@
               }
 
               [
-                downloadQRBtn,
+                copyAndDownloadBtn,
                 manualPayBtn,
                 paidBtn,
                 havingtroublebutton,
@@ -1502,12 +1576,15 @@
             qrImg.src = qrPlaceholder;
 
             // Disable buttons initially until checkbox is checked
-            [downloadQRBtn, manualPayBtn, paidBtn, havingtroublebutton].forEach(
-              (btn) => {
-                btn.disabled = true;
-                btn.classList.add("opacity-20", "cursor-not-allowed");
-              }
-            );
+            [
+              copyAndDownloadBtn,
+              manualPayBtn,
+              paidBtn,
+              havingtroublebutton,
+            ].forEach((btn) => {
+              btn.disabled = true;
+              btn.classList.add("opacity-20", "cursor-not-allowed");
+            });
 
             // Initialize countdown timer
             initializeCountdownTimer(code);
@@ -1769,27 +1846,31 @@
           }
         };
 
-        downloadQRBtn.onclick = async () => {
-          try {
-            const res = await fetch(qrImg.src, { mode: "cors" });
-            const blob = await res.blob();
+        document.getElementById("copyAndDownloadBtn").onclick =
+          async function () {
+            // Copy booking ID
+            await copy(code, this);
 
-            const url = URL.createObjectURL(blob);
-            const a = Object.assign(document.createElement("a"), {
-              href: url,
-              download: `CafeKyaa_QR_${code}.png`,
-            });
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          } catch (err) {
-            alert(
-              "Couldn’t download the QR code. Please long‑press or right‑click the image instead."
-            );
-            console.error(err);
-          }
-        };
+            // Download QR code (force download even for cross-origin images)
+            try {
+              const qrImage = document.getElementById("qrImage");
+              const response = await fetch(qrImage.src, { mode: "cors" });
+              const blob = await response.blob();
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.download = "cafe-kyaa-qr.png";
+              link.href = url;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            } catch (err) {
+              alert(
+                "Couldn't download the QR code. Please long‑press or right‑click the image instead."
+              );
+              console.error(err);
+            }
+          };
       });
     </script>
     <!-- Loading Modal -->
