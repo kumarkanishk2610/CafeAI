@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Cafe Kyaa! Payment Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      body {
+        background: linear-gradient(
+          135deg,
+          #0f172a 0%,
+          #1e293b 50%,
+          #334155 100%
+        );
+        min-height: 100vh;
+      }
+
+      .glass-effect {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+      }
+
+      .glow-border {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+      }
+
+      .glow-border:focus {
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+      }
+
+      .success-glow {
+        animation: successPulse 2s ease-in-out;
+      }
+
+      @keyframes successPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(34, 197, 94, 0.6);
+        }
+      }
+
+      .error-glow {
+        animation: errorPulse 2s ease-in-out;
+      }
+
+      @keyframes errorPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(239, 68, 68, 0.6);
+        }
+      }
+
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="font-sans">
+    <!-- Loading Modal -->
+    <div
+      id="loadingModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden"
+    >
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="glass-effect rounded-2xl p-8 text-center">
+          <div
+            class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full spinner mx-auto mb-4"
+          ></div>
+          <p class="text-gray-300 text-lg">
+            Processing payment verification...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="h-screen flex items-center justify-center p-2">
+      <div class="w-full max-w-sm">
+        <!-- Header -->
+        <div class="text-center mb-4 fade-in">
+          <div
+            class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-2"
+          >
+            <svg
+              class="w-6 h-6 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <h1 class="text-2xl font-bold text-white mb-1">Admin Panel</h1>
+          <p class="text-gray-400 text-sm">Cafe Kyaa! Payment Verification</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="glass-effect rounded-xl p-6 mb-4 fade-in">
+          <h2 class="text-lg font-semibold text-white mb-4 text-center">
+            Authentication Required
+          </h2>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="passwordInput"
+                class="w-full px-3 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 glow-border transition-all duration-300"
+                placeholder="Enter admin password"
+              />
+            </div>
+
+            <button
+              onclick="authenticate()"
+              class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            >
+              <div class="flex items-center justify-center">
+                <span id="loginBtnText">Authenticate</span>
+                <div
+                  id="loginSpinner"
+                  class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full spinner ml-2"
+                ></div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Payment Verification Form -->
+        <div
+          id="verificationForm"
+          class="glass-effect rounded-xl p-6 hidden fade-in"
+        >
+          <h2 class="text-lg font-semibold text-white mb-4 text-center">
+            Payment Verification
+          </h2>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Booking ID</label
+              >
+              <input
+                type="text"
+                id="bookingIdInput"
+                class="w-full px-3 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 glow-border transition-all duration-300"
+                placeholder="Enter booking ID"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Transaction ID</label
+              >
+              <input
+                type="text"
+                id="txnIdInput"
+                class="w-full px-3 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 glow-border transition-all duration-300"
+                placeholder="Enter transaction ID"
+              />
+            </div>
+
+            <div class="text-center">
+              <p class="text-gray-400 text-xs mb-3">
+                Enter either Booking ID or Transaction ID
+              </p>
+            </div>
+
+            <button
+              onclick="approvePayment()"
+              class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            >
+              <div class="flex items-center justify-center">
+                <span id="approveBtnText">Approve Payment</span>
+                <div
+                  id="approveSpinner"
+                  class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full spinner ml-2"
+                ></div>
+              </div>
+            </button>
+          </div>
+
+          <!-- Logout Button -->
+          <div class="mt-4 pt-4 border-t border-gray-600">
+            <button
+              onclick="logout()"
+              class="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div
+          id="statusMessage"
+          class="hidden mt-3 p-3 rounded-lg text-center fade-in text-sm"
+        ></div>
+      </div>
+    </div>
+
+    <script>
+      // MD5 hash of password
+      const ADMIN_PASSWORD_HASH = "0a7fe17e846e0e035cac91fff6ad7cef";
+
+      let isAuthenticated = false;
+
+      // Check if already authenticated
+      function checkAuth() {
+        const authStatus = sessionStorage.getItem("adminAuthenticated");
+        if (authStatus === "true") {
+          isAuthenticated = true;
+          showVerificationForm();
+        }
+      }
+
+      // Authenticate user
+      function authenticate() {
+        const password = document.getElementById("passwordInput").value;
+        const loginBtn = document.getElementById("loginBtnText");
+        const loginSpinner = document.getElementById("loginSpinner");
+
+        if (!password) {
+          showStatus("Please enter a password", "error");
+          return;
+        }
+
+        // Show loading state
+        loginBtn.textContent = "Authenticating...";
+        loginSpinner.classList.remove("hidden");
+
+        // Simulate processing delay
+        setTimeout(() => {
+          const passwordHash = CryptoJS.MD5(password).toString();
+
+          if (passwordHash === ADMIN_PASSWORD_HASH) {
+            isAuthenticated = true;
+            sessionStorage.setItem("adminAuthenticated", "true");
+            showStatus("Authentication successful!", "success");
+            showVerificationForm();
+          } else {
+            showStatus("Invalid password. Access denied.", "error");
+            document.getElementById("passwordInput").value = "";
+          }
+
+          // Reset button state
+          loginBtn.textContent = "Authenticate";
+          loginSpinner.classList.add("hidden");
+        }, 1000);
+      }
+
+      // Show verification form
+      function showVerificationForm() {
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("verificationForm").classList.remove("hidden");
+      }
+
+      // Show login form
+      function showLoginForm() {
+        document.getElementById("verificationForm").classList.add("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+        document.getElementById("passwordInput").value = "";
+      }
+
+      // Logout
+      function logout() {
+        isAuthenticated = false;
+        sessionStorage.removeItem("adminAuthenticated");
+        showLoginForm();
+        showStatus("Logged out successfully", "success");
+      }
+
+      // Approve payment
+      function approvePayment() {
+        const bookingId = document
+          .getElementById("bookingIdInput")
+          .value.trim();
+        const txnId = document.getElementById("txnIdInput").value.trim();
+        const approveBtn = document.getElementById("approveBtnText");
+        const approveSpinner = document.getElementById("approveSpinner");
+
+        if (!bookingId && !txnId) {
+          showStatus(
+            "Please enter either Booking ID or Transaction ID",
+            "error"
+          );
+          return;
+        }
+
+        // Show loading state
+        approveBtn.textContent = "Processing...";
+        approveSpinner.classList.remove("hidden");
+        document.getElementById("loadingModal").classList.remove("hidden");
+
+        // Prepare form data
+        const formData = new FormData();
+        if (bookingId) {
+          formData.append("entry.2009691305", bookingId);
+        }
+        if (txnId) {
+          formData.append("entry.7403682", txnId);
+        }
+
+        // Submit to Google Form
+        const formUrl =
+          "https://docs.google.com/forms/d/e/1FAIpQLSfbGZ2i3oJTEhSm15EJ7IPmIz6G29lzze4P2da-cXLYGn0xLg/formResponse";
+
+        fetch(formUrl, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData,
+        })
+          .then(() => {
+            // Success
+            showStatus("Payment approved successfully!", "success");
+            document.getElementById("bookingIdInput").value = "";
+            document.getElementById("txnIdInput").value = "";
+          })
+          .catch((error) => {
+            // Error
+            showStatus(
+              "Error processing payment approval. Please try again.",
+              "error"
+            );
+            console.error("Error:", error);
+          })
+          .finally(() => {
+            // Reset button state
+            approveBtn.textContent = "Approve Payment";
+            approveSpinner.classList.add("hidden");
+            document.getElementById("loadingModal").classList.add("hidden");
+          });
+      }
+
+      // Show status message
+      function showStatus(message, type) {
+        const statusDiv = document.getElementById("statusMessage");
+        statusDiv.textContent = message;
+        statusDiv.className = `mt-4 p-4 rounded-lg text-center fade-in`;
+
+        if (type === "success") {
+          statusDiv.classList.add(
+            "bg-green-500/20",
+            "border",
+            "border-green-500/30",
+            "text-green-300",
+            "success-glow"
+          );
+        } else if (type === "error") {
+          statusDiv.classList.add(
+            "bg-red-500/20",
+            "border",
+            "border-red-500/30",
+            "text-red-300",
+            "error-glow"
+          );
+        }
+
+        statusDiv.classList.remove("hidden");
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          statusDiv.classList.add("hidden");
+        }, 5000);
+      }
+
+      // Handle Enter key
+      document.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          if (!isAuthenticated) {
+            authenticate();
+          } else {
+            approvePayment();
+          }
+        }
+      });
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        checkAuth();
+      });
+
+      // Security: Clear session on page unload
+      window.addEventListener("beforeunload", function () {
+        if (!isAuthenticated) {
+          sessionStorage.removeItem("adminAuthenticated");
+        }
+      });
+    </script>
+  </body>
+</html>
