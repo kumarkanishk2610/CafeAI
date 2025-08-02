@@ -111,29 +111,173 @@
     </style>
   </head>
   <body class="text-gray-800">
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
     <!-- header -->
     <header
       class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
-      <div class="flex items-center h-14 px-4">
-        <a href="index.html" class="flex items-center hover:opacity-80">
-          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
-          <h1
-            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-          >
-            Cafe Kyaa!
-          </h1>
-        </a>
-        <span
-          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+      <div class="flex items-center justify-between h-16 px-4">
+        <div class="flex items-center">
+          <a href="index.html" class="flex items-center hover:opacity-80">
+            <img src="logo.png" class="h-12 w-12 rounded-full" alt="logo" />
+            <div class="ml-2 flex flex-col">
+              <h1
+                class="text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide leading-tight"
+              >
+                Cafe Kyaa!
+              </h1>
+              <span class="text-xs font-medium text-rose-600 leading-tight">
+                Anime India 2025 · Mumbai
+              </span>
+            </div>
+          </a>
+        </div>
+        <!-- User Details Button -->
+        <button
+          id="userDetailsBtn"
+          class="p-2 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-full transition-colors duration-200"
+          title="View User Details"
         >
-          Anime India 2025 · Mumbai
-        </span>
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+          </svg>
+        </button>
       </div>
     </header>
 
+    <!-- User Details Popup -->
+    <div
+      id="userDetailsPopup"
+      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+    >
+      <div class="space-y-3 min-w-[280px]">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-gray-800">User Details</h3>
+          <button
+            id="closePopupBtn"
+            class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+              ></path>
+              <path
+                d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Email:</span>
+            <span id="popupEmail" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Booking ID:</span>
+            <span id="popupBookingId" class="font-bold text-gray-800"></span>
+            <button
+              id="copyBookingIdPopupBtn"
+              class="ml-2 p-1 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded transition-colors duration-200"
+              title="Copy Booking ID"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Mobile:</span>
+            <span id="popupMobile" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Total:</span>
+            <span class="font-bold text-gray-800"
+              >₹<span id="popupAmount">0</span></span
+            >
+            <span class="text-gray-600"
+              >(<span id="popupSeats">0</span> seats)</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- main -->
-    <main class="pt-20 flex flex-col items-center p-4">
+    <main class="pt-24 flex flex-col items-center p-4">
       <div class="w-full max-w-4xl space-y-6">
         <!-- Countdown Timer -->
         <div id="countdownContainer" class="fade-in sticky top-20 z-30">
@@ -197,192 +341,6 @@
             </div>
           </div>
         </div>
-        <!-- Order Summary Card -->
-        <div class="fade-in">
-          <div
-            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
-          >
-            <!-- Decorative elements -->
-            <div
-              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
-            ></div>
-            <div
-              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
-            ></div>
-
-            <div class="relative z-10">
-              <!-- Header -->
-              <div
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
-              >
-                <div class="flex items-center gap-4">
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
-                  >
-                    <svg
-                      class="w-6 h-6 text-white"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 class="text-xl font-bold text-gray-800 mb-1">
-                      Reserve Your Slot!
-                    </h2>
-                    <p class="text-gray-600 font-medium">Cafe Kyaa! Tickets</p>
-                  </div>
-                </div>
-
-                <!-- Price Summary -->
-                <div class="text-right">
-                  <div class="text-2xl font-bold gradient-text mb-1">
-                    ₹<span id="amtTitle">0</span>
-                  </div>
-                  <div class="text-gray-600">
-                    <span id="seatCount">0</span> seat(s) @ ₹500 each
-                  </div>
-                </div>
-              </div>
-
-              <!-- Contact Details -->
-              <div
-                class="bg-white rounded-xl p-4 shadow-lg border border-gray-100"
-              >
-                <h3
-                  class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2"
-                >
-                  <svg
-                    class="w-5 h-5 text-pink-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                    ></path>
-                    <path
-                      d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                    ></path>
-                  </svg>
-                  Your Details
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div
-                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
-                  >
-                    <div
-                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-pink-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                        ></path>
-                        <path
-                          d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <div class="text-xs text-gray-500 font-medium">Email</div>
-                      <div
-                        id="emailVal"
-                        class="text-sm font-semibold text-gray-800 break-words max-w-[40vw]"
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div
-                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
-                  >
-                    <div
-                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-pink-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <div class="text-xs text-gray-500 font-medium">
-                        Mobile
-                      </div>
-                      <div
-                        id="mobileVal"
-                        class="text-sm font-semibold text-gray-800"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Booking ID Section -->
-                <div
-                  class="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-200"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <div class="text-xs text-gray-500 font-medium">
-                        Booking ID
-                      </div>
-                      <div
-                        id="bookingIdValSummary"
-                        class="text-sm font-bold text-gray-800"
-                      ></div>
-                    </div>
-                  </div>
-                  <button
-                    id="copyBookingIdSummaryBtn"
-                    class="bg-pink-500 hover:bg-pink-600 text-white px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
-                  >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 002 2z"
-                      ></path>
-                    </svg>
-                    Copy
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Payment Section -->
         <div class="fade-in" style="animation-delay: 0.2s">
@@ -398,94 +356,6 @@
                 <!-- <p class="text-gray-600 font-medium">Scan QR Code to Pay</p> -->
               </div>
 
-              <!-- Disclaimer -->
-              <div
-                class="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 rounded-2xl p-6 mb-6 border border-amber-200 shadow-lg"
-              >
-                <!-- Decorative background elements -->
-                <div
-                  class="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full opacity-30 blur-xl"
-                ></div>
-                <div
-                  class="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-orange-200 to-red-200 rounded-full opacity-30 blur-xl"
-                ></div>
-
-                <div class="relative z-10">
-                  <!-- Header with icon -->
-                  <div class="flex items-center gap-3 mb-4">
-                    <div
-                      class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md"
-                    >
-                      <svg
-                        class="w-5 h-5 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <h5
-                        class="text-lg font-bold bg-gradient-to-r from-amber-700 to-orange-700 bg-clip-text text-transparent"
-                      >
-                        Important Notice
-                      </h5>
-                      <p class="text-xs text-amber-600 font-medium">
-                        Please read carefully before proceeding
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Main message -->
-                  <div
-                    class="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-4 border border-amber-100 shadow-sm"
-                  >
-                    <p class="text-sm text-gray-700 leading-relaxed">
-                      <span class="font-semibold text-amber-700"
-                        >Please mention the booking ID in your UPI payment
-                        comment.</span
-                      >
-                      This helps us process your booking faster and ensures
-                      accurate tracking of your payment!
-                    </p>
-                  </div>
-
-                  <!-- Checkbox section -->
-                  <div
-                    class="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-amber-100 shadow-sm"
-                  >
-                    <label class="flex items-start gap-3 cursor-pointer group">
-                      <div class="relative">
-                        <input
-                          type="checkbox"
-                          id="qrCheckbox"
-                          class="mt-1 h-5 w-5 text-amber-600 border-amber-300 rounded-lg focus:ring-amber-500 focus:ring-2 focus:ring-offset-2 transition-all duration-200"
-                        />
-                        <div
-                          class="absolute inset-0 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
-                        ></div>
-                      </div>
-                      <div class="flex-1">
-                        <div class="font-semibold text-gray-800 text-sm mb-1">
-                          I understand and will include the booking ID in my
-                          payment
-                        </div>
-                        <div class="text-xs text-gray-500 leading-relaxed">
-                          This helps us process your booking faster and more
-                          accurately.
-                          <span class="font-medium text-amber-600"
-                            >Your cooperation is greatly appreciated!</span
-                          >
-                        </div>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
               <!-- UPI Payment Methods -->
               <div
                 class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6 border border-blue-200"
@@ -506,15 +376,63 @@
                   </svg>
                   Scan and Pay via any UPI App
                 </h4>
-                <p class="text-xs text-gray-600 mb-4">
-                  You need to open your UPI app of choice, and scan the QR code
-                  manually to pay.
+                <p class="text-sm text-gray-600 mb-4">
+                  Open any UPI app of your choice and scan the QR Code below to
+                  pay!
                 </p>
-                <p class="text-xs text-gray-600 mb-4">
-                  You can either take a screenshot, or use the download QR
-                  button.
+
+                <!-- Disclaimer -->
+                <div
+                  class="mb-0 p-4 bg-green-50 rounded-lg border border-green-200 mb-4"
+                >
+                  <p class="text-sm text-green-800 leading-relaxed mb-4">
+                    <span>Important: </span> Fill your
+                    <strong>Booking ID in the UPI Payment Note</strong> for
+                    faster processing!
+                  </p>
+                  <!-- Booking ID Display -->
+                  <div
+                    class="mb-0 px-2 p-1 bg-red-50 rounded-lg border border-red-200"
+                  >
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium text-red-700"
+                          >Booking ID:</span
+                        >
+                        <span
+                          id="displayBookingId"
+                          class="text-sm font-semibold text-gray-800"
+                        ></span>
+                      </div>
+                      <button
+                        id="copyBookingIdBtn"
+                        class="text-pink-600 hover:text-pink-700 transition-colors p-1 rounded-md hover:bg-pink-50"
+                        title="Copy Booking ID"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 mb-4 text-center">
+                  <strong
+                    >Make sure to enter your Transaction ID below after Payment!
+                  </strong>
                 </p>
               </div>
+
               <!-- QR Code -->
               <div class="flex justify-center mb-4">
                 <div class="relative">
@@ -529,19 +447,6 @@
                 </div>
               </div>
 
-              <!-- Disclaimer -->
-              <div
-                class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200"
-              >
-                <p class="text-sm text-blue-800 leading-relaxed">
-                  <span class="font-semibold">💡 Tip:</span> Use the button
-                  below to copy your booking ID onto your clipboard, and
-                  download your QR. Now, open your UPI app, upload this QR to
-                  scan, then paste your booking ID from clipboard onto the UPI
-                  note.
-                </p>
-              </div>
-
               <!-- Combined Copy Booking ID & Download QR Button -->
               <button
                 id="copyAndDownloadBtn"
@@ -549,32 +454,30 @@
                 type="button"
               >
                 <svg
-                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="24"
+                  viewBox="0 0 48 24"
                   fill="none"
                   stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 002 2z"
-                  />
+                  <!-- Copy Icon (left) -->
+                  <rect x="4" y="4" width="12" height="12" rx="2" ry="2" />
+                  <rect x="8" y="8" width="12" height="12" rx="2" ry="2" />
+
+                  <!-- Download Icon (right) -->
+                  <path d="M34 4v6" />
+                  <path d="M31 7l3 3 3-3" />
+                  <rect x="28" y="16" width="12" height="2" rx="1" ry="1" />
                 </svg>
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                <span>Copy Booking ID & Download QR</span>
+
+                <div class="text-center">
+                  <div>Copy Booking ID &</div>
+                  <div>Save UPI QR to Gallery</div>
+                </div>
               </button>
 
               <!-- Help Button -->
@@ -700,80 +603,35 @@
                 </svg>
                 I've Paid – Complete my Booking!
               </button>
-              <p> </p>
-              <!-- Information Cards -->
-              <div class="fade-in" style="animation-delay: 0.4s">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Note Card -->
-                  <div
-                    class="bg-white rounded-xl p-4 shadow-lg border border-blue-100"
+              <div class="mt-8 flex items-start gap-3">
+                <div
+                  class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <svg
+                    class="w-5 h-5 text-blue-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
                   >
-                    <div class="flex items-start gap-3">
-                      <div
-                        class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
-                      >
-                        <svg
-                          class="w-5 h-5 text-blue-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 class="font-semibold text-gray-800 mb-1">
-                          Important Note
-                        </h4>
-                        <p class="text-sm text-gray-600 break-words">
-                          In case of any issues or queries, please raise a
-                          ticket via
-                          <a
-                            href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
-                            target="_blank"
-                            class="text-blue-600 underline hover:text-blue-800 font-medium"
-                            >this form</a
-                          >. We will try to get back to you as soon as possible.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Refund Card -->
-                  <div
-                    class="bg-white rounded-xl p-4 shadow-lg border border-green-100"
-                  >
-                    <div class="flex items-start gap-3">
-                      <div
-                        class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0"
-                      >
-                        <svg
-                          class="w-5 h-5 text-green-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 class="font-semibold text-gray-800 mb-1">
-                          Refund Policy
-                        </h4>
-                        <p class="text-sm text-gray-600 leading-relaxed">
-                          In case your booking fails but your payment is
-                          completed, please raise a ticket at the link given
-                          above and we will issue a refund.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-1 text-sm">
+                    Need Help?
+                  </h4>
+                  <p class="text-xs text-gray-600 break-words">
+                    You can reach out to us by raising a ticket via
+                    <a
+                      href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                      target="_blank"
+                      class="text-blue-600 underline hover:text-blue-800 font-medium"
+                      >this form</a
+                    >. We will try to get back to you as soon as possible.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1074,13 +932,10 @@
           PAYEE = "Kanishk Kumar"; // appears in some UPI apps
 
         /* ---------- elements ---------- */
-        const seatCount = document.getElementById("seatCount");
-        const amtTitle = document.getElementById("amtTitle");
+
         const amtDisp = document.getElementById("amountDisplay");
         const manualAmt = document.getElementById("manualAmountText");
 
-        const emailVal = document.getElementById("emailVal");
-        const mobileVal = document.getElementById("mobileVal");
         const bookingIdTextModal =
           document.getElementById("bookingIdTextModal");
 
@@ -1099,7 +954,7 @@
         );
 
         const paidBtn = document.getElementById("paidButton");
-        const qrCheckbox = document.getElementById("qrCheckbox");
+
         const havingtroublebutton = document.getElementById(
           "havingtroublebutton"
         );
@@ -1123,7 +978,7 @@
           return;
         }
 
-        // ===== USER DETAILS SHEET CONFIGURATION =====
+        // ===== SHEET CONFIGURATIONS =====
         const userDetailsSheetID =
           "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
         const userDetailsSheetName = "Raw Data";
@@ -1523,6 +1378,7 @@
             console.log("User details validation passed");
 
             // Set global variables
+            window.userDetails = userDetails; // Store globally for later access
             const email = userDetails.email;
             const mobile = userDetails.mobile;
             const seats = userDetails.seats;
@@ -1535,27 +1391,18 @@
             console.log(`Amount: ${amount}`);
 
             // Update UI elements
-            const seatCountEl = document.getElementById("seatCount");
-            const amtTitleEl = document.getElementById("amtTitle");
             const amountDisplayEl = document.getElementById("amountDisplay");
             const manualAmountTextEl =
               document.getElementById("manualAmountText");
-            const emailValEl = document.getElementById("emailVal");
-            const mobileValEl = document.getElementById("mobileVal");
-            const bookingIdValSummaryEl = document.getElementById(
-              "bookingIdValSummary"
-            );
             const bookingIdTextModalEl =
               document.getElementById("bookingIdTextModal");
+            const displayBookingIdEl =
+              document.getElementById("displayBookingId");
 
-            if (seatCountEl) seatCountEl.textContent = seats;
-            if (amtTitleEl) amtTitleEl.textContent = amount;
             if (amountDisplayEl) amountDisplayEl.textContent = amount;
             if (manualAmountTextEl) manualAmountTextEl.textContent = amount;
-            if (emailValEl) emailValEl.textContent = email;
-            if (mobileValEl) mobileValEl.textContent = mobile;
-            if (bookingIdValSummaryEl) bookingIdValSummaryEl.textContent = code;
             if (bookingIdTextModalEl) bookingIdTextModalEl.textContent = code;
+            if (displayBookingIdEl) displayBookingIdEl.textContent = code;
 
             console.log("UI elements updated successfully");
 
@@ -1563,119 +1410,10 @@
             upiURL = buildUPI(email, seats, amount);
             console.log("UPI URL built:", upiURL);
 
-            // Set up QR checkbox event listener
-            if (qrCheckbox) {
-              qrCheckbox.addEventListener("change", () => {
-                const isChecked = qrCheckbox.checked;
-
-                if (isChecked) {
-                  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-                    upiURL
-                  )}`;
-                } else {
-                  qrImg.src = qrPlaceholder;
-                }
-
-                const buttonsToToggle = [
-                  copyAndDownloadBtn,
-                  manualPayBtn,
-                  paidBtn,
-                  havingtroublebutton,
-                ].filter((btn) => btn); // Filter out null/undefined buttons
-
-                buttonsToToggle.forEach((btn) => {
-                  btn.disabled = !isChecked;
-                  btn.classList.toggle("opacity-20", !isChecked);
-                  btn.classList.toggle("cursor-not-allowed", !isChecked);
-                });
-
-                // Also control the UPI transaction number inputs and confirm payment modal
-                const upiTransactionNumber = document.getElementById(
-                  "upiTransactionNumber"
-                );
-                const confirmUpiTransactionNumber = document.getElementById(
-                  "confirmUpiTransactionNumber"
-                );
-
-                if (upiTransactionNumber && confirmUpiTransactionNumber) {
-                  upiTransactionNumber.disabled = !isChecked;
-                  confirmUpiTransactionNumber.disabled = !isChecked;
-                  upiTransactionNumber.classList.toggle(
-                    "opacity-50",
-                    !isChecked
-                  );
-                  confirmUpiTransactionNumber.classList.toggle(
-                    "opacity-50",
-                    !isChecked
-                  );
-                  upiTransactionNumber.classList.toggle(
-                    "cursor-not-allowed",
-                    !isChecked
-                  );
-                  confirmUpiTransactionNumber.classList.toggle(
-                    "cursor-not-allowed",
-                    !isChecked
-                  );
-
-                  // Clear the inputs when checkbox is unchecked
-                  if (!isChecked) {
-                    upiTransactionNumber.value = "";
-                    confirmUpiTransactionNumber.value = "";
-                    // Reset validation state
-                    const validationMessage = document.getElementById(
-                      "transactionValidationMessage"
-                    );
-                    const successMessage = document.getElementById(
-                      "transactionValidationSuccess"
-                    );
-                    const errorMessage = document.getElementById(
-                      "transactionValidationError"
-                    );
-                    if (validationMessage)
-                      validationMessage.classList.add("hidden");
-                    if (successMessage) successMessage.classList.add("hidden");
-                    if (errorMessage) errorMessage.classList.add("hidden");
-                  }
-                }
-              });
-            }
-
-            // Show placeholder image initially
-            qrImg.src = qrPlaceholder;
-
-            // Disable buttons initially until checkbox is checked
-            const buttonsToDisable = [
-              copyAndDownloadBtn,
-              manualPayBtn,
-              paidBtn,
-              havingtroublebutton,
-            ].filter((btn) => btn); // Filter out null/undefined buttons
-
-            buttonsToDisable.forEach((btn) => {
-              btn.disabled = true;
-              btn.classList.add("opacity-20", "cursor-not-allowed");
-            });
-
-            // Also disable UPI transaction number inputs initially
-            const upiTransactionNumber = document.getElementById(
-              "upiTransactionNumber"
-            );
-            const confirmUpiTransactionNumber = document.getElementById(
-              "confirmUpiTransactionNumber"
-            );
-
-            if (upiTransactionNumber && confirmUpiTransactionNumber) {
-              upiTransactionNumber.disabled = true;
-              confirmUpiTransactionNumber.disabled = true;
-              upiTransactionNumber.classList.add(
-                "opacity-50",
-                "cursor-not-allowed"
-              );
-              confirmUpiTransactionNumber.classList.add(
-                "opacity-50",
-                "cursor-not-allowed"
-              );
-            }
+            // Set up QR code directly
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+              upiURL
+            )}`;
 
             // Initialize countdown timer
             initializeCountdownTimer(code);
@@ -1748,9 +1486,6 @@
         // UPI URL will be built after user details are loaded
         let upiURL = "";
 
-        const qrPlaceholder = "assets/qrdekinai.png"; // placeholder image
-        qrImg.src = qrPlaceholder;
-
         // Checkbox event listener will be set up after user details are loaded
 
         /* ---------- events ---------- */
@@ -1763,8 +1498,6 @@
         copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
         copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
         copyBookingIdModalBtn.onclick = () => copy(code, copyBookingIdModalBtn);
-        document.getElementById("copyBookingIdSummaryBtn").onclick = () =>
-          copy(code, document.getElementById("copyBookingIdSummaryBtn"));
 
         // UPI Transaction Validation
         const upiTransactionNumber = document.getElementById(
@@ -1842,12 +1575,10 @@
             }
 
             // User details are already loaded from the sheet during initialization
-            // We can access them from the UI elements or store them globally
-            const email = document.getElementById("emailVal").textContent;
-            const mobile = document.getElementById("mobileVal").textContent;
-            const seats = parseInt(
-              document.getElementById("seatCount").textContent
-            );
+            // We can access them from the global variables set during initialization
+            const email = window.userDetails.email;
+            const mobile = window.userDetails.mobile;
+            const seats = window.userDetails.seats;
 
             // Show loading modal
             const modal = document.getElementById("loadingModal");
@@ -1969,23 +1700,21 @@
           };
       });
     </script>
-    <!-- Loading Modal -->
+    <!-- Loading Modal with Spinner -->
     <div
       id="loadingModal"
-      class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 hidden"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
     >
       <div
-        class="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-sm mx-4"
+        class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-sm mx-4"
       >
         <div
-          class="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full spinner mx-auto mb-6"
+          class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-6 mx-auto"
         ></div>
-        <h2 class="text-xl font-bold text-gray-800 mb-2">
-          Confirming your booking…
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">
+          Loading your details…
         </h2>
-        <p class="text-gray-600">
-          Please wait a moment while we process your payment.
-        </p>
+        <p class="text-gray-600">Please wait a moment.</p>
       </div>
     </div>
 
@@ -2123,6 +1852,187 @@
       function closeNextStepsModal() {
         document.getElementById("nextStepsModal").classList.add("hidden");
       }
+
+      // Toast notification function
+      const showToast = (message) => {
+        const toastContainer = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+
+        toast.className = `
+          bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg 
+          transform transition-all duration-300 ease-in-out
+          opacity-0 translate-x-full
+          flex items-center gap-2
+        `;
+
+        toast.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span class="font-medium">${message}</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => {
+          toast.classList.remove("opacity-0", "translate-x-full");
+          toast.classList.add("opacity-100", "translate-x-0");
+        }, 10);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.classList.add("opacity-0", "translate-x-full");
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 3000);
+      };
+
+      // Copy helper function
+      const copy = async (text, btn) => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+
+          btn.classList.add(
+            "ring-2",
+            "ring-offset-1",
+            "ring-green-400",
+            "transition",
+            "duration-150"
+          );
+          setTimeout(() => {
+            btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+          }, 1100);
+
+          // Show toast notification
+          showToast("Booking ID Copied!");
+        } catch (err) {
+          alert("Copy failed: " + err);
+        }
+      };
+
+      // User Details Popup Functionality
+      let isPopupOpen = false;
+
+      const togglePopup = (show) => {
+        const popup = document.getElementById("userDetailsPopup");
+        const btn = document.getElementById("userDetailsBtn");
+
+        if (show) {
+          popup.classList.remove("hidden");
+          setTimeout(() => {
+            popup.classList.remove("opacity-0", "scale-95");
+            popup.classList.add("opacity-100", "scale-100");
+          }, 10);
+          btn.classList.add("bg-gray-200", "text-gray-600");
+          btn.classList.remove(
+            "text-pink-600",
+            "hover:text-pink-700",
+            "hover:bg-pink-50"
+          );
+        } else {
+          popup.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            popup.classList.add("hidden");
+          }, 200);
+          btn.classList.remove("bg-gray-200", "text-gray-600");
+          btn.classList.add(
+            "text-pink-600",
+            "hover:text-pink-700",
+            "hover:bg-pink-50"
+          );
+        }
+      };
+
+      // Initialize user details popup
+      const initializeUserDetails = () => {
+        // Get user data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get("code");
+
+        // Populate popup with user data from global variables if available
+        if (window.userDetails) {
+          document.getElementById("popupEmail").textContent =
+            window.userDetails.email || "";
+          document.getElementById("popupBookingId").textContent =
+            bookingId || "";
+          document.getElementById("popupMobile").textContent =
+            window.userDetails.mobile || "";
+          document.getElementById("popupAmount").textContent =
+            window.userDetails.seats * 500 || "0";
+          document.getElementById("popupSeats").textContent =
+            window.userDetails.seats || "0";
+        } else {
+          // Fallback to just booking ID if user details not loaded yet
+          document.getElementById("popupEmail").textContent = "";
+          document.getElementById("popupBookingId").textContent =
+            bookingId || "";
+          document.getElementById("popupMobile").textContent = "";
+          document.getElementById("popupAmount").textContent = "0";
+          document.getElementById("popupSeats").textContent = "0";
+        }
+      };
+
+      // User details button click handler
+      document
+        .getElementById("userDetailsBtn")
+        .addEventListener("click", () => {
+          isPopupOpen = !isPopupOpen;
+          togglePopup(isPopupOpen);
+        });
+
+      // Close popup button handler
+      document.getElementById("closePopupBtn").addEventListener("click", () => {
+        isPopupOpen = false;
+        togglePopup(false);
+      });
+
+      // Copy booking ID popup button handler
+      document
+        .getElementById("copyBookingIdPopupBtn")
+        .addEventListener("click", () => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const bookingId = urlParams.get("code");
+          copy(bookingId, document.getElementById("copyBookingIdPopupBtn"));
+        });
+
+      // Copy booking ID button handler (main display)
+      document
+        .getElementById("copyBookingIdBtn")
+        .addEventListener("click", () => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const bookingId = urlParams.get("code");
+          copy(bookingId, document.getElementById("copyBookingIdBtn"));
+        });
+
+      // Close popup when clicking outside
+      document.addEventListener("click", (e) => {
+        const popup = document.getElementById("userDetailsPopup");
+        const btn = document.getElementById("userDetailsBtn");
+
+        if (!popup.contains(e.target) && !btn.contains(e.target)) {
+          isPopupOpen = false;
+          togglePopup(false);
+        }
+      });
+
+      // Initialize user details when page loads
+      initializeUserDetails();
     </script>
   </body>
 </html>

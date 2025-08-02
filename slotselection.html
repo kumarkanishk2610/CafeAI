@@ -115,234 +115,191 @@
   </head>
 
   <body class="text-gray-800">
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
     <!-- Header -->
     <header
       class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
-      <div class="flex items-center h-14 px-4">
-        <a href="index.html" class="flex items-center hover:opacity-80">
-          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
-          <h1
-            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-          >
-            Cafe Kyaa!
-          </h1>
-        </a>
-        <span
-          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap"
+      <div class="flex items-center justify-between h-16 px-4">
+        <div class="flex items-center">
+          <a href="index.html" class="flex items-center hover:opacity-80">
+            <img src="logo.png" class="h-12 w-12 rounded-full" alt="logo" />
+            <div class="ml-2 flex flex-col">
+              <h1
+                class="text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide leading-tight"
+              >
+                Cafe Kyaa!
+              </h1>
+              <span class="text-xs font-medium text-rose-600 leading-tight">
+                Anime India 2025 · Mumbai
+              </span>
+            </div>
+          </a>
+        </div>
+        <!-- User Details Button -->
+        <button
+          id="userDetailsBtn"
+          class="p-2 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-full transition-colors duration-200"
+          title="View User Details"
         >
-          Anime India 2025 · Mumbai
-        </span>
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="pt-20 flex flex-col items-center p-4">
-      <div class="w-full max-w-4xl space-y-6">
-        <!-- Order Summary Card -->
-        <div class="fade-in">
-          <div
-            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
+    <!-- User Details Popup -->
+    <div
+      id="userDetailsPopup"
+      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+    >
+      <div class="space-y-3 min-w-[280px]">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-gray-800">User Details</h3>
+          <button
+            id="closePopupBtn"
+            class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
           >
-            <!-- Decorative elements -->
-            <div
-              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
-            ></div>
-            <div
-              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
-            ></div>
-
-            <div class="relative z-10">
-              <!-- Header -->
-              <div
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
-              >
-                <div class="flex items-center gap-4">
-                  <div
-                    class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
-                  >
-                    <svg
-                      class="w-6 h-6 text-white"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 class="text-xl font-bold text-gray-800 mb-1">
-                      Reserve Your Slot!
-                    </h2>
-                    <p class="text-gray-600 font-medium">Cafe Kyaa! Tickets</p>
-                  </div>
-                </div>
-
-                <!-- Price Summary -->
-                <div class="text-right">
-                  <div class="text-2xl font-bold gradient-text mb-1">
-                    ₹<span id="amtTitle">0</span>
-                  </div>
-                  <div class="text-gray-600">
-                    <span id="seatCount">0</span> seat(s) @ ₹500 each
-                  </div>
-                </div>
-              </div>
-
-              <!-- Contact Details -->
-              <div
-                class="bg-white rounded-xl p-4 shadow-lg border border-gray-100"
-              >
-                <h3
-                  class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2"
-                >
-                  <svg
-                    class="w-5 h-5 text-pink-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                    ></path>
-                    <path
-                      d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                    ></path>
-                  </svg>
-                  Your Details
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div
-                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
-                  >
-                    <div
-                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-pink-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                        ></path>
-                        <path
-                          d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <div class="text-xs text-gray-500 font-medium">Email</div>
-                      <div
-                        id="emailVal"
-                        class="text-sm font-semibold text-gray-800 break-words max-w-[40vw]"
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div
-                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
-                  >
-                    <div
-                      class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-pink-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <div class="text-xs text-gray-500 font-medium">
-                        Mobile
-                      </div>
-                      <div
-                        id="mobileVal"
-                        class="text-sm font-semibold text-gray-800"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Booking ID Section -->
-                <div
-                  class="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-200"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <div class="text-xs text-gray-500 font-medium">
-                        Booking ID
-                      </div>
-                      <div
-                        id="bookingIdValSummary"
-                        class="text-sm font-bold text-gray-800"
-                      ></div>
-                    </div>
-                  </div>
-                  <button
-                    id="copyBookingIdSummaryBtn"
-                    class="bg-pink-500 hover:bg-pink-600 text-white px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
-                  >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 002 2z"
-                      ></path>
-                    </svg>
-                    Copy
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
         </div>
 
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+              ></path>
+              <path
+                d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Email:</span>
+            <span id="popupEmail" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Booking ID:</span>
+            <span id="popupBookingId" class="font-bold text-gray-800"></span>
+            <button
+              id="copyBookingIdPopupBtn"
+              class="ml-2 p-1 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded transition-colors duration-200"
+              title="Copy Booking ID"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Mobile:</span>
+            <span id="popupMobile" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Total:</span>
+            <span class="font-bold text-gray-800"
+              >₹<span id="popupAmount">0</span></span
+            >
+            <span class="text-gray-600"
+              >(<span id="popupSeats">0</span> seats)</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-24 flex flex-col items-center p-4">
+      <div class="w-full max-w-4xl space-y-4">
         <!-- Slot Selection Section -->
         <div class="fade-in" style="animation-delay: 0.2s">
           <div
             class="bg-white rounded-3xl shadow-2xl p-6 border border-pink-100"
           >
-            <div class="text-center mb-6">
+            <div class="text-center mb-4">
               <h3 class="text-xl font-bold text-gray-800 mb-2">
-                Select Your Preferred Slots
+                Select Your Preferred Timing!
               </h3>
               <p class="text-gray-600">
-                Choose the day and time slots that work best for you
+                Choose the day and time that work best for you.
               </p>
             </div>
 
             <!-- Day Selection Controls -->
             <div
-              class="flex flex-col md:flex-row items-center justify-between mb-6 space-y-4 md:space-y-0"
+              class="flex flex-col md:flex-row items-center justify-between mb-0 space-y-4 md:space-y-0"
             >
               <div class="flex items-center gap-3">
                 <label
@@ -363,113 +320,50 @@
                 </label>
                 <select
                   id="daySelector"
-                  class="border border-pink-300 rounded-lg px-4 py-2 text-sm focus:ring-pink-500 focus:border-pink-500 bg-white shadow-sm"
+                  class="border border-pink-300 rounded-lg px-4 py-2 text-base font-bold focus:ring-pink-500 focus:border-pink-500 bg-white shadow-sm"
                 >
                   <option value="1">Fri, 22 Aug 2025</option>
                   <option value="2">Sat, 23 Aug 2025</option>
                   <option value="3">Sun, 24 Aug 2025</option>
                 </select>
               </div>
-              <button
-                id="refreshTableBtn"
-                class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white text-sm px-6 py-2 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  ></path>
-                </svg>
-                Refresh Availability
-              </button>
             </div>
 
             <!-- Availability Table -->
             <div class="w-full">
               <div id="sheet-data"></div>
 
-              <div id="selectionSummary" class="mt-6 text-center"></div>
+              <div id="selectionSummary" class="mt-0 text-center"></div>
             </div>
-          </div>
-        </div>
-
-        <!-- Information Cards -->
-        <div class="fade-in" style="animation-delay: 0.4s">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Note Card -->
-            <div
-              class="bg-white rounded-xl p-4 shadow-lg border border-blue-100"
-            >
-              <div class="flex items-start gap-3">
-                <div
-                  class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+            <div class="mt-8 flex items-start gap-3">
+              <div
+                class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-5 h-5 text-blue-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <svg
-                    class="w-5 h-5 text-blue-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-semibold text-gray-800 mb-1">
-                    Important Note
-                  </h4>
-                  <p class="text-sm text-gray-600 break-words">
-                    In case of any issues or queries, please raise a ticket via
-                    <a
-                      href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
-                      target="_blank"
-                      class="text-blue-600 underline hover:text-blue-800 font-medium"
-                      >this form</a
-                    >. We will try to get back to you as soon as possible.
-                  </p>
-                </div>
+                  <path
+                    fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
               </div>
-            </div>
-
-            <!-- Refund Card -->
-            <div
-              class="bg-white rounded-xl p-4 shadow-lg border border-green-100"
-            >
-              <div class="flex items-start gap-3">
-                <div
-                  class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0"
-                >
-                  <svg
-                    class="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-semibold text-gray-800 mb-1">
-                    Refund Policy
-                  </h4>
-                  <p class="text-sm text-gray-600 leading-relaxed">
-                    In case your booking fails but your payment is completed,
-                    please raise a ticket at the link given above and we will
-                    issue a refund.
-                  </p>
-                </div>
+              <div>
+                <h4 class="font-semibold text-gray-800 mb-1 text-sm">
+                  Need Help?
+                </h4>
+                <p class="text-xs text-gray-600 break-words">
+                  You can reach out to us by raising a ticket via
+                  <a
+                    href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                    target="_blank"
+                    class="text-blue-600 underline hover:text-blue-800 font-medium"
+                    >this form</a
+                  >. We will try to get back to you as soon as possible.
+                </p>
               </div>
             </div>
           </div>
@@ -477,21 +371,21 @@
       </div>
     </main>
 
-    <!-- Loading Modal -->
+    <!-- Loading Modal with Spinner -->
     <div
       id="loadingModal"
-      class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 hidden"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
     >
       <div
-        class="bg-white rounded-2xl p-6 shadow-2xl text-center max-w-sm mx-4"
+        class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-sm mx-4"
       >
         <div
-          class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full spinner mx-auto mb-4"
+          class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-6 mx-auto"
         ></div>
-        <h2 class="text-lg font-bold text-gray-800 mb-2">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">
           Loading your details…
         </h2>
-        <p class="text-gray-600">Fetching your booking information...</p>
+        <p class="text-gray-600">Please wait a moment.</p>
       </div>
     </div>
 
@@ -728,9 +622,50 @@
           setTimeout(() => {
             btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
           }, 1100);
+
+          // Show toast notification
+          showToast("Booking ID Copied!");
         } catch (err) {
           alert("Copy failed: " + err);
         }
+      };
+
+      // Toast notification function
+      const showToast = (message) => {
+        const toastContainer = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+
+        toast.className = `
+          bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg 
+          transform transition-all duration-300 ease-in-out
+          opacity-0 translate-x-full
+          flex items-center gap-2
+        `;
+
+        toast.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span class="font-medium">${message}</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => {
+          toast.classList.remove("opacity-0", "translate-x-full");
+          toast.classList.add("opacity-100", "translate-x-0");
+        }, 10);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.classList.add("opacity-0", "translate-x-full");
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 3000);
       };
 
       // ===== GLOBAL VARIABLES =====
@@ -984,13 +919,8 @@
           console.log(`Amount: ${amount}`);
           console.log(`Max Seats: ${maxSeats}`);
 
-          // Update UI elements
-          document.getElementById("seatCount").textContent = seats;
-          document.getElementById("amtTitle").textContent = amount;
-          document.getElementById("emailVal").textContent = email;
-          document.getElementById("mobileVal").textContent = mobile;
-          document.getElementById("bookingIdValSummary").textContent =
-            bookingId;
+          // Store user details for popup (no need to update header elements since they were removed)
+          // The popup will be populated when the user clicks the details button
 
           console.log("UI elements updated successfully");
 
@@ -1018,15 +948,12 @@
 
       // ===== EVENT HANDLERS =====
 
-      // Copy button event handler
-      document.getElementById("copyBookingIdSummaryBtn").onclick = () =>
-        copy(bookingId, document.getElementById("copyBookingIdSummaryBtn"));
+      // Copy button event handler (removed since the header button was removed)
+      // The copy functionality is now handled in the popup
 
-      // Day selector and refresh handlers
+      // Day selector handler
       document.getElementById("daySelector").onchange = (e) =>
         renderTable(+e.target.value);
-      document.getElementById("refreshTableBtn").onclick = () =>
-        fetchAndRenderTable();
 
       // ===== DATA FETCHING =====
       const fetchAndRenderTable = () => {
@@ -1058,19 +985,20 @@
           });
       };
 
+      // Slot name mapping - easily customizable
+      const slotNameMapping = {
+        "Slot 1": "11:00 AM",
+        "Slot 2": "1:00 PM",
+        "Slot 3": "3:00 PM",
+        "Slot 4": "5:00 PM",
+      };
+
       // Function to format slotId for frontend display only
       const formatSlotIdForDisplay = (slotId) => {
-        let formatted = slotId
-          .replace("Day 1 -", "Fri,")
-          .replace("Day 2 -", "Sat,")
-          .replace("Day 3 -", "Sun,");
-
-        // Remove last 9 characters and append 2025
-        if (formatted.length > 9) {
-          formatted = formatted.slice(0, -9) + " 2025";
-        }
-
-        return formatted;
+        // Extract slot number from the slotId
+        const slotMatch = slotId.match(/Slot (\d+)/);
+        const slotName = slotMatch ? `Slot ${slotMatch[1]}` : slotId;
+        return slotNameMapping[slotName] || slotName;
       };
 
       // ===== TABLE RENDERING =====
@@ -1079,13 +1007,14 @@
         const startIdx = (day - 1) * 4;
         const endIdx = startIdx + 4;
         const visibleRows = allRows.slice(startIdx, endIdx);
-        const dayLabel =
-          visibleRows[0]?.c[0]?.v?.split("Slot")[0]?.replace(/[\s–-]+$/, "") ||
-          `Day ${day}`;
+        const dayLabels = [
+          "Fri, 22 Aug 2025",
+          "Sat, 23 Aug 2025",
+          "Sun, 24 Aug 2025",
+        ];
+        const dayLabel = dayLabels[day - 1] || `Day ${day}`;
 
-        let html = `
-  <div class="text-xl font-bold text-gray-800 mb-4 text-center">${dayLabel}</div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+        let html = ``;
 
         visibleRows.forEach((row, i) => {
           const slotId = row.c[0]?.v || `Slot${i}`;
@@ -1101,51 +1030,42 @@
           // Use formattedSlotId ONLY for display
           const formattedSlotId = formatSlotIdForDisplay(slotId);
 
+          // Show alert only if less than 12 seats available
+          const seatsLeft = freeSlots;
+          const showAlert = seatsLeft < 12;
+
           html += `
-    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-lg hover:shadow-xl transition-all duration-200 card-hover">
-      <div class="flex items-center justify-between mb-3">
-        <h4 class="text-base font-bold text-gray-800">${formattedSlotId}</h4>
-        <div class="w-12 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
-          <span class="text-white text-xs font-bold">Slot ${i + 1}</span>
+    <div class="flex items-center justify-between py-4 ${
+      i < visibleRows.length - 1 ? "border-b border-gray-200" : ""
+    }">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4">
+          <h4 class="text-lg font-semibold text-gray-800 w-20">${formattedSlotId}</h4>
+          <div class="w-px h-8 bg-gray-200"></div>
         </div>
-      </div>
-      
-      <div class="grid grid-cols-3 gap-2 mb-3">
-        <div class="bg-green-50 border border-green-200 rounded-lg p-2 text-center">
-          <div class="text-base font-bold text-green-700">${freeSlots}</div>
-          <div class="text-xs text-green-600 font-medium">Free</div>
-        </div>
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2 text-center">
-          <div class="text-base font-bold text-yellow-700">${processing}</div>
-          <div class="text-xs text-yellow-600 font-medium">Processing</div>
-        </div>
-        <div class="bg-red-50 border border-red-200 rounded-lg p-2 text-center">
-          <div class="text-base font-bold text-red-700">${booked}</div>
-          <div class="text-xs text-red-600 font-medium">Booked</div>
-        </div>
-      </div>
-      
-      <div class="flex items-center justify-between">
         <div class="text-sm text-gray-600">
-          <span class="font-semibold text-gray-800">Selected:</span> ${selected}
+          <span class="font-medium text-gray-800">Selected:</span> ${selected}
+          ${
+            showAlert
+              ? `<br><span class="text-xs text-orange-600 font-medium">Only ${seatsLeft} seats left!</span>`
+              : ""
+          }
         </div>
-        <div class="flex items-center gap-2">
-          <button data-slot="${slotId}" class="decBtn w-8 h-8 bg-gray-200 text-gray-800 rounded-full text-sm font-bold flex items-center justify-center transition-all duration-200 ${
+      </div>
+      <div class="flex items-center gap-2">
+        <button data-slot="${slotId}" class="decBtn w-8 h-8 bg-gray-100 text-gray-600 rounded-full text-sm font-bold flex items-center justify-center transition-all duration-200 ${
             disableMinus
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-gray-300 hover:scale-110"
-          }" ${disableMinus ? "disabled" : ""}>–</button>
-          <button data-slot="${slotId}" class="incBtn w-8 h-8 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full text-sm font-bold flex items-center justify-center transition-all duration-200 ${
+              ? "opacity-40 cursor-not-allowed"
+              : "hover:bg-gray-200 hover:scale-105"
+          }" ${disableMinus ? "disabled" : ""}>−</button>
+        <button data-slot="${slotId}" class="incBtn w-8 h-8 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full text-sm font-bold flex items-center justify-center transition-all duration-200 ${
             disablePlus
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:from-pink-600 hover:to-rose-600 hover:scale-110"
+              ? "opacity-40 cursor-not-allowed"
+              : "hover:from-pink-600 hover:to-rose-600 hover:scale-105"
           }" ${disablePlus ? "disabled" : ""}>+</button>
-        </div>
       </div>
     </div>`;
         });
-
-        html += `</div>`;
 
         document.getElementById("sheet-data").innerHTML = html;
 
@@ -1182,28 +1102,20 @@
       const updateSummary = () => {
         const summaryDiv = document.getElementById("selectionSummary");
         summaryDiv.innerHTML = `
-        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200 shadow-lg">
-          <div class="text-center mb-4">
-            <div class="text-2xl font-bold text-gray-800 mb-2">
-              Selection Summary
+
+                      <div class="text-center mb-4">
+              <div class="text-sm text-gray-700">
+                <span class="font-semibold text-green-600">${totalSelected}</span> of <span class="font-semibold text-gray-800">${maxSeats}</span> seats selected
+              </div>
             </div>
-            <div class="text-lg text-gray-600">
-              Selected <span class="font-bold text-green-600">${totalSelected}</span> of <span class="font-bold text-gray-800">${maxSeats}</span> seat(s)
-            </div>
-          </div>
-          <div class="flex justify-center">
-            <button id="confirmBtn" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 ${
-              totalSelected !== maxSeats
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:scale-105"
-            }" ${totalSelected !== maxSeats ? "disabled" : ""}>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              Confirm Slot Selection
-            </button>
-          </div>
-        </div>`;
+          <button id="confirmBtn" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-3 rounded-lg font-semibold text-lg transition-all duration-200 ${
+            totalSelected !== maxSeats
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:shadow-lg"
+          }" ${totalSelected !== maxSeats ? "disabled" : ""}>
+            Confirm Slot Selection
+          </button>
+        `;
 
         const confirmBtn = document.getElementById("confirmBtn");
         if (confirmBtn) {
@@ -1373,13 +1285,22 @@
           }
 
           // Final slot form submission (finalSlot form)
-          const dayVal = document.getElementById("daySelector").value;
-          const dayCode = `D${dayVal}`;
           for (let slotId in selection) {
             const count = selection[slotId];
             if (count === 0) continue;
+
+            // Extract day and slot information from slotId
+            const dayMatch = slotId.match(/Day\s*(\d+)/);
             const slotMatch = slotId.match(/Slot\s*(\d+)/);
-            const slotCode = slotMatch ? `S${slotMatch[1]}` : "S1";
+
+            if (!dayMatch || !slotMatch) {
+              console.warn(`Invalid slotId format: ${slotId}`);
+              continue;
+            }
+
+            const dayCode = `D${dayMatch[1]}`;
+            const slotCode = `S${slotMatch[1]}`;
+
             for (let i = 0; i < count; i++) {
               await submitToGoogleForm(FORM_URLS.finalSlot, {
                 [ENTRY_IDS.finalSlot.day]: dayCode,
@@ -1686,15 +1607,22 @@
       const submitFinalForms = async () => {
         const formBaseURL =
           "https://docs.google.com/forms/d/e/1FAIpQLSdKvVjiL3W356UZsWKy0BBRpqHxoFN7Q_5UQHUKlQDjxpNxBA/formResponse";
-        const dayVal = document.getElementById("daySelector").value;
-        const dayCode = `D${dayVal}`;
 
         for (let slotId in selection) {
           const count = selection[slotId];
           if (count === 0) continue;
 
+          // Extract day and slot information from slotId
+          const dayMatch = slotId.match(/Day\s*(\d+)/);
           const slotMatch = slotId.match(/Slot\s*(\d+)/);
-          const slotCode = slotMatch ? `S${slotMatch[1]}` : "S1";
+
+          if (!dayMatch || !slotMatch) {
+            console.warn(`Invalid slotId format: ${slotId}`);
+            continue;
+          }
+
+          const dayCode = `D${dayMatch[1]}`;
+          const slotCode = `S${slotMatch[1]}`;
 
           for (let i = 0; i < count; i++) {
             const formData = new FormData();
@@ -1713,6 +1641,88 @@
           }
         }
       };
+
+      // ===== POPUP FUNCTIONALITY =====
+
+      // Popup elements
+      const userDetailsBtn = document.getElementById("userDetailsBtn");
+      const userDetailsPopup = document.getElementById("userDetailsPopup");
+      const closePopupBtn = document.getElementById("closePopupBtn");
+
+      // Toggle popup function
+      const togglePopup = (show) => {
+        if (show) {
+          // Populate popup with current data from global variables
+          document.getElementById("popupEmail").textContent = email;
+          document.getElementById("popupBookingId").textContent = bookingId;
+          document.getElementById("popupMobile").textContent = mobile;
+          document.getElementById("popupAmount").textContent = amount;
+          document.getElementById("popupSeats").textContent = seats;
+
+          // Show popup with animation
+          userDetailsPopup.classList.remove("hidden");
+          setTimeout(() => {
+            userDetailsPopup.classList.remove("opacity-0", "scale-95");
+            userDetailsPopup.classList.add("opacity-100", "scale-100");
+          }, 10);
+
+          // Add grey highlight to button
+          userDetailsBtn.classList.add("bg-gray-200", "text-gray-600");
+          userDetailsBtn.classList.remove(
+            "text-pink-600",
+            "hover:text-pink-700",
+            "hover:bg-pink-50"
+          );
+        } else {
+          // Hide popup with animation
+          userDetailsPopup.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            userDetailsPopup.classList.add("hidden");
+          }, 200);
+
+          // Remove grey highlight from button
+          userDetailsBtn.classList.remove("bg-gray-200", "text-gray-600");
+          userDetailsBtn.classList.add(
+            "text-pink-600",
+            "hover:text-pink-700",
+            "hover:bg-pink-50"
+          );
+        }
+      };
+
+      // Track popup state
+      let isPopupOpen = false;
+
+      // Toggle popup on button click
+      userDetailsBtn.addEventListener("click", () => {
+        isPopupOpen = !isPopupOpen;
+        togglePopup(isPopupOpen);
+      });
+
+      // Close popup
+      closePopupBtn.addEventListener("click", () => {
+        isPopupOpen = false;
+        togglePopup(false);
+      });
+
+      // Close popup when clicking outside
+      document.addEventListener("click", (e) => {
+        if (
+          !userDetailsPopup.contains(e.target) &&
+          !userDetailsBtn.contains(e.target) &&
+          isPopupOpen
+        ) {
+          isPopupOpen = false;
+          togglePopup(false);
+        }
+      });
+
+      // Copy booking ID button event handler
+      document
+        .getElementById("copyBookingIdPopupBtn")
+        .addEventListener("click", () => {
+          copy(bookingId, document.getElementById("copyBookingIdPopupBtn"));
+        });
 
       // ===== INITIALIZATION =====
 

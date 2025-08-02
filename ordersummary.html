@@ -1,0 +1,1432 @@
+<!-- ordersummary.html – Order Summary Page -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – Order Summary</title>
+
+    <!-- Quicksand + Tailwind -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0);
+        --sab: env(safe-area-inset-bottom, 0);
+      }
+      html {
+        --vh: 1vh;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: calc(var(--vh) * 100);
+        padding: var(--sat) 0 var(--sab);
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- header -->
+    <header
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center justify-between h-16 px-4">
+        <div class="flex items-center">
+          <a href="index.html" class="flex items-center hover:opacity-80">
+            <img src="logo.png" class="h-12 w-12 rounded-full" alt="logo" />
+            <div class="ml-2 flex flex-col">
+              <h1
+                class="text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide leading-tight"
+              >
+                Cafe Kyaa!
+              </h1>
+              <span class="text-xs font-medium text-rose-600 leading-tight">
+                Anime India 2025 · Mumbai
+              </span>
+            </div>
+          </a>
+        </div>
+        <!-- User Details Button -->
+        <button
+          id="userDetailsBtn"
+          class="p-2 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-full transition-colors duration-200"
+          title="View User Details"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- User Details Popup -->
+    <div
+      id="userDetailsPopup"
+      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+    >
+      <div class="space-y-3 min-w-[280px]">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-gray-800">User Details</h3>
+          <button
+            id="closePopupBtn"
+            class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+              ></path>
+              <path
+                d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Email:</span>
+            <span id="popupEmail" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Mobile:</span>
+            <span id="popupMobile" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Booking ID:</span>
+            <span
+              id="popupBookingId"
+              class="font-semibold text-gray-800"
+            ></span>
+            <button
+              id="copyBookingIdPopupBtn"
+              class="text-pink-600 hover:text-pink-700 transition-colors"
+              title="Copy Booking ID"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Seats:</span>
+            <span id="popupSeats" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Amount:</span>
+            <span id="popupAmount" class="font-semibold text-gray-800"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main -->
+    <main class="pt-24 flex flex-col items-center p-4">
+      <div class="w-full max-w-4xl space-y-6">
+        <!-- Countdown Timer -->
+        <div id="countdownContainer" class="fade-in sticky top-20 z-30">
+          <!-- Full-width frosted glass backdrop -->
+          <div
+            class="absolute inset-x-0 -top-6 -bottom-6 -mx-4 pointer-events-none"
+            style="
+              background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.95) 20%,
+                rgba(255, 255, 255, 0.3) 40%,
+                rgba(255, 255, 255, 0) 80%
+              );
+            "
+          ></div>
+
+          <div
+            class="bg-gradient-to-r from-orange-50/90 to-red-50/90 backdrop-blur-md border border-orange-200/80 rounded-xl p-4 shadow-xl relative overflow-hidden"
+          >
+            <!-- Decorative blur elements -->
+            <div
+              class="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-orange-200 to-red-200 rounded-full opacity-30 blur-xl"
+            ></div>
+            <div
+              class="absolute -bottom-8 -left-8 w-12 h-12 bg-gradient-to-br from-red-200 to-orange-200 rounded-full opacity-30 blur-xl"
+            ></div>
+
+            <div class="relative z-10 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-md"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-gray-800">
+                    Complete your booking
+                  </h3>
+                  <p class="text-xs text-gray-600">before time runs out</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <div
+                  id="countdownTimer"
+                  class="text-2xl font-bold text-orange-600 font-mono"
+                >
+                  Loading...
+                </div>
+                <div class="text-xs text-gray-500">minutes:seconds</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div class="fade-in">
+          <div
+            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+            <div
+              class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
+            ></div>
+
+            <div class="relative z-10">
+              <!-- Header -->
+              <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M2.25 9.75A2.25 2.25 0 0 1 4.5 7.5h15a2.25 2.25 0 0 1 2.25 2.25v1.08a3.219 3.219 0 0 0 0 6.42v1.08A2.25 2.25 0 0 1 19.5 21h-15A2.25 2.25 0 0 1 2.25 18.75v-1.08a3.219 3.219 0 0 0 0-6.42V9.75zM12 9a.75.75 0 0 0-.75.75v.75h1.5V9.75A.75.75 0 0 0 12 9zm-.75 3h1.5v1.5h-1.5V12zm1.5 4.5h-1.5V18a.75.75 0 0 0 1.5 0v-1.5z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">
+                      Order Summary
+                    </h2>
+                    <p class="text-gray-600 font-medium">
+                      Your Booking Details
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="text-right">
+                  <div class="text-2xl font-bold gradient-text mb-1">
+                    ₹<span id="amtTitle">0</span>
+                  </div>
+                  <div class="text-gray-600">
+                    <span id="seatCount">0</span> seat(s) @ ₹500 each
+                  </div>
+                </div>
+              </div>
+
+              <!-- Order Summary Content -->
+              <div id="orderSummaryContainer" class="mt-6">
+                <div class="text-center py-8">
+                  <div
+                    class="w-8 h-8 border-4 border-pink-500 border-t-transparent rounded-full spinner mx-auto mb-4"
+                  ></div>
+                  <p class="text-gray-600">Loading your order details...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="fade-in" style="animation-delay: 0.3s">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button
+              id="continueToPaymentBtn"
+              class="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-4 px-6 rounded-xl font-semibold shadow-lg transition-all duration-200 transform hover:scale-105"
+            >
+              Continue to Payment
+            </button>
+            <button
+              id="restartBookingBtn"
+              class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 px-6 rounded-xl font-semibold shadow-lg transition-all duration-200 transform hover:scale-105"
+            >
+              Restart Booking
+            </button>
+          </div>
+        </div>
+
+        <!-- Need Help Section -->
+        <div class="fade-in" style="animation-delay: 0.4s">
+          <div
+            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-transparent"
+            ></div>
+            <div
+              class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-pink-200/30 to-rose-200/30 rounded-full blur-xl"
+            ></div>
+            <div
+              class="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-tr from-rose-200/20 to-pink-200/20 rounded-full blur-lg"
+            ></div>
+
+            <div class="relative z-10">
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <svg
+                    class="w-5 h-5 text-blue-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800 mb-1 text-sm">
+                    Need Help?
+                  </h4>
+                  <p class="text-xs text-gray-600 break-words">
+                    You can reach out to us by raising a ticket via
+                    <a
+                      href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                      target="_blank"
+                      class="text-blue-600 underline hover:text-blue-800 font-medium"
+                      >this form</a
+                    >. We will try to get back to you as soon as possible.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Loading Modal with Spinner -->
+    <div
+      id="loadingModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-sm mx-4"
+      >
+        <div
+          class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full spinner mb-6 mx-auto"
+        ></div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">
+          Loading your details…
+        </h2>
+        <p class="text-gray-600">Please wait a moment.</p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- all your current script code goes inside here ---
+
+        /* ---------- viewport helper ---------- */
+        const setVH = () =>
+          document.documentElement.style.setProperty(
+            "--vh",
+            `${innerHeight * 0.01}px`
+          );
+        setVH();
+        addEventListener("resize", setVH);
+
+        /* ---------- constants ---------- */
+        const HEADER_OFFSET = 60;
+
+        /* ---------- elements ---------- */
+        const seatCount = document.getElementById("seatCount");
+        const amtTitle = document.getElementById("amtTitle");
+        const continueToPaymentBtn = document.getElementById(
+          "continueToPaymentBtn"
+        );
+        const restartBookingBtn = document.getElementById("restartBookingBtn");
+
+        /* ---------- read query‑params ---------- */
+        const params = new URLSearchParams(location.search);
+        const code = params.get("code")?.trim() || "";
+
+        // Debug logging
+        console.log("=== URL PARAMETERS DEBUG ===");
+        console.log("Raw URL:", window.location.href);
+        console.log("URL search params:", location.search);
+        console.log("Code:", code, "| Valid:", !!code);
+
+        if (!code) {
+          console.error("=== REDIRECTING DUE TO MISSING BOOKING ID ===");
+          alert("Missing booking ID. Redirecting to initiate payment page...");
+          setTimeout(() => {
+            location.replace("initiatebooking.html");
+          }, 2000);
+          return;
+        }
+
+        // ===== SHEET CONFIGURATIONS =====
+        const userDetailsSheetID =
+          "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const userDetailsSheetName = "Raw Data";
+
+        // Availability Updater Sheet (for slot details)
+        const availabilityUpdaterSheetID =
+          "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const availabilityUpdaterSheetName = "Availability Updater";
+
+        // Food Items Sheet (for food/beverage details)
+        const foodItemsSheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const foodItemsSheetName = "Food Items";
+
+        // ===== FETCH USER DETAILS BY BOOKING ID =====
+        const fetchUserDetailsByBookingId = async (bookingId) => {
+          try {
+            console.log("=== FETCH USER DETAILS START ===");
+            console.log(`Input booking ID: "${bookingId}"`);
+            console.log(`Sheet ID: ${userDetailsSheetID}`);
+            console.log(`Sheet Name: ${userDetailsSheetName}`);
+
+            // Fetch the entire sheet data
+            const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
+              userDetailsSheetName
+            )}&tq=${encodeURIComponent("SELECT *")}`;
+
+            console.log(`Query URL: ${userUrl}`);
+
+            console.log("Making fetch request...");
+            const response = await fetch(userUrl);
+            console.log(`Response status: ${response.status}`);
+            console.log(`Response ok: ${response.ok}`);
+
+            const data = await response.text();
+            console.log(`Response data length: ${data.length}`);
+            console.log(`Response data preview: ${data.substring(0, 200)}...`);
+
+            // Parse the response
+            const json = JSON.parse(data.substring(47).slice(0, -2));
+            const rows = json.table.rows;
+
+            console.log(`Total rows: ${rows.length}`);
+
+            // Debug: Show all booking IDs in the sheet
+            console.log("=== ALL BOOKING IDs IN SHEET ===");
+            console.log(`Total rows in sheet: ${rows.length}`);
+            console.log(`Looking for booking ID: "${bookingId}"`);
+
+            // Show first row to understand column structure (no header assumption)
+            if (rows.length > 0) {
+              const firstRow = rows[0];
+              console.log("=== FIRST ROW STRUCTURE ===");
+              console.log(
+                "First row structure:",
+                firstRow.c
+                  ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
+                  .join(", ")
+              );
+            }
+
+            // Show first 20 rows with more details
+            for (let i = 0; i < Math.min(rows.length, 20); i++) {
+              const row = rows[i];
+              const hashValue = row.c[4]?.v;
+              const email = row.c[1]?.v;
+              const seats = row.c[2]?.v;
+              const mobile = row.c[3]?.v;
+
+              console.log(
+                `Row ${i}: Hash="${hashValue}" | Email="${email}" | Seats="${seats}" | Mobile="${mobile}"`
+              );
+
+              // Show full row structure for debugging
+              console.log(
+                `Row ${i} full structure:`,
+                row.c
+                  ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
+                  .join(", ")
+              );
+            }
+
+            // Also check if the booking ID exists anywhere in the sheet
+            let foundInSheet = false;
+            for (let i = 0; i < rows.length; i++) {
+              const row = rows[i];
+              // Check all columns for the booking ID
+              for (let col = 0; col < (row.c?.length || 0); col++) {
+                const cellValue = row.c[col]?.v;
+                if (cellValue && String(cellValue).includes(bookingId)) {
+                  console.log(
+                    `Booking ID "${bookingId}" found in row ${i}, column ${col} with value: "${cellValue}"`
+                  );
+                  foundInSheet = true;
+                }
+              }
+            }
+
+            if (!foundInSheet) {
+              console.log(
+                `Booking ID "${bookingId}" NOT found anywhere in the sheet`
+              );
+            }
+
+            console.log("=== END BOOKING IDs DEBUG ===");
+
+            // Search for the booking ID
+            for (let i = 0; i < rows.length; i++) {
+              const row = rows[i];
+
+              // First try the standard column mapping
+              const hashValue = row.c[4]?.v; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
+              const hashValueStr = hashValue ? String(hashValue) : "";
+
+              console.log(
+                `Row ${i} - hashValue: "${hashValueStr}" (type: ${typeof hashValue})`
+              );
+              console.log(
+                `Row ${i} - bookingId: "${bookingId}" (type: ${typeof bookingId})`
+              );
+
+              // Additional debugging for data type issues
+              const hashValueNum = parseInt(hashValueStr);
+              const bookingIdNum = parseInt(bookingId);
+
+              if (
+                hashValueStr === bookingId ||
+                hashValueStr.trim() === bookingId.trim() ||
+                hashValueNum === bookingIdNum ||
+                (hashValueNum && hashValueNum === bookingIdNum)
+              ) {
+                console.log(
+                  `Found matching booking ID in row ${i} using standard column mapping (${
+                    hashValueStr === bookingId ? "exact match" : "trimmed match"
+                  })`
+                );
+
+                const userDetails = {
+                  email: row.c[1]?.v || "", // B column (Email) - 2nd column (0-indexed as 1)
+                  seats: parseInt(row.c[2]?.v) || 0, // C column (Seats) - 3rd column (0-indexed as 2)
+                  mobile: row.c[3]?.v || "", // D column (Mobile Number) - 4th column (0-indexed as 3)
+                  hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
+                };
+
+                console.log(`User details found:`, userDetails);
+                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                return userDetails;
+              }
+
+              // If standard mapping didn't work, search all columns
+              console.log(
+                `Standard mapping failed for row ${i}, searching all columns...`
+              );
+              for (let col = 0; col < (row.c?.length || 0); col++) {
+                const cellValue = row.c[col]?.v;
+                const cellValueStr = cellValue ? String(cellValue) : "";
+
+                if (
+                  cellValueStr === bookingId ||
+                  cellValueStr.trim() === bookingId.trim() ||
+                  parseInt(cellValueStr) === parseInt(bookingId)
+                ) {
+                  console.log(
+                    `Found matching booking ID in row ${i}, column ${col} with value: "${cellValueStr}"`
+                  );
+
+                  // Try to find email, seats, mobile in adjacent columns
+                  const email =
+                    row.c[col - 3]?.v ||
+                    row.c[col - 2]?.v ||
+                    row.c[col - 1]?.v ||
+                    row.c[col + 1]?.v ||
+                    row.c[col + 2]?.v ||
+                    row.c[col + 3]?.v ||
+                    "";
+                  const seats = parseInt(
+                    row.c[col - 2]?.v ||
+                      row.c[col - 1]?.v ||
+                      row.c[col + 1]?.v ||
+                      row.c[col + 2]?.v ||
+                      0
+                  );
+                  const mobile =
+                    row.c[col - 1]?.v ||
+                    row.c[col + 1]?.v ||
+                    row.c[col + 2]?.v ||
+                    row.c[col + 3]?.v ||
+                    "";
+
+                  const userDetails = {
+                    email: email,
+                    seats: seats,
+                    mobile: mobile,
+                    hash: cellValue,
+                  };
+
+                  console.log(
+                    `User details found using column search:`,
+                    userDetails
+                  );
+                  console.log("=== FETCH USER DETAILS SUCCESS ===");
+                  return userDetails;
+                }
+              }
+            }
+
+            console.warn(
+              `No user details found for booking ID: "${bookingId}"`
+            );
+            console.log("All rows checked, no match found");
+            console.log("=== FETCH USER DETAILS FAILED ===");
+            return null;
+          } catch (error) {
+            console.error("=== ERROR IN FETCH USER DETAILS ===");
+            console.error("Error details:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
+            return null;
+          }
+        };
+
+        // ===== FETCH ORDER SUMMARY DATA =====
+
+        /**
+         * Fetches slot details from Availability Updater sheet
+         * @param {string} bookingId - The booking ID to search for
+         * @returns {Promise<Array>} - Array of slot details
+         */
+        const fetchSlotDetails = async (bookingId) => {
+          try {
+            console.log("=== FETCHING SLOT DETAILS ===");
+            console.log(`Booking ID: ${bookingId}`);
+
+            const url = `https://docs.google.com/spreadsheets/d/${availabilityUpdaterSheetID}/gviz/tq?sheet=${encodeURIComponent(
+              availabilityUpdaterSheetName
+            )}&tq=${encodeURIComponent("SELECT *")}`;
+
+            console.log("Fetching from URL:", url);
+
+            const response = await fetch(url);
+            const data = await response.text();
+            const json = JSON.parse(data.substring(47).slice(0, -2));
+            const rows = json.table.rows;
+
+            console.log("Total rows fetched:", rows.length);
+
+            const slotDetails = [];
+
+            for (let i = 1; i < rows.length; i++) {
+              // Skip header row
+              const row = rows[i];
+              const rowBookingId = row.c[1]?.v ? String(row.c[1].v).trim() : "";
+              const status = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+              const slotId = row.c[3]?.v || "";
+              const seatCount = parseInt(row.c[2]?.v) || 0;
+
+              if (rowBookingId === bookingId && status === "Active") {
+                slotDetails.push({
+                  slotId: slotId,
+                  seatCount: seatCount,
+                  bookingId: rowBookingId,
+                });
+              }
+            }
+
+            console.log("Slot details found:", slotDetails);
+            return slotDetails;
+          } catch (error) {
+            console.error("Error fetching slot details:", error);
+            return [];
+          }
+        };
+
+        /**
+         * Fetches food/beverage details from Food Items sheet
+         * @param {string} bookingId - The booking ID to search for
+         * @returns {Promise<Array>} - Array of food/beverage details
+         */
+        const fetchFoodDetails = async (bookingId) => {
+          try {
+            console.log("=== FETCHING FOOD DETAILS ===");
+            console.log(`Booking ID: ${bookingId}`);
+
+            const url = `https://docs.google.com/spreadsheets/d/${foodItemsSheetID}/gviz/tq?sheet=${encodeURIComponent(
+              foodItemsSheetName
+            )}&tq=${encodeURIComponent("SELECT *")}`;
+
+            console.log("Fetching from URL:", url);
+
+            const response = await fetch(url);
+            const data = await response.text();
+            const json = JSON.parse(data.substring(47).slice(0, -2));
+            const rows = json.table.rows;
+
+            console.log("Total rows fetched:", rows.length);
+
+            const foodDetails = [];
+
+            for (let i = 1; i < rows.length; i++) {
+              // Skip header row
+              const row = rows[i];
+              const rowBookingId = row.c[1]?.v ? String(row.c[1].v).trim() : "";
+              const slotId = row.c[2]?.v || "";
+              const omuriceQty = parseInt(row.c[3]?.v) || 0;
+              const curryRiceQty = parseInt(row.c[4]?.v) || 0;
+              const icedTeaQty = parseInt(row.c[5]?.v) || 0;
+              const plainWaterQty = parseInt(row.c[6]?.v) || 0;
+
+              if (rowBookingId === bookingId) {
+                foodDetails.push({
+                  slotId: slotId,
+                  omurice: omuriceQty,
+                  curryRice: curryRiceQty,
+                  icedTea: icedTeaQty,
+                  plainWater: plainWaterQty,
+                });
+              }
+            }
+
+            console.log("Food details found:", foodDetails);
+            return foodDetails;
+          } catch (error) {
+            console.error("Error fetching food details:", error);
+            return [];
+          }
+        };
+
+        /**
+         * Updates the order summary display
+         * @param {Array} slotDetails - Array of slot details
+         * @param {Array} foodDetails - Array of food/beverage details
+         */
+        const updateOrderSummary = (slotDetails, foodDetails) => {
+          try {
+            console.log("=== UPDATING ORDER SUMMARY ===");
+
+            const orderSummaryContainer = document.getElementById(
+              "orderSummaryContainer"
+            );
+            if (!orderSummaryContainer) {
+              console.error("Order summary container not found");
+              return;
+            }
+
+            let summaryHTML = "";
+
+            // Slot name and day mapping
+            const slotNameMapping = {
+              "Slot 1": "11:00 AM",
+              "Slot 2": "1:00 PM",
+              "Slot 3": "3:00 PM",
+              "Slot 4": "5:00 PM",
+            };
+
+            const dayDateMapping = {
+              "Day 1": "Fri, 22 Aug 2025",
+              "Day 2": "Sat, 23 Aug 2025",
+              "Day 3": "Sun, 24 Aug 2025",
+            };
+
+            if (slotDetails.length === 0) {
+              summaryHTML =
+                '<p class="text-gray-500 text-center py-4">No active bookings found</p>';
+            } else {
+              summaryHTML = '<div class="space-y-4">';
+
+              slotDetails.forEach((slot, index) => {
+                // Parse slot ID to get day and slot number
+                const dayMatch = slot.slotId.match(/^(Day \d+)/);
+                const slotMatch = slot.slotId.match(/Slot (\d+)$/);
+
+                let displayTime = slot.slotId; // fallback
+                let displayDate = "";
+
+                if (dayMatch && slotMatch) {
+                  const day = dayMatch[1];
+                  const slotNumber = slotMatch[1];
+                  const timeSlot = slotNameMapping[`Slot ${slotNumber}`];
+                  const date = dayDateMapping[day];
+
+                  if (timeSlot && date) {
+                    displayTime = timeSlot;
+                    displayDate = date;
+                  }
+                }
+
+                // Find corresponding food details
+                const foodDetail = foodDetails.find(
+                  (food) => food.slotId === slot.slotId
+                ) || {
+                  omurice: 0,
+                  curryRice: 0,
+                  icedTea: 0,
+                  plainWater: 0,
+                };
+
+                summaryHTML += `
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div class="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 class="font-semibold text-gray-800">${displayTime}</h4>
+                        <p class="text-sm text-gray-500">${displayDate}</p>
+                      </div>
+                      <span class="text-sm text-gray-600">${
+                        slot.seatCount
+                      } seat${slot.seatCount > 1 ? "s" : ""}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm relative">
+                      <div>
+                        <h5 class="font-medium text-gray-700 mb-2">Food Items</h5>
+                        <div class="space-y-1">
+                          ${
+                            foodDetail.omurice > 0
+                              ? `<div class="flex justify-between"><span>Omurice</span><span class="font-medium">${foodDetail.omurice}</span></div>`
+                              : ""
+                          }
+                          ${
+                            foodDetail.curryRice > 0
+                              ? `<div class="flex justify-between"><span>Curry Rice</span><span class="font-medium">${foodDetail.curryRice}</span></div>`
+                              : ""
+                          }
+                        </div>
+                      </div>
+                      <!-- Vertical divider -->
+                      <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gray-300 transform -translate-x-1/2"></div>
+                      <div>
+                        <h5 class="font-medium text-gray-700 mb-2">Beverages</h5>
+                        <div class="space-y-1">
+                          ${
+                            foodDetail.icedTea > 0
+                              ? `<div class="flex justify-between"><span>Iced Tea</span><span class="font-medium">${foodDetail.icedTea}</span></div>`
+                              : ""
+                          }
+                          ${
+                            foodDetail.plainWater > 0
+                              ? `<div class="flex justify-between"><span>Plain Water</span><span class="font-medium">${foodDetail.plainWater}</span></div>`
+                              : ""
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              });
+
+              summaryHTML += "</div>";
+            }
+
+            orderSummaryContainer.innerHTML = summaryHTML;
+            console.log("Order summary updated successfully");
+          } catch (error) {
+            console.error("Error updating order summary:", error);
+          }
+        };
+
+        // ===== INITIALIZE USER DETAILS =====
+        const initializeUserDetails = async () => {
+          try {
+            console.log("=== INITIALIZE USER DETAILS START ===");
+            console.log(`Booking ID from URL: "${code}"`);
+            console.log(`Sheet ID: ${userDetailsSheetID}`);
+            console.log(`Sheet Name: ${userDetailsSheetName}`);
+
+            // Show loading state
+            document.getElementById("loadingModal").classList.remove("hidden");
+
+            // Wait 2 seconds before fetching user details from Raw Data
+            console.log("Waiting 2 seconds before fetching...");
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            console.log(
+              "2-second wait completed, now fetching user details..."
+            );
+
+            // Fetch user details from sheet
+            const userDetails = await fetchUserDetailsByBookingId(code);
+
+            console.log("User details returned:", userDetails);
+
+            if (!userDetails) {
+              console.error(
+                "No user details found - redirecting to initiatebooking.html"
+              );
+              alert("Invalid booking ID. Please try again.");
+              location.replace("initiatebooking.html");
+              return;
+            }
+
+            // Validate user details
+            console.log("Validating user details:");
+            console.log(`Email: "${userDetails.email}"`);
+            console.log(`Mobile: "${userDetails.mobile}"`);
+            console.log(`Seats: ${userDetails.seats}`);
+
+            if (
+              !userDetails.email ||
+              !userDetails.mobile ||
+              userDetails.seats < 1
+            ) {
+              console.error(
+                "Invalid user details - redirecting to initiatebooking.html"
+              );
+              console.error(`Email valid: ${!!userDetails.email}`);
+              console.error(`Mobile valid: ${!!userDetails.mobile}`);
+              console.error(`Seats valid: ${userDetails.seats >= 1}`);
+              alert("Invalid user details. Please try again.");
+              location.replace("initiatebooking.html");
+              return;
+            }
+
+            console.log("User details validation passed");
+
+            // Set global variables
+            window.userDetails = userDetails; // Store globally for later access
+            const email = userDetails.email;
+            const mobile = userDetails.mobile;
+            const seats = userDetails.seats;
+            const amount = seats * 500;
+
+            console.log("Global variables set:");
+            console.log(`Email: ${email}`);
+            console.log(`Mobile: ${mobile}`);
+            console.log(`Seats: ${seats}`);
+            console.log(`Amount: ${amount}`);
+
+            // Update UI elements
+            const seatCountEl = document.getElementById("seatCount");
+            const amtTitleEl = document.getElementById("amtTitle");
+
+            if (seatCountEl) seatCountEl.textContent = seats;
+            if (amtTitleEl) amtTitleEl.textContent = amount;
+
+            console.log("UI elements updated successfully");
+
+            // Fetch and display order summary
+            try {
+              console.log("=== FETCHING ORDER SUMMARY ===");
+              const [slotDetails, foodDetails] = await Promise.all([
+                fetchSlotDetails(code),
+                fetchFoodDetails(code),
+              ]);
+
+              console.log("Order summary data fetched:");
+              console.log("Slot details:", slotDetails);
+              console.log("Food details:", foodDetails);
+
+              // Update the order summary display
+              updateOrderSummary(slotDetails, foodDetails);
+            } catch (error) {
+              console.error("Error fetching order summary:", error);
+              // Show error message in order summary
+              const orderSummaryContainer = document.getElementById(
+                "orderSummaryContainer"
+              );
+              if (orderSummaryContainer) {
+                orderSummaryContainer.innerHTML =
+                  '<p class="text-red-500 text-center py-4">Failed to load order details</p>';
+              }
+            }
+
+            // Initialize countdown timer
+            initializeCountdownTimer(code);
+
+            // Hide loading modal
+            document.getElementById("loadingModal").classList.add("hidden");
+
+            console.log("Loading modal hidden, starting application...");
+
+            console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
+          } catch (error) {
+            console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
+            console.error("Error details:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
+            alert("Failed to load user details. Please try again.");
+            location.replace("initiatebooking.html");
+          }
+        };
+
+        // ===== USER DETAILS POPUP FUNCTIONALITY =====
+        let isPopupOpen = false;
+
+        const togglePopup = (show) => {
+          const popup = document.getElementById("userDetailsPopup");
+          const btn = document.getElementById("userDetailsBtn");
+
+          if (show) {
+            popup.classList.remove("hidden", "opacity-0", "scale-95");
+            popup.classList.add("opacity-100", "scale-100");
+            btn.classList.add("bg-gray-200", "text-gray-600");
+            btn.classList.remove(
+              "text-pink-600",
+              "hover:text-pink-700",
+              "hover:bg-pink-50"
+            );
+          } else {
+            popup.classList.add("hidden", "opacity-0", "scale-95");
+            popup.classList.remove("opacity-100", "scale-100");
+            btn.classList.remove("bg-gray-200", "text-gray-600");
+            btn.classList.add(
+              "text-pink-600",
+              "hover:text-pink-700",
+              "hover:bg-pink-50"
+            );
+          }
+        };
+
+        // Initialize user details popup
+        const initializeUserDetailsPopup = () => {
+          // Populate popup with user data
+          document.getElementById("popupEmail").textContent =
+            window.userDetails?.email || "";
+          document.getElementById("popupBookingId").textContent = code || "";
+          document.getElementById("popupMobile").textContent =
+            window.userDetails?.mobile || "";
+          document.getElementById("popupAmount").textContent =
+            window.userDetails ? window.userDetails.seats * 500 : "0";
+          document.getElementById("popupSeats").textContent =
+            window.userDetails?.seats || "0";
+        };
+
+        // User details button click handler
+        document
+          .getElementById("userDetailsBtn")
+          .addEventListener("click", () => {
+            isPopupOpen = !isPopupOpen;
+            togglePopup(isPopupOpen);
+          });
+
+        // Close popup button handler
+        document
+          .getElementById("closePopupBtn")
+          .addEventListener("click", () => {
+            isPopupOpen = false;
+            togglePopup(false);
+          });
+
+        // Copy booking ID popup button handler
+        document
+          .getElementById("copyBookingIdPopupBtn")
+          .addEventListener("click", () => {
+            copy(code, document.getElementById("copyBookingIdPopupBtn"));
+          });
+
+        // Close popup when clicking outside
+        document.addEventListener("click", (e) => {
+          const popup = document.getElementById("userDetailsPopup");
+          const btn = document.getElementById("userDetailsBtn");
+
+          if (!popup.contains(e.target) && !btn.contains(e.target)) {
+            isPopupOpen = false;
+            togglePopup(false);
+          }
+        });
+
+        // ===== BUTTON EVENT HANDLERS =====
+        continueToPaymentBtn.addEventListener("click", () => {
+          window.location.href = `payment.html?code=${code}`;
+        });
+
+        restartBookingBtn.addEventListener("click", () => {
+          if (
+            confirm(
+              "Are you sure you want to restart your booking? This will clear your current selections."
+            )
+          ) {
+            window.location.href = "initiatebooking.html";
+          }
+        });
+
+        // ===== HELPER FUNCTIONS =====
+        const copy = async (text, btn) => {
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const ta = document.createElement("textarea");
+              ta.value = text;
+              ta.style.position = "fixed";
+              ta.style.opacity = "0";
+              document.body.appendChild(ta);
+              ta.focus();
+              ta.select();
+              document.execCommand("copy");
+              document.body.removeChild(ta);
+            }
+            btn.classList.add(
+              "ring-2",
+              "ring-offset-1",
+              "ring-green-400",
+              "transition",
+              "duration-150"
+            );
+            setTimeout(() => {
+              btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+            }, 1100);
+          } catch (err) {
+            alert("Copy failed: " + err);
+          }
+        };
+
+        // ===== COUNTDOWN TIMER FUNCTIONALITY =====
+        let countdownInterval;
+        let timeoutOccurred = false;
+
+        const initializeCountdownTimer = async (bookingId) => {
+          try {
+            console.log("=== INITIALIZING COUNTDOWN TIMER ===");
+            console.log("Booking ID:", bookingId);
+
+            // Fetch data from Slot Blocking Sources sheet
+            const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+            const sheetName = "Slot Blocking Sources";
+            const query = encodeURIComponent("SELECT *");
+            const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${encodeURIComponent(
+              sheetName
+            )}&tq=${query}`;
+
+            console.log("Fetching data from:", url);
+
+            const response = await fetch(url);
+            const data = await response.text();
+            const json = JSON.parse(data.substring(47).slice(0, -2));
+            const rows = json.table.rows;
+
+            console.log("Total rows fetched:", rows.length);
+
+            // Find the last occurrence of the booking ID with status "Processing"
+            let lastProcessingEntry = null;
+            for (let i = rows.length - 1; i >= 0; i--) {
+              const row = rows[i];
+              const rowBookingId = row.c[3]?.v ? String(row.c[3].v).trim() : "";
+              const status = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+
+              if (rowBookingId === bookingId && status === "Processing") {
+                lastProcessingEntry = row;
+                break;
+              }
+            }
+
+            if (!lastProcessingEntry) {
+              console.error(
+                "No Processing entry found for booking ID:",
+                bookingId
+              );
+              document.getElementById("countdownTimer").textContent = "N/A";
+              return;
+            }
+
+            // Extract timestamp from the first column
+            const timestampStr = lastProcessingEntry.c[0]?.v;
+            if (!timestampStr) {
+              console.error("No timestamp found in Processing entry");
+              document.getElementById("countdownTimer").textContent = "N/A";
+              return;
+            }
+
+            console.log("Found Processing entry timestamp:", timestampStr);
+
+            // Parse the timestamp from Google Sheets format
+            let timestamp;
+            if (
+              typeof timestampStr === "string" &&
+              timestampStr.startsWith("Date(")
+            ) {
+              // Parse Google Sheets Date format: "Date(2025,7,1,10,19,16)"
+              const match = timestampStr.match(
+                /Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/
+              );
+              if (match) {
+                const [, year, month, day, hour, minute, second] = match;
+                // Note: Google Sheets months are 1-indexed, JavaScript is 0-indexed
+                // But it seems the month values are already 0-indexed in the data
+                timestamp = new Date(
+                  parseInt(year),
+                  parseInt(month),
+                  parseInt(day),
+                  parseInt(hour),
+                  parseInt(minute),
+                  parseInt(second)
+                );
+              } else {
+                console.error(
+                  "Could not parse timestamp format:",
+                  timestampStr
+                );
+                document.getElementById("countdownTimer").textContent = "N/A";
+                return;
+              }
+            } else {
+              // Try direct Date constructor as fallback
+              timestamp = new Date(timestampStr);
+            }
+
+            if (isNaN(timestamp.getTime())) {
+              console.error("Invalid timestamp after parsing:", timestampStr);
+              document.getElementById("countdownTimer").textContent = "N/A";
+              return;
+            }
+
+            const tPlus10 = new Date(timestamp.getTime() + 10 * 60 * 1000); // T + 10 minutes
+
+            console.log("Original timestamp:", timestamp);
+            console.log("T+10 deadline:", tPlus10);
+
+            // Start countdown
+            updateCountdown(tPlus10);
+          } catch (error) {
+            console.error("Error initializing countdown timer:", error);
+            document.getElementById("countdownTimer").textContent = "Error";
+          }
+        };
+
+        const updateCountdown = (deadline) => {
+          const updateTimer = () => {
+            if (timeoutOccurred) return;
+
+            const now = new Date();
+            const timeLeft = deadline - now;
+
+            if (timeLeft <= 0) {
+              // Timeout occurred
+              timeoutOccurred = true;
+              clearInterval(countdownInterval);
+
+              console.log("=== TIMEOUT OCCURRED ===");
+              console.log("Current time:", now);
+              console.log("Deadline:", deadline);
+              console.log("Time left:", timeLeft);
+
+              // Show timeout message
+              document.getElementById("countdownTimer").textContent = "00:00";
+              document
+                .getElementById("countdownTimer")
+                .classList.add("text-red-600");
+
+              // Notify user and redirect
+              alert(
+                "Payment timeout occurred. Your booking has expired. You will be redirected to the booking failed page."
+              );
+              window.location.href = "bookingfailed.html";
+              return;
+            }
+
+            // Calculate minutes and seconds
+            const minutes = Math.floor(timeLeft / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            // Check for valid numbers
+            if (isNaN(minutes) || isNaN(seconds)) {
+              console.error("Invalid time calculation:", {
+                timeLeft,
+                minutes,
+                seconds,
+              });
+              document.getElementById("countdownTimer").textContent = "Error";
+              return;
+            }
+
+            // Update display
+            const displayText = `${minutes
+              .toString()
+              .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            document.getElementById("countdownTimer").textContent = displayText;
+
+            // Change color when less than 2 minutes remaining
+            if (timeLeft < 2 * 60 * 1000) {
+              document
+                .getElementById("countdownTimer")
+                .classList.add("text-red-600");
+            } else if (timeLeft < 5 * 60 * 1000) {
+              document
+                .getElementById("countdownTimer")
+                .classList.add("text-orange-600");
+            } else {
+              document
+                .getElementById("countdownTimer")
+                .classList.remove("text-red-600", "text-orange-600");
+            }
+
+            console.log("Countdown updated:", displayText);
+          };
+
+          // Update immediately
+          updateTimer();
+
+          // Update every second
+          countdownInterval = setInterval(updateTimer, 1000);
+        };
+
+        // Initialize user details and start the application
+        initializeUserDetails();
+      });
+    </script>
+  </body>
+</html>

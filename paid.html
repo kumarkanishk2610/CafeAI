@@ -130,29 +130,173 @@
     </style>
   </head>
   <body class="text-gray-800">
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
     <!-- header -->
     <header
       class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
     >
-      <div class="flex items-center h-14 px-4">
-        <a href="index.html" class="flex items-center hover:opacity-80">
-          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
-          <h1
-            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
-          >
-            Cafe Kyaa!
-          </h1>
-        </a>
-        <span
-          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap break-words"
+      <div class="flex items-center justify-between h-16 px-4">
+        <div class="flex items-center">
+          <a href="index.html" class="flex items-center hover:opacity-80">
+            <img src="logo.png" class="h-12 w-12 rounded-full" alt="logo" />
+            <div class="ml-2 flex flex-col">
+              <h1
+                class="text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide leading-tight"
+              >
+                Cafe Kyaa!
+              </h1>
+              <span class="text-xs font-medium text-rose-600 leading-tight">
+                Anime India 2025 · Mumbai
+              </span>
+            </div>
+          </a>
+        </div>
+        <!-- User Details Button -->
+        <button
+          id="userDetailsBtn"
+          class="p-2 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-full transition-colors duration-200"
+          title="View User Details"
         >
-          Anime India 2025 · Mumbai
-        </span>
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+          </svg>
+        </button>
       </div>
     </header>
 
+    <!-- User Details Popup -->
+    <div
+      id="userDetailsPopup"
+      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+    >
+      <div class="space-y-3 min-w-[280px]">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-gray-800">User Details</h3>
+          <button
+            id="closePopupBtn"
+            class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+              ></path>
+              <path
+                d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Email:</span>
+            <span id="popupEmail" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Booking ID:</span>
+            <span id="popupBookingId" class="font-bold text-gray-800"></span>
+            <button
+              id="copyBookingIdPopupBtn"
+              class="ml-2 p-1 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded transition-colors duration-200"
+              title="Copy Booking ID"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Mobile:</span>
+            <span id="popupMobile" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Total:</span>
+            <span class="font-bold text-gray-800"
+              >₹<span id="popupAmount">0</span></span
+            >
+            <span class="text-gray-600"
+              >(<span id="popupSeats">0</span> seats)</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- main -->
-    <main class="pt-20 flex flex-col items-center p-4">
+    <main class="pt-24 flex flex-col items-center p-4">
       <div class="w-full max-w-4xl space-y-6">
         <!-- Success Card -->
         <div class="fade-in">
@@ -379,6 +523,157 @@
         bookingIdElement.textContent = "Not Available";
         bookingIdElement.classList.add("text-gray-400");
       }
+
+      // Toast notification function
+      const showToast = (message) => {
+        const toastContainer = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+
+        toast.className = `
+          bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg 
+          transform transition-all duration-300 ease-in-out
+          opacity-0 translate-x-full
+          flex items-center gap-2
+        `;
+
+        toast.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span class="font-medium">${message}</span>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => {
+          toast.classList.remove("opacity-0", "translate-x-full");
+          toast.classList.add("opacity-100", "translate-x-0");
+        }, 10);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          toast.classList.add("opacity-0", "translate-x-full");
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 3000);
+      };
+
+      // Copy helper function
+      const copy = async (text, btn) => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+
+          btn.classList.add(
+            "ring-2",
+            "ring-offset-1",
+            "ring-green-400",
+            "transition",
+            "duration-150"
+          );
+          setTimeout(() => {
+            btn.classList.remove("ring-2", "ring-offset-1", "ring-green-400");
+          }, 1100);
+
+          // Show toast notification
+          showToast("Booking ID Copied!");
+        } catch (err) {
+          alert("Copy failed: " + err);
+        }
+      };
+
+      // User Details Popup Functionality
+      let isPopupOpen = false;
+
+      const togglePopup = (show) => {
+        const popup = document.getElementById("userDetailsPopup");
+        const btn = document.getElementById("userDetailsBtn");
+
+        if (show) {
+          popup.classList.remove("hidden");
+          setTimeout(() => {
+            popup.classList.remove("opacity-0", "scale-95");
+            popup.classList.add("opacity-100", "scale-100");
+          }, 10);
+          btn.classList.add("bg-gray-200", "text-gray-600");
+          btn.classList.remove(
+            "text-pink-600",
+            "hover:text-pink-700",
+            "hover:bg-pink-50"
+          );
+        } else {
+          popup.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            popup.classList.add("hidden");
+          }, 200);
+          btn.classList.remove("bg-gray-200", "text-gray-600");
+          btn.classList.add(
+            "text-pink-600",
+            "hover:text-pink-700",
+            "hover:bg-pink-50"
+          );
+        }
+      };
+
+      // Initialize user details popup
+      const initializeUserDetails = () => {
+        // Populate popup with user data
+        document.getElementById("popupEmail").textContent = ""; // Will be populated if available
+        document.getElementById("popupBookingId").textContent = bookingId || "";
+        document.getElementById("popupMobile").textContent = ""; // Will be populated if available
+        document.getElementById("popupAmount").textContent = "0"; // Will be populated if available
+        document.getElementById("popupSeats").textContent = "0"; // Will be populated if available
+      };
+
+      // User details button click handler
+      document
+        .getElementById("userDetailsBtn")
+        .addEventListener("click", () => {
+          isPopupOpen = !isPopupOpen;
+          togglePopup(isPopupOpen);
+        });
+
+      // Close popup button handler
+      document.getElementById("closePopupBtn").addEventListener("click", () => {
+        isPopupOpen = false;
+        togglePopup(false);
+      });
+
+      // Copy booking ID popup button handler
+      document
+        .getElementById("copyBookingIdPopupBtn")
+        .addEventListener("click", () => {
+          copy(bookingId, document.getElementById("copyBookingIdPopupBtn"));
+        });
+
+      // Close popup when clicking outside
+      document.addEventListener("click", (e) => {
+        const popup = document.getElementById("userDetailsPopup");
+        const btn = document.getElementById("userDetailsBtn");
+
+        if (!popup.contains(e.target) && !btn.contains(e.target)) {
+          isPopupOpen = false;
+          togglePopup(false);
+        }
+      });
+
+      // Initialize user details when page loads
+      initializeUserDetails();
 
       // Copy booking ID function
       function copyBookingId() {

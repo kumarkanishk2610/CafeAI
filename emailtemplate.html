@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Confirmation - Cafe Kyaa!</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      line-height: 1.6;
+    "
+  >
+    <!-- Email Container -->
+    <table
+      role="presentation"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      width="100%"
+      style="background-color: #f8f9fa"
+    >
+      <tr>
+        <td align="center" style="padding: 20px 0">
+          <!-- Main Content Table -->
+          <table
+            role="presentation"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            width="600"
+            style="
+              max-width: 600px;
+              background-color: #ffffff;
+              border-radius: 12px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              overflow: hidden;
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                style="
+                  background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+                  padding: 40px 30px;
+                  text-align: center;
+                "
+              >
+                <img
+                  src="https://via.placeholder.com/120x60/ffffff/ec4899?text=Cafe+Kyaa!"
+                  alt="Cafe Kyaa!"
+                  style="
+                    width: 120px;
+                    height: 60px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                  "
+                />
+                <h1
+                  style="
+                    color: #ffffff;
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: 700;
+                  "
+                >
+                  Booking Confirmed!
+                </h1>
+                <p
+                  style="
+                    color: #ffffff;
+                    margin: 10px 0 0 0;
+                    font-size: 16px;
+                    opacity: 0.9;
+                  "
+                >
+                  Anime India 2025 · Mumbai
+                </p>
+              </td>
+            </tr>
+
+            <!-- Success Message -->
+            <tr>
+              <td
+                style="
+                  padding: 30px;
+                  text-align: center;
+                  background-color: #f0fdf4;
+                  border-bottom: 1px solid #e5e7eb;
+                "
+              >
+                <div
+                  style="
+                    width: 60px;
+                    height: 60px;
+                    background: linear-gradient(
+                      135deg,
+                      #10b981 0%,
+                      #059669 100%
+                    );
+                    border-radius: 50%;
+                    margin: 0 auto 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="color: #ffffff; font-size: 24px">✓</span>
+                </div>
+                <h2
+                  style="
+                    color: #065f46;
+                    margin: 0 0 10px 0;
+                    font-size: 24px;
+                    font-weight: 600;
+                  "
+                >
+                  Payment Successful!
+                </h2>
+                <p style="color: #047857; margin: 0; font-size: 16px">
+                  Your booking has been confirmed and payment received.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Entry QR Code -->
+            <tr>
+              <td
+                style="
+                  padding: 30px;
+                  text-align: center;
+                  background-color: #f8fafc;
+                  border-bottom: 1px solid #e5e7eb;
+                "
+              >
+                <h3
+                  style="
+                    color: #1f2937;
+                    margin: 0 0 20px 0;
+                    font-size: 20px;
+                    font-weight: 600;
+                  "
+                >
+                  Entry Pass
+                </h3>
+                <p
+                  style="
+                    color: #6b7280;
+                    margin: 0 0 20px 0;
+                    font-size: 14px;
+                    font-weight: 500;
+                  "
+                >
+                  Show this QR code at the venue for entry
+                </p>
+                <div
+                  style="
+                    display: inline-block;
+                    padding: 20px;
+                    background-color: #ffffff;
+                    border-radius: 12px;
+                    border: 2px solid #e5e7eb;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                  "
+                >
+                  <img
+                    src="{{ENTRY_QR_CODE}}"
+                    alt="Entry QR Code"
+                    style="width: 200px; height: 200px; display: block"
+                  />
+                </div>
+                <p style="color: #6b7280; margin: 20px 0 0 0; font-size: 12px">
+                  Booking ID: {{BOOKING_ID}}
+                </p>
+              </td>
+            </tr>
+
+            <!-- Booking Details -->
+            <tr>
+              <td style="padding: 30px">
+                <h3
+                  style="
+                    color: #1f2937;
+                    margin: 0 0 20px 0;
+                    font-size: 20px;
+                    font-weight: 600;
+                  "
+                >
+                  Booking Details
+                </h3>
+
+                <table
+                  role="presentation"
+                  cellspacing="0"
+                  cellpadding="0"
+                  border="0"
+                  width="100%"
+                  style="margin-bottom: 25px"
+                >
+                  <tr>
+                    <td
+                      style="padding: 12px 0; border-bottom: 1px solid #e5e7eb"
+                    >
+                      <span
+                        style="
+                          color: #6b7280;
+                          font-weight: 500;
+                          display: inline-block;
+                          width: 120px;
+                        "
+                        >Booking ID:</span
+                      >
+                      <span style="color: #1f2937; font-weight: 600"
+                        >{{BOOKING_ID}}</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 12px 0; border-bottom: 1px solid #e5e7eb"
+                    >
+                      <span
+                        style="
+                          color: #6b7280;
+                          font-weight: 500;
+                          display: inline-block;
+                          width: 120px;
+                        "
+                        >Email:</span
+                      >
+                      <span style="color: #1f2937">{{CUSTOMER_EMAIL}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 12px 0; border-bottom: 1px solid #e5e7eb"
+                    >
+                      <span
+                        style="
+                          color: #6b7280;
+                          font-weight: 500;
+                          display: inline-block;
+                          width: 120px;
+                        "
+                        >Mobile:</span
+                      >
+                      <span style="color: #1f2937">{{CUSTOMER_MOBILE}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 12px 0; border-bottom: 1px solid #e5e7eb"
+                    >
+                      <span
+                        style="
+                          color: #6b7280;
+                          font-weight: 500;
+                          display: inline-block;
+                          width: 120px;
+                        "
+                        >Total Seats:</span
+                      >
+                      <span style="color: #1f2937">{{TOTAL_SEATS}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 12px 0; border-bottom: 1px solid #e5e7eb"
+                    >
+                      <span
+                        style="
+                          color: #6b7280;
+                          font-weight: 500;
+                          display: inline-block;
+                          width: 120px;
+                        "
+                        >Transaction ID:</span
+                      >
+                      <span style="color: #1f2937">{{TRANSACTION_ID}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 12px 0">
+                      <span
+                        style="
+                          color: #6b7280;
+                          font-weight: 500;
+                          display: inline-block;
+                          width: 120px;
+                        "
+                        >Amount Paid:</span
+                      >
+                      <span
+                        style="
+                          color: #1f2937;
+                          font-weight: 600;
+                          font-size: 18px;
+                        "
+                        >₹{{TOTAL_AMOUNT}}</span
+                      >
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Slot Details -->
+                <h3
+                  style="
+                    color: #1f2937;
+                    margin: 30px 0 20px 0;
+                    font-size: 20px;
+                    font-weight: 600;
+                  "
+                >
+                  Your Slots & Orders
+                </h3>
+                <div
+                  style="
+                    background-color: #f8fafc;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin-bottom: 25px;
+                  "
+                >
+                  <!-- Dynamic Slot Details Table -->
+                  <table
+                    role="presentation"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    width="100%"
+                    style="border-collapse: collapse; margin-bottom: 20px"
+                  >
+                    <!-- Table Header -->
+                    <tr
+                      style="
+                        background-color: #e5e7eb;
+                        border-radius: 8px 8px 0 0;
+                      "
+                    >
+                      <th
+                        style="
+                          padding: 12px 8px;
+                          text-align: left;
+                          font-weight: 600;
+                          color: #374151;
+                          font-size: 14px;
+                          border-bottom: 2px solid #d1d5db;
+                        "
+                      >
+                        Slot Details
+                      </th>
+                      <th
+                        style="
+                          padding: 12px 8px;
+                          text-align: center;
+                          font-weight: 600;
+                          color: #374151;
+                          font-size: 14px;
+                          border-bottom: 2px solid #d1d5db;
+                        "
+                      >
+                        Seats
+                      </th>
+                      <th
+                        style="
+                          padding: 12px 8px;
+                          text-align: center;
+                          font-weight: 600;
+                          color: #374151;
+                          font-size: 14px;
+                          border-bottom: 2px solid #d1d5db;
+                        "
+                      >
+                        Omurice
+                      </th>
+                      <th
+                        style="
+                          padding: 12px 8px;
+                          text-align: center;
+                          font-weight: 600;
+                          color: #374151;
+                          font-size: 14px;
+                          border-bottom: 2px solid #d1d5db;
+                        "
+                      >
+                        Curry Rice
+                      </th>
+                      <th
+                        style="
+                          padding: 12px 8px;
+                          text-align: center;
+                          font-weight: 600;
+                          color: #374151;
+                          font-size: 14px;
+                          border-bottom: 2px solid #d1d5db;
+                        "
+                      >
+                        Iced Tea
+                      </th>
+                      <th
+                        style="
+                          padding: 12px 8px;
+                          text-align: center;
+                          font-weight: 600;
+                          color: #374151;
+                          font-size: 14px;
+                          border-bottom: 2px solid #d1d5db;
+                        "
+                      >
+                        Plain Water
+                      </th>
+                    </tr>
+
+                    <!-- Dynamic Slot Rows -->
+                    {{SLOT_ROWS}}
+                  </table>
+
+                  <!-- Summary Row -->
+                  <div
+                    style="
+                      background-color: #ffffff;
+                      border-radius: 6px;
+                      padding: 15px;
+                      margin-top: 15px;
+                      border: 1px solid #e5e7eb;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                      "
+                    >
+                      <span style="font-weight: 600; color: #374151"
+                        >Total Summary:</span
+                      >
+                      <div style="text-align: right">
+                        <div style="font-size: 14px; color: #6b7280">
+                          <span style="font-weight: 500">Total Seats:</span>
+                          <span style="font-weight: 600; color: #374151"
+                            >{{TOTAL_SEATS}}</span
+                          >
+                        </div>
+                        <div style="font-size: 14px; color: #6b7280">
+                          <span style="font-weight: 500"
+                            >Total Food Items:</span
+                          >
+                          <span style="font-weight: 600; color: #374151"
+                            >{{TOTAL_FOOD_ITEMS}}</span
+                          >
+                        </div>
+                        <div style="font-size: 14px; color: #6b7280">
+                          <span style="font-weight: 500">Total Beverages:</span>
+                          <span style="font-weight: 600; color: #374151"
+                            >{{TOTAL_BEVERAGES}}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Important Information -->
+            <tr>
+              <td style="padding: 0 30px 30px 30px">
+                <div
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      #fef3c7 0%,
+                      #fde68a 100%
+                    );
+                    border: 1px solid #f59e0b;
+                    border-radius: 8px;
+                    padding: 20px;
+                  "
+                >
+                  <h4
+                    style="
+                      color: #92400e;
+                      margin: 0 0 15px 0;
+                      font-size: 18px;
+                      font-weight: 600;
+                    "
+                  >
+                    📋 Important Information
+                  </h4>
+                  <ul style="color: #92400e; margin: 0; padding-left: 20px">
+                    <li style="margin-bottom: 8px">
+                      Please arrive 10 minutes before your scheduled slot time
+                    </li>
+                    <li style="margin-bottom: 8px">
+                      Bring a valid ID proof for verification
+                    </li>
+                    <li style="margin-bottom: 8px">
+                      This confirmation email serves as your entry pass
+                    </li>
+                    <li style="margin-bottom: 0">
+                      For any queries, contact us via our support form
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Venue Details -->
+            <tr>
+              <td style="padding: 0 30px 30px 30px">
+                <div
+                  style="
+                    background-color: #f8fafc;
+                    border-radius: 8px;
+                    padding: 20px;
+                  "
+                >
+                  <h4
+                    style="
+                      color: #1f2937;
+                      margin: 0 0 15px 0;
+                      font-size: 18px;
+                      font-weight: 600;
+                    "
+                  >
+                    📍 Venue Details
+                  </h4>
+                  <p
+                    style="color: #4b5563; margin: 0 0 10px 0; font-weight: 500"
+                  >
+                    Anime India 2025
+                  </p>
+                  <p style="color: #6b7280; margin: 0 0 10px 0">
+                    Mumbai, Maharashtra
+                  </p>
+                  <p style="color: #6b7280; margin: 0">
+                    Event Date: August 22-24, 2025
+                  </p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                style="
+                  background-color: #1f2937;
+                  padding: 30px;
+                  text-align: center;
+                "
+              >
+                <p style="color: #9ca3af; margin: 0 0 15px 0; font-size: 14px">
+                  Thank you for choosing Cafe Kyaa!
+                </p>
+                <p style="color: #9ca3af; margin: 0 0 20px 0; font-size: 14px">
+                  For support, visit our help form
+                </p>
+                <div style="border-top: 1px solid #374151; padding-top: 20px">
+                  <p style="color: #6b7280; margin: 0; font-size: 12px">
+                    © 2025 Cafe Kyaa! All rights reserved.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Template Demo - Cafe Kyaa!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="email-generator.js"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+          Email Template Generator Demo
+        </h1>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Demo Options</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <button
+              onclick="showFullEmail()"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Show All Slots
+            </button>
+            <button
+              onclick="showPartialEmail()"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Show Day 1 Only
+            </button>
+            <button
+              onclick="showActiveSlotsEmail()"
+              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Show Active Slots Only
+            </button>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Custom Slot Selection:</label
+            >
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  value="Day 1 - 22 Aug - Slot 1"
+                  class="mr-2"
+                  checked
+                />
+                <span class="text-sm">Day 1 - Slot 1</span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  value="Day 1 - 22 Aug - Slot 2"
+                  class="mr-2"
+                  checked
+                />
+                <span class="text-sm">Day 1 - Slot 2</span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  value="Day 2 - 23 Aug - Slot 1"
+                  class="mr-2"
+                />
+                <span class="text-sm">Day 2 - Slot 1</span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  value="Day 2 - 23 Aug - Slot 2"
+                  class="mr-2"
+                />
+                <span class="text-sm">Day 2 - Slot 2</span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  value="Day 3 - 24 Aug - Slot 1"
+                  class="mr-2"
+                />
+                <span class="text-sm">Day 3 - Slot 1</span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  value="Day 3 - 24 Aug - Slot 2"
+                  class="mr-2"
+                />
+                <span class="text-sm">Day 3 - Slot 2</span>
+              </label>
+            </div>
+            <button
+              onclick="showCustomEmail()"
+              class="mt-3 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Generate Custom Email
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Generated Email Preview
+          </h2>
+          <div
+            id="emailPreview"
+            class="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-96"
+          >
+            <p class="text-gray-500 text-center">
+              Select an option above to generate email preview
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showFullEmail() {
+        const emailContent = generateFullEmail();
+        document.getElementById("emailPreview").innerHTML = emailContent;
+      }
+
+      function showPartialEmail() {
+        const emailContent = generatePartialEmail();
+        document.getElementById("emailPreview").innerHTML = emailContent;
+      }
+
+      function showActiveSlotsEmail() {
+        const emailContent = generateActiveSlotsEmail();
+        document.getElementById("emailPreview").innerHTML = emailContent;
+      }
+
+      function showCustomEmail() {
+        const selectedSlots = Array.from(
+          document.querySelectorAll('input[type="checkbox"]:checked')
+        ).map((checkbox) => checkbox.value);
+
+        if (selectedSlots.length === 0) {
+          alert("Please select at least one slot");
+          return;
+        }
+
+        const emailContent = generateEmailContent(
+          sampleBookingData,
+          selectedSlots
+        );
+        document.getElementById("emailPreview").innerHTML = emailContent;
+      }
+    </script>
+  </body>
+</html>

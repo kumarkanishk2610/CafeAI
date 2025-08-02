@@ -589,7 +589,7 @@
         timerId = setInterval(() => {
           remaining--;
           countEl.textContent = remaining;
-          if (remaining <= 0) {
+          if (remaining <= 30) {
             clearInterval(timerId);
             timerTxt.classList.add("hidden");
             updateButtonState();
