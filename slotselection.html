@@ -987,10 +987,16 @@
 
       // Slot name mapping - easily customizable
       const slotNameMapping = {
-        "Slot 1": "11:00 AM",
-        "Slot 2": "1:00 PM",
-        "Slot 3": "3:00 PM",
-        "Slot 4": "5:00 PM",
+        "Slot 1": "10:00 AM",
+        "Slot 2": "11:00 AM",
+        "Slot 3": "12:00 PM",
+        "Slot 4": "01:00 PM",
+        "Slot 5": "02:00 PM",
+        "Slot 6": "03:00 PM",
+        "Slot 7": "03:00 PM",
+        "Slot 8": "05:00 PM",
+        "Slot 9": "06:00 PM",
+        "Slot 10": "07:00 PM",
       };
 
       // Function to format slotId for frontend display only
@@ -1004,8 +1010,8 @@
       // ===== TABLE RENDERING =====
 
       const renderTable = (day = 1) => {
-        const startIdx = (day - 1) * 4;
-        const endIdx = startIdx + 4;
+        const startIdx = (day - 1) * 10;
+        const endIdx = startIdx + 10;
         const visibleRows = allRows.slice(startIdx, endIdx);
         const dayLabels = [
           "Fri, 22 Aug 2025",
@@ -1015,8 +1021,16 @@
         const dayLabel = dayLabels[day - 1] || `Day ${day}`;
 
         let html = ``;
+        let validRowCount = 0;
 
-        visibleRows.forEach((row, i) => {
+        // Filter out rows where both free slots and processing are 0
+        const validRows = visibleRows.filter((row) => {
+          const freeSlots = +row.c[1]?.v || 0;
+          const processing = +row.c[2]?.v || 0;
+          return !(freeSlots === 0 && processing === 0);
+        });
+
+        validRows.forEach((row, i) => {
           const slotId = row.c[0]?.v || `Slot${i}`;
           const freeSlots = +row.c[1]?.v || 0;
           const processing = +row.c[2]?.v || 0;
@@ -1036,7 +1050,7 @@
 
           html += `
     <div class="flex items-center justify-between py-4 ${
-      i < visibleRows.length - 1 ? "border-b border-gray-200" : ""
+      i < validRows.length - 1 ? "border-b border-gray-200" : ""
     }">
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-4">
@@ -1138,14 +1152,32 @@
           day1Slot2: "entry.932368020",
           day1Slot3: "entry.2138292831",
           day1Slot4: "entry.289682458",
+          day1Slot5: "entry.784258010",
+          day1Slot6: "entry.1293731699",
+          day1Slot7: "entry.1207107693",
+          day1Slot8: "entry.1581124993",
+          day1Slot9: "entry.379119257",
+          day1Slot10: "entry.984452720",
           day2Slot1: "entry.870117852",
           day2Slot2: "entry.1157155505",
           day2Slot3: "entry.1474125256",
           day2Slot4: "entry.1575272486",
+          day2Slot5: "entry.461195791",
+          day2Slot6: "entry.125707347",
+          day2Slot7: "entry.1444513547",
+          day2Slot8: "entry.1470313618",
+          day2Slot9: "entry.335063754",
+          day2Slot10: "entry.364884408",
           day3Slot1: "entry.1042905315",
           day3Slot2: "entry.679434220",
           day3Slot3: "entry.1438879432",
           day3Slot4: "entry.1392821554",
+          day3Slot5: "entry.210512443",
+          day3Slot6: "entry.1759494387",
+          day3Slot7: "entry.519624058",
+          day3Slot8: "entry.142383170",
+          day3Slot9: "entry.1733224228",
+          day3Slot10: "entry.467333756",
         },
         lockSlot: {
           bookingId: "entry.1178870073",
@@ -1454,14 +1486,32 @@
             "Day 1 - 22 Aug - Slot 2": "Day 1 - 22 Aug - Slot 2",
             "Day 1 - 22 Aug - Slot 3": "Day 1 - 22 Aug - Slot 3",
             "Day 1 - 22 Aug - Slot 4": "Day 1 - 22 Aug - Slot 4",
+            "Day 1 - 22 Aug - Slot 5": "Day 1 - 22 Aug - Slot 5",
+            "Day 1 - 22 Aug - Slot 6": "Day 1 - 22 Aug - Slot 6",
+            "Day 1 - 22 Aug - Slot 7": "Day 1 - 22 Aug - Slot 7",
+            "Day 1 - 22 Aug - Slot 8": "Day 1 - 22 Aug - Slot 8",
+            "Day 1 - 22 Aug - Slot 9": "Day 1 - 22 Aug - Slot 9",
+            "Day 1 - 22 Aug - Slot 10": "Day 1 - 22 Aug - Slot 10",
             "Day 2 - 23 Aug - Slot 1": "Day 2 - 23 Aug - Slot 1",
             "Day 2 - 23 Aug - Slot 2": "Day 2 - 23 Aug - Slot 2",
             "Day 2 - 23 Aug - Slot 3": "Day 2 - 23 Aug - Slot 3",
             "Day 2 - 23 Aug - Slot 4": "Day 2 - 23 Aug - Slot 4",
+            "Day 2 - 23 Aug - Slot 5": "Day 2 - 23 Aug - Slot 5",
+            "Day 2 - 23 Aug - Slot 6": "Day 2 - 23 Aug - Slot 6",
+            "Day 2 - 23 Aug - Slot 7": "Day 2 - 23 Aug - Slot 7",
+            "Day 2 - 23 Aug - Slot 8": "Day 2 - 23 Aug - Slot 8",
+            "Day 2 - 23 Aug - Slot 9": "Day 2 - 23 Aug - Slot 9",
+            "Day 2 - 23 Aug - Slot 10": "Day 2 - 23 Aug - Slot 10",
             "Day 3 - 24 Aug - Slot 1": "Day 3 - 24 Aug - Slot 1",
             "Day 3 - 24 Aug - Slot 2": "Day 3 - 24 Aug - Slot 2",
             "Day 3 - 24 Aug - Slot 3": "Day 3 - 24 Aug - Slot 3",
             "Day 3 - 24 Aug - Slot 4": "Day 3 - 24 Aug - Slot 4",
+            "Day 3 - 24 Aug - Slot 5": "Day 3 - 24 Aug - Slot 5",
+            "Day 3 - 24 Aug - Slot 6": "Day 3 - 24 Aug - Slot 6",
+            "Day 3 - 24 Aug - Slot 7": "Day 3 - 24 Aug - Slot 7",
+            "Day 3 - 24 Aug - Slot 8": "Day 3 - 24 Aug - Slot 8",
+            "Day 3 - 24 Aug - Slot 9": "Day 3 - 24 Aug - Slot 9",
+            "Day 3 - 24 Aug - Slot 10": "Day 3 - 24 Aug - Slot 10",
           };
 
           const seatResponse = await fetch(seatUrl);
