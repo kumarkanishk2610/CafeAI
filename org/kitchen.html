@@ -667,8 +667,10 @@
           currentSlot = this.value;
           if (currentSlot) {
             loadKitchenData();
+            startAutoRefresh(); // Start auto-refresh when slot is selected
           } else {
             clearKitchenData();
+            stopAutoRefresh(); // Stop auto-refresh when no slot is selected
           }
         });
       }
@@ -684,6 +686,7 @@
       function logout() {
         isAuthenticated = false;
         sessionStorage.removeItem("kitchenAuthenticated");
+        stopAutoRefresh(); // Stop auto-refresh when logging out
         showLoginForm();
         showStatus("Logged out successfully", "success");
       }
@@ -697,6 +700,9 @@
       function hideLoadingModal() {
         document.getElementById("loadingModal").classList.add("hidden");
       }
+
+      // Auto-refresh interval
+      let refreshInterval = null;
 
       // Load kitchen data
       async function loadKitchenData() {
@@ -721,6 +727,30 @@
           console.error("Error loading kitchen data:", error);
           showStatus("Error loading data: " + error.message, "error");
           hideLoadingModal();
+        }
+      }
+
+      // Start auto-refresh
+      function startAutoRefresh() {
+        // Clear any existing interval
+        if (refreshInterval) {
+          clearInterval(refreshInterval);
+        }
+
+        // Start new interval - refresh every 15 seconds
+        refreshInterval = setInterval(() => {
+          if (currentSlot) {
+            console.log("Auto-refreshing kitchen data...");
+            loadKitchenData();
+          }
+        }, 15000); // 15 seconds
+      }
+
+      // Stop auto-refresh
+      function stopAutoRefresh() {
+        if (refreshInterval) {
+          clearInterval(refreshInterval);
+          refreshInterval = null;
         }
       }
 
