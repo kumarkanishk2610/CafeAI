@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitchen Dashboard - Cafe Kyaa!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      body {
+        background: linear-gradient(
+          135deg,
+          #0f172a 0%,
+          #1e293b 50%,
+          #334155 100%
+        );
+        min-height: 100vh;
+      }
+
+      .glass-effect {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .slide-up {
+        animation: slideUp 0.6s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .glow-border {
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+      }
+
+      .glow-border:focus {
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+      }
+
+      .success-glow {
+        animation: successPulse 2s infinite;
+      }
+
+      @keyframes successPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+        }
+      }
+
+      .error-glow {
+        animation: errorPulse 2s infinite;
+      }
+
+      @keyframes errorPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+        }
+      }
+
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .table-container {
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      .table-container::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .table-container::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.3);
+        border-radius: 4px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.5);
+        border-radius: 4px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(59, 130, 246, 0.7);
+      }
+
+      /* Mobile-specific styles */
+      @media (max-width: 768px) {
+        .mobile-card {
+          margin-bottom: 1rem;
+        }
+
+        .mobile-table {
+          font-size: 0.75rem;
+        }
+
+        .mobile-table th,
+        .mobile-table td {
+          padding: 0.5rem 0.25rem;
+        }
+
+        .mobile-badge {
+          font-size: 0.625rem;
+          padding: 0.125rem 0.25rem;
+        }
+
+        .mobile-text {
+          font-size: 0.875rem;
+        }
+
+        .mobile-title {
+          font-size: 1.5rem;
+        }
+
+        .mobile-subtitle {
+          font-size: 1rem;
+        }
+
+        .mobile-button {
+          padding: 0.75rem 1rem;
+          font-size: 0.875rem;
+        }
+
+        .mobile-input {
+          padding: 0.75rem;
+          font-size: 1rem;
+        }
+
+        .mobile-select {
+          padding: 0.75rem;
+          font-size: 1rem;
+        }
+
+        .mobile-modal {
+          padding: 1rem;
+        }
+
+        .mobile-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.5rem;
+        }
+
+        .mobile-summary {
+          padding: 0.75rem;
+        }
+
+        .mobile-summary-number {
+          font-size: 1.5rem;
+        }
+
+        .mobile-summary-label {
+          font-size: 0.75rem;
+        }
+      }
+
+      /* Touch-friendly interactions */
+      .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .touch-friendly {
+        touch-action: manipulation;
+      }
+
+      /* Mobile table responsive */
+      @media (max-width: 640px) {
+        .mobile-table-responsive {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+
+        .mobile-table-responsive table {
+          min-width: 600px;
+        }
+      }
+
+      /* Mobile card layout */
+      @media (max-width: 480px) {
+        .mobile-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .mobile-stack {
+          flex-direction: column;
+        }
+
+        .mobile-stack > * {
+          margin-bottom: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="font-sans">
+    <!-- Main Container -->
+    <div class="min-h-screen p-2 sm:p-4">
+      <!-- Header -->
+      <div class="text-center mb-4 sm:mb-6 fade-in">
+        <div
+          class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full mb-3 sm:mb-4"
+        >
+          <svg
+            class="w-6 h-6 sm:w-8 sm:h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            ></path>
+          </svg>
+        </div>
+        <h1 class="mobile-title sm:text-3xl font-bold text-white mb-2">
+          Kitchen Dashboard
+        </h1>
+        <p class="mobile-text text-gray-400">
+          Cafe Kyaa! Order Management System
+        </p>
+      </div>
+
+      <!-- Authentication Section -->
+      <div
+        id="loginForm"
+        class="max-w-md mx-auto glass-effect rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 fade-in"
+      >
+        <h2
+          class="mobile-subtitle sm:text-xl font-semibold text-white mb-4 text-center"
+        >
+          Authentication Required
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="passwordInput"
+              class="w-full mobile-input px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 glow-border transition-all duration-300 touch-target touch-friendly"
+              placeholder="Enter kitchen password"
+              onkeypress="if(event.key==='Enter') authenticate()"
+            />
+          </div>
+          <button
+            onclick="authenticate()"
+            class="w-full mobile-button bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-900 touch-target touch-friendly"
+          >
+            <div class="flex items-center justify-center">
+              <span id="loginBtnText">Authenticate</span>
+              <div
+                id="loginSpinner"
+                class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full spinner ml-2"
+              ></div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Kitchen Dashboard -->
+      <div id="kitchenDashboard" class="hidden">
+        <!-- Slot Selection -->
+        <div class="glass-effect rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 fade-in">
+          <h2
+            class="mobile-subtitle sm:text-xl font-semibold text-white mb-4 text-center"
+          >
+            Slot Selection
+          </h2>
+          <div class="max-w-md mx-auto">
+            <label class="block text-sm font-medium text-gray-300 mb-2"
+              >Select Slot</label
+            >
+            <select
+              id="slotSelect"
+              class="w-full mobile-select px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-orange-500 glow-border transition-all duration-300 touch-target touch-friendly"
+            >
+              <option value="">Choose a slot...</option>
+              <option value="Day 1 - 22 Aug - Slot 1">
+                Day 1 - 22 Aug - Slot 1
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 2">
+                Day 1 - 22 Aug - Slot 2
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 3">
+                Day 1 - 22 Aug - Slot 3
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 4">
+                Day 1 - 22 Aug - Slot 4
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 5">
+                Day 1 - 22 Aug - Slot 5
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 6">
+                Day 1 - 22 Aug - Slot 6
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 7">
+                Day 1 - 22 Aug - Slot 7
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 8">
+                Day 1 - 22 Aug - Slot 8
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 9">
+                Day 1 - 22 Aug - Slot 9
+              </option>
+              <option value="Day 1 - 22 Aug - Slot 10">
+                Day 1 - 22 Aug - Slot 10
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 1">
+                Day 2 - 23 Aug - Slot 1
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 2">
+                Day 2 - 23 Aug - Slot 2
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 3">
+                Day 2 - 23 Aug - Slot 3
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 4">
+                Day 2 - 23 Aug - Slot 4
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 5">
+                Day 2 - 23 Aug - Slot 5
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 6">
+                Day 2 - 23 Aug - Slot 6
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 7">
+                Day 2 - 23 Aug - Slot 7
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 8">
+                Day 2 - 23 Aug - Slot 8
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 9">
+                Day 2 - 23 Aug - Slot 9
+              </option>
+              <option value="Day 2 - 23 Aug - Slot 10">
+                Day 2 - 23 Aug - Slot 10
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 1">
+                Day 3 - 24 Aug - Slot 1
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 2">
+                Day 3 - 24 Aug - Slot 2
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 3">
+                Day 3 - 24 Aug - Slot 3
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 4">
+                Day 3 - 24 Aug - Slot 4
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 5">
+                Day 3 - 24 Aug - Slot 5
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 6">
+                Day 3 - 24 Aug - Slot 6
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 7">
+                Day 3 - 24 Aug - Slot 7
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 8">
+                Day 3 - 24 Aug - Slot 8
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 9">
+                Day 3 - 24 Aug - Slot 9
+              </option>
+              <option value="Day 3 - 24 Aug - Slot 10">
+                Day 3 - 24 Aug - Slot 10
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div
+          class="mobile-grid grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6"
+        >
+          <div
+            class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
+          >
+            <div
+              class="mobile-summary-number sm:text-2xl font-bold text-white"
+              id="totalOrders"
+            >
+              -
+            </div>
+            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
+              Total Orders
+            </div>
+          </div>
+          <div
+            class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
+          >
+            <div
+              class="mobile-summary-number sm:text-2xl font-bold text-orange-400"
+              id="totalOmurice"
+            >
+              -
+            </div>
+            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
+              Omurice
+            </div>
+          </div>
+          <div
+            class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
+          >
+            <div
+              class="mobile-summary-number sm:text-2xl font-bold text-yellow-400"
+              id="totalCurryRice"
+            >
+              -
+            </div>
+            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
+              Curry Rice
+            </div>
+          </div>
+          <div
+            class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
+          >
+            <div
+              class="mobile-summary-number sm:text-2xl font-bold text-blue-400"
+              id="totalDrinks"
+            >
+              -
+            </div>
+            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
+              Drinks
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="glass-effect rounded-xl p-4 sm:p-6 fade-in">
+          <h2
+            class="mobile-subtitle sm:text-xl font-semibold text-white mb-4 text-center"
+          >
+            Orders & Seating
+          </h2>
+          <div id="ordersListContainer" class="space-y-2">
+            <div class="text-center py-8 text-gray-500">
+              Select a slot to view orders
+            </div>
+          </div>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="text-center mt-4 sm:mt-6">
+          <button
+            onclick="logout()"
+            class="mobile-button bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 touch-target touch-friendly"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div
+      id="loadingModal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 hidden"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div
+          class="glass-effect rounded-2xl mobile-modal p-6 sm:p-8 text-center max-w-sm mx-4"
+        >
+          <div class="relative">
+            <div
+              class="w-12 h-12 sm:w-16 sm:h-16 border-4 border-orange-500 border-t-transparent rounded-full spinner mx-auto mb-4 sm:mb-6"
+            ></div>
+            <div
+              class="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-transparent border-orange-400 rounded-full animate-ping opacity-20"
+            ></div>
+          </div>
+          <h3 class="mobile-subtitle sm:text-xl font-bold text-white mb-2">
+            Loading Data
+          </h3>
+          <p class="mobile-text text-gray-300 text-sm">
+            Fetching orders and seating information...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Detail Modal -->
+    <div
+      id="tableDetailModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div
+          class="glass-effect rounded-xl mobile-modal p-4 sm:p-6 w-full max-w-lg mx-4 fade-in max-h-[80vh] overflow-y-auto"
+        >
+          <div class="text-center mb-4">
+            <h3
+              id="tableDetailTitle"
+              class="mobile-subtitle sm:text-xl font-bold text-white mb-2"
+            ></h3>
+            <div
+              id="tableDetailStatus"
+              class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
+            ></div>
+          </div>
+
+          <div id="tableDetailContent" class="space-y-4">
+            <!-- Content will be dynamically generated -->
+          </div>
+
+          <div class="text-center mt-6">
+            <button
+              onclick="closeTableDetailModal()"
+              class="mobile-button bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-900 touch-target touch-friendly"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Modal -->
+    <div
+      id="statusModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div
+          class="glass-effect rounded-xl mobile-modal p-4 sm:p-6 w-full max-w-sm mx-4 fade-in"
+        >
+          <div class="text-center">
+            <div
+              id="statusIcon"
+              class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-2xl sm:text-3xl"
+            ></div>
+            <h3
+              id="statusTitle"
+              class="mobile-subtitle sm:text-xl font-bold mb-2"
+            ></h3>
+            <p
+              id="statusMessage"
+              class="mobile-text text-gray-300 text-sm mb-4 sm:mb-6"
+            ></p>
+            <button
+              onclick="closeStatusModal()"
+              class="w-full mobile-button bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-900 touch-target touch-friendly"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // MD5 hash of password
+      const ADMIN_PASSWORD_HASH = "0a7fe17e846e0e035cac91fff6ad7cef";
+      let isAuthenticated = false;
+      let currentSlot = "";
+
+      // Initialize the page
+      document.addEventListener("DOMContentLoaded", function () {
+        checkAuth();
+      });
+
+      // Check if already authenticated
+      function checkAuth() {
+        const authStatus = sessionStorage.getItem("kitchenAuthenticated");
+        if (authStatus === "true") {
+          isAuthenticated = true;
+          showKitchenDashboard();
+        } else {
+          showLoginForm();
+        }
+      }
+
+      // Authenticate user
+      function authenticate() {
+        const password = document.getElementById("passwordInput").value;
+        const loginBtn = document.getElementById("loginBtnText");
+        const loginSpinner = document.getElementById("loginSpinner");
+
+        if (!password) {
+          showStatus("Please enter a password", "error");
+          return;
+        }
+
+        // Show loading state
+        loginBtn.textContent = "Authenticating...";
+        loginSpinner.classList.remove("hidden");
+
+        // Simulate processing delay
+        setTimeout(() => {
+          const passwordHash = CryptoJS.MD5(password).toString();
+
+          if (passwordHash === ADMIN_PASSWORD_HASH) {
+            isAuthenticated = true;
+            sessionStorage.setItem("kitchenAuthenticated", "true");
+            showStatus("Authentication successful!", "success");
+            showKitchenDashboard();
+          } else {
+            showStatus("Invalid password. Access denied.", "error");
+            document.getElementById("passwordInput").value = "";
+          }
+
+          // Reset button state
+          loginBtn.textContent = "Authenticate";
+          loginSpinner.classList.add("hidden");
+        }, 1000);
+      }
+
+      // Show kitchen dashboard
+      function showKitchenDashboard() {
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("kitchenDashboard").classList.remove("hidden");
+
+        // Add event listener for slot selection
+        const slotSelect = document.getElementById("slotSelect");
+        slotSelect.addEventListener("change", function () {
+          currentSlot = this.value;
+          if (currentSlot) {
+            loadKitchenData();
+          } else {
+            clearKitchenData();
+          }
+        });
+      }
+
+      // Show login form
+      function showLoginForm() {
+        document.getElementById("kitchenDashboard").classList.add("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+        document.getElementById("passwordInput").value = "";
+      }
+
+      // Logout
+      function logout() {
+        isAuthenticated = false;
+        sessionStorage.removeItem("kitchenAuthenticated");
+        showLoginForm();
+        showStatus("Logged out successfully", "success");
+      }
+
+      // Show loading modal
+      function showLoadingModal() {
+        document.getElementById("loadingModal").classList.remove("hidden");
+      }
+
+      // Hide loading modal
+      function hideLoadingModal() {
+        document.getElementById("loadingModal").classList.add("hidden");
+      }
+
+      // Load kitchen data
+      async function loadKitchenData() {
+        if (!currentSlot) return;
+
+        try {
+          showLoadingModal();
+
+          // Fetch food items data
+          const foodItemsData = await fetchFoodItemsData(currentSlot);
+
+          // Fetch table reservations data
+          const tableReservationsData = await fetchTableReservationsData(
+            currentSlot
+          );
+
+          // Combine and display data
+          displayKitchenData(foodItemsData, tableReservationsData);
+
+          hideLoadingModal();
+        } catch (error) {
+          console.error("Error loading kitchen data:", error);
+          showStatus("Error loading data: " + error.message, "error");
+          hideLoadingModal();
+        }
+      }
+
+      // Fetch food items data
+      async function fetchFoodItemsData(slot) {
+        const response = await fetch(
+          `https://docs.google.com/spreadsheets/d/1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc/gviz/tq?tqx=out:json&tq=SELECT%20B%2C%20C%2C%20D%2C%20E%2C%20F%2C%20G%20WHERE%20C%20%3D%20'${encodeURIComponent(
+            slot
+          )}'&gid=916433977`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const data = JSON.parse(text.substring(47, text.length - 2));
+
+        if (data.status === "error") {
+          throw new Error(
+            `Query error: ${data.errors?.[0]?.message || "Unknown error"}`
+          );
+        }
+
+        console.log("Food Items Data:", data.table?.rows);
+        return data.table?.rows || [];
+      }
+
+      // Fetch table reservations data
+      async function fetchTableReservationsData(slot) {
+        const response = await fetch(
+          `https://docs.google.com/spreadsheets/d/1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc/gviz/tq?tqx=out:json&tq=SELECT%20B%2C%20C%2C%20D%20WHERE%20C%20%3D%20'${encodeURIComponent(
+            slot
+          )}'&gid=365103881`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const data = JSON.parse(text.substring(47, text.length - 2));
+
+        if (data.status === "error") {
+          throw new Error(
+            `Query error: ${data.errors?.[0]?.message || "Unknown error"}`
+          );
+        }
+
+        console.log("Table Reservations Data:", data.table?.rows);
+        return data.table?.rows || [];
+      }
+
+      // Display kitchen data
+      function displayKitchenData(foodItemsData, tableReservationsData) {
+        console.log("Processing data...");
+        console.log("Food Items Data:", foodItemsData);
+        console.log("Table Reservations Data:", tableReservationsData);
+
+        // Create a map of booking ID to table/seat
+        const tableMap = {};
+        tableReservationsData.forEach((row) => {
+          const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
+          const tableSeat = row.c[2]?.v || ""; // Column D - Table/Seat
+          console.log(`Table mapping: ${bookingId} -> ${tableSeat}`);
+          if (bookingId && tableSeat) {
+            if (!tableMap[bookingId]) {
+              tableMap[bookingId] = [];
+            }
+            tableMap[bookingId].push(tableSeat);
+          }
+        });
+
+        console.log("Final table map:", tableMap);
+
+        // Process food items data
+        const orders = [];
+        let totalOmurice = 0;
+        let totalCurryRice = 0;
+        let totalDrinks = 0;
+
+        foodItemsData.forEach((row) => {
+          const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
+          const omurice = parseInt(row.c[2]?.v || 0); // Column D - Omurice Qty
+          const curryRice = parseInt(row.c[3]?.v || 0); // Column E - Curry Rice Qty
+          const icedTea = parseInt(row.c[4]?.v || 0); // Column F - Iced Tea Qty
+          const plainWater = parseInt(row.c[5]?.v || 0); // Column G - Plain Water Qty
+          const totalItems = omurice + curryRice + icedTea + plainWater;
+
+          console.log(`Processing booking: ${bookingId}, items: ${totalItems}`);
+
+          if (totalItems > 0) {
+            orders.push({
+              bookingId,
+              omurice,
+              curryRice,
+              icedTea,
+              plainWater,
+              totalItems,
+              tables: tableMap[bookingId] || [],
+            });
+
+            totalOmurice += omurice;
+            totalCurryRice += curryRice;
+            totalDrinks += icedTea + plainWater;
+          }
+        });
+
+        // Update summary cards
+        document.getElementById("totalOrders").textContent = orders.length;
+        document.getElementById("totalOmurice").textContent = totalOmurice;
+        document.getElementById("totalCurryRice").textContent = totalCurryRice;
+        document.getElementById("totalDrinks").textContent = totalDrinks;
+
+        // Create table cards
+        const tableCardsContainer = document.getElementById(
+          "tableCardsContainer"
+        );
+
+        if (orders.length === 0) {
+          tableCardsContainer.innerHTML = `
+             <div class="col-span-full text-center py-8 text-gray-500">
+               No orders found for this slot
+             </div>
+           `;
+          return;
+        }
+
+        // Initialize table data structure
+        const tables = {
+          A: { seats: [], orders: [], totalItems: 0 },
+          B: { seats: [], orders: [], totalItems: 0 },
+          C: { seats: [], orders: [], totalItems: 0 },
+          D: { seats: [], orders: [], totalItems: 0 },
+          E: { seats: [], orders: [], totalItems: 0 },
+          F: { seats: [], orders: [], totalItems: 0 },
+        };
+
+        // Process orders and assign to tables
+        orders.forEach((order) => {
+          order.tables.forEach((tableSeat) => {
+            const tableLetter = tableSeat.charAt(0); // A, B, C, D, E, or F
+            const seatNumber = tableSeat.charAt(1); // 1 or 2
+
+            if (tables[tableLetter]) {
+              if (!tables[tableLetter].seats.includes(tableSeat)) {
+                tables[tableLetter].seats.push(tableSeat);
+              }
+              tables[tableLetter].orders.push(order);
+              tables[tableLetter].totalItems += order.totalItems;
+            }
+          });
+        });
+
+        // Update orders list
+        const ordersListContainer = document.getElementById(
+          "ordersListContainer"
+        );
+
+        if (orders.length === 0) {
+          ordersListContainer.innerHTML = `
+             <div class="text-center py-8 text-gray-500">
+               No orders found for this slot
+             </div>
+           `;
+          return;
+        }
+
+        // Sort orders by seat assignment
+        const sortedOrders = orders.sort((a, b) => {
+          // If both have seats, sort alphabetically
+          if (a.tables.length > 0 && b.tables.length > 0) {
+            return a.tables.join(", ").localeCompare(b.tables.join(", "));
+          }
+          // If only one has seats, prioritize the one with seats
+          if (a.tables.length > 0 && b.tables.length === 0) {
+            return -1;
+          }
+          if (a.tables.length === 0 && b.tables.length > 0) {
+            return 1;
+          }
+          // If neither has seats, sort by booking ID
+          return String(a.bookingId).localeCompare(String(b.bookingId));
+        });
+
+        ordersListContainer.innerHTML = sortedOrders
+          .map((order) => {
+            const tableSeats =
+              order.tables.length > 0
+                ? order.tables.join(", ")
+                : "Not assigned";
+            const status =
+              order.tables.length > 0
+                ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Seated</span>'
+                : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">Pending</span>';
+
+            return `
+               <div class="glass-effect rounded-lg p-3 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300">
+                 <div class="flex items-center justify-between mb-3">
+                   <div class="flex items-center gap-3">
+                     <span class="text-white font-mono text-sm">${order.bookingId}</span>
+                     <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">${tableSeats}</span>
+                   </div>
+                   <div class="flex items-center gap-2">
+                     ${status}
+                   </div>
+                 </div>
+                 <div class="grid grid-cols-2 gap-3 text-xs">
+                   <div class="flex justify-between items-center">
+                     <span class="text-orange-400">Omurice:</span>
+                     <span class="text-white font-bold">${order.omurice}</span>
+                   </div>
+                   <div class="flex justify-between items-center">
+                     <span class="text-yellow-400">Curry:</span>
+                     <span class="text-white font-bold">${order.curryRice}</span>
+                   </div>
+                   <div class="flex justify-between items-center">
+                     <span class="text-blue-400">Tea:</span>
+                     <span class="text-white font-bold">${order.icedTea}</span>
+                   </div>
+                   <div class="flex justify-between items-center">
+                     <span class="text-gray-400">Water:</span>
+                     <span class="text-white font-bold">${order.plainWater}</span>
+                   </div>
+                 </div>
+               </div>
+             `;
+          })
+          .join("");
+      }
+
+      // Clear kitchen data
+      function clearKitchenData() {
+        document.getElementById("totalOrders").textContent = "-";
+        document.getElementById("totalOmurice").textContent = "-";
+        document.getElementById("totalCurryRice").textContent = "-";
+        document.getElementById("totalDrinks").textContent = "-";
+
+        document.getElementById("ordersListContainer").innerHTML = `
+           <div class="text-center py-8 text-gray-500">
+             Select a slot to view orders
+           </div>
+         `;
+      }
+
+      // Show status modal
+      function showStatus(message, type) {
+        const statusModal = document.getElementById("statusModal");
+        const statusIcon = document.getElementById("statusIcon");
+        const statusTitle = document.getElementById("statusTitle");
+        const statusMessage = document.getElementById("statusMessage");
+
+        if (type === "success") {
+          statusIcon.innerHTML = "✅";
+          statusIcon.className =
+            "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-green-500/20 border-2 border-green-500/40 success-glow";
+          statusTitle.textContent = "Success!";
+          statusTitle.className = "text-2xl font-bold text-green-200 mb-2";
+        } else if (type === "error") {
+          statusIcon.innerHTML = "❌";
+          statusIcon.className =
+            "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-red-500/20 border-2 border-red-500/40 error-glow";
+          statusTitle.textContent = "Error";
+          statusTitle.className = "text-2xl font-bold text-red-200 mb-2";
+        } else {
+          statusIcon.innerHTML = "ℹ️";
+          statusIcon.className =
+            "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-blue-500/20 border-2 border-blue-500/40";
+          statusTitle.textContent = "Information";
+          statusTitle.className = "text-2xl font-bold text-blue-200 mb-2";
+        }
+
+        statusMessage.textContent = message;
+        statusMessage.className = "text-gray-300 text-base";
+
+        statusModal.classList.remove("hidden");
+      }
+
+      // Open table detail modal
+      function openTableDetailModal(tableLetter, tableData) {
+        const modal = document.getElementById("tableDetailModal");
+        const title = document.getElementById("tableDetailTitle");
+        const status = document.getElementById("tableDetailStatus");
+        const content = document.getElementById("tableDetailContent");
+
+        // Set title and status
+        title.textContent = `Table ${tableLetter}`;
+
+        const isOccupied = tableData.seats.length > 0;
+        const statusClass = isOccupied
+          ? "bg-green-500/20 text-green-400"
+          : "bg-gray-500/20 text-gray-400";
+        const statusText = isOccupied ? "Occupied" : "Available";
+
+        status.className = `inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusClass}`;
+        status.textContent = statusText;
+
+        // Calculate food totals for this table
+        const tableOmurice = tableData.orders.reduce(
+          (sum, order) => sum + order.omurice,
+          0
+        );
+        const tableCurryRice = tableData.orders.reduce(
+          (sum, order) => sum + order.curryRice,
+          0
+        );
+        const tableIcedTea = tableData.orders.reduce(
+          (sum, order) => sum + order.icedTea,
+          0
+        );
+        const tablePlainWater = tableData.orders.reduce(
+          (sum, order) => sum + order.plainWater,
+          0
+        );
+
+        // Generate content
+        content.innerHTML = `
+           <div class="space-y-4">
+             ${
+               tableData.totalItems > 0
+                 ? `
+               <div class="glass-effect rounded-lg p-4">
+                 <h4 class="text-white font-semibold mb-3 text-center">Food Items</h4>
+                 <div class="grid grid-cols-2 gap-4">
+                   <div class="flex justify-between items-center">
+                     <span class="text-orange-400 font-medium">Omurice</span>
+                     <span class="text-white font-bold text-lg">${tableOmurice}</span>
+                   </div>
+                   <div class="flex justify-between items-center">
+                     <span class="text-yellow-400 font-medium">Curry Rice</span>
+                     <span class="text-white font-bold text-lg">${tableCurryRice}</span>
+                   </div>
+                   <div class="flex justify-between items-center">
+                     <span class="text-blue-400 font-medium">Iced Tea</span>
+                     <span class="text-white font-bold text-lg">${tableIcedTea}</span>
+                   </div>
+                   <div class="flex justify-between items-center">
+                     <span class="text-gray-400 font-medium">Plain Water</span>
+                     <span class="text-white font-bold text-lg">${tablePlainWater}</span>
+                   </div>
+                 </div>
+               </div>
+             `
+                 : ""
+             }
+             
+             ${
+               tableData.orders.length > 0
+                 ? `
+               <div class="glass-effect rounded-lg p-4">
+                 <h4 class="text-white font-semibold mb-3 text-center">Booking Details</h4>
+                 <div class="space-y-3">
+                   ${tableData.orders
+                     .map(
+                       (order) => `
+                     <div class="p-3 bg-gray-800/50 rounded">
+                       <div class="flex justify-between items-center mb-2">
+                         <div class="flex items-center gap-2">
+                           <span class="text-blue-400 font-mono">${
+                             order.bookingId
+                           }</span>
+                           <span class="px-2 py-1 bg-green-500/30 text-green-400 text-xs rounded font-semibold">${
+                             order.tables.length > 0
+                               ? order.tables.join(", ")
+                               : "No seat"
+                           }</span>
+                         </div>
+                         <span class="text-white font-semibold">${
+                           order.totalItems
+                         } items</span>
+                       </div>
+                       <div class="text-xs text-gray-400 space-y-1">
+                         ${
+                           order.omurice > 0
+                             ? `<div>• ${order.omurice} Omurice</div>`
+                             : ""
+                         }
+                         ${
+                           order.curryRice > 0
+                             ? `<div>• ${order.curryRice} Curry Rice</div>`
+                             : ""
+                         }
+                         ${
+                           order.icedTea > 0
+                             ? `<div>• ${order.icedTea} Iced Tea</div>`
+                             : ""
+                         }
+                         ${
+                           order.plainWater > 0
+                             ? `<div>• ${order.plainWater} Plain Water</div>`
+                             : ""
+                         }
+                       </div>
+                     </div>
+                   `
+                     )
+                     .join("")}
+                 </div>
+               </div>
+             `
+                 : ""
+             }
+           </div>
+         `;
+
+        modal.classList.remove("hidden");
+      }
+
+      // Close table detail modal
+      function closeTableDetailModal() {
+        document.getElementById("tableDetailModal").classList.add("hidden");
+      }
+
+      // Close status modal
+      function closeStatusModal() {
+        document.getElementById("statusModal").classList.add("hidden");
+      }
+    </script>
+  </body>
+</html>

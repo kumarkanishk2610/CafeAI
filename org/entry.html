@@ -236,15 +236,57 @@
             <p id="statusMessage" class="text-gray-300 text-base">
               <!-- Message will be set dynamically -->
             </p>
+
+            <!-- Reservation Summary -->
+            <div
+              id="reservationSummary"
+              class="mt-6 p-4 bg-gray-800/50 rounded-lg border border-gray-600 hidden"
+            >
+              <h4 class="text-lg font-semibold text-white mb-3">
+                Reservation Summary
+              </h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Booked By:</span>
+                  <span id="summaryBookedBy" class="text-white font-medium"
+                    >-</span
+                  >
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Slot Name:</span>
+                  <span id="summarySlotName" class="text-white font-medium"
+                    >-</span
+                  >
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Status:</span>
+                  <span id="summaryStatus" class="text-white font-medium"
+                    >-</span
+                  >
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Seats:</span>
+                  <span id="summarySeats" class="text-white font-medium"
+                    >-</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- View Details Button (hidden by default) -->
           <div id="statusViewDetailsBtn" class="hidden mb-4">
             <button
               onclick="showReservationsPopup()"
-              class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
+              class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg mb-3"
             >
               📋 View Reservation Details
+            </button>
+            <button
+              onclick="continueToSeatBooking()"
+              class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
+            >
+              🪑 Continue to Seat Booking
             </button>
           </div>
 
@@ -318,6 +360,11 @@
                   >
                     Txn ID
                   </th>
+                  <th
+                    class="px-4 py-2 text-sm font-semibold text-gray-300 border-b border-gray-600"
+                  >
+                    Table
+                  </th>
                 </tr>
               </thead>
               <tbody id="reservationsTableBody">
@@ -339,15 +386,15 @@
     </div>
 
     <!-- Main Container -->
-    <div class="h-screen flex items-center justify-center p-2">
-      <div class="w-full max-w-sm">
+    <div class="h-screen flex items-center justify-center p-4">
+      <div class="w-full max-w-lg">
         <!-- Header -->
-        <div class="text-center mb-6 slide-up">
+        <div class="text-center mb-8 slide-up">
           <div
-            class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-3 shadow-lg"
+            class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-4 shadow-lg"
           >
             <svg
-              class="w-8 h-8 text-white"
+              class="w-10 h-10 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -361,38 +408,41 @@
             </svg>
           </div>
           <h1
-            class="text-3xl font-bold text-white mb-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent"
+            class="text-4xl font-bold text-white mb-3 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent"
           >
             Entry Management
           </h1>
-          <p class="text-gray-300 text-base">Cafe Kyaa! Entry Verification</p>
+          <p class="text-gray-300 text-lg">
+            Cafe Kyaa! Entry Verification System
+          </p>
         </div>
 
         <!-- Login Form -->
         <div id="loginForm" class="glass-effect rounded-2xl p-8 mb-6 slide-up">
-          <h2 class="text-xl font-bold text-white mb-6 text-center">
-            🔐 Authentication Required
+          <h2 class="text-2xl font-bold text-white mb-8 text-center">
+            🔐 Admin Authentication
           </h2>
 
-          <div class="space-y-4">
+          <div class="space-y-6">
             <div>
-              <label class="block text-sm font-semibold text-gray-300 mb-2"
-                >Password</label
+              <label class="block text-sm font-semibold text-gray-300 mb-3"
+                >Entry Management Password</label
               >
               <input
                 type="password"
                 id="passwordInput"
-                class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-green-500 glow-border transition-all duration-300 text-center"
-                placeholder="Enter entry password"
+                class="w-full px-4 py-4 bg-gray-800/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-green-500 glow-border transition-all duration-300 text-center text-lg"
+                placeholder="Enter password to continue"
+                onkeypress="handleLoginKeypress(event)"
               />
             </div>
 
             <button
               onclick="authenticate()"
-              class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
+              class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
             >
               <div class="flex items-center justify-center">
-                <span id="loginBtnText">🔓 Authenticate</span>
+                <span id="loginBtnText">🔓 Access Entry System</span>
                 <div
                   id="loginSpinner"
                   class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full spinner ml-3"
@@ -402,23 +452,142 @@
           </div>
         </div>
 
-        <!-- QR Scanner Form -->
+        <!-- Entry Management Form -->
         <div
           id="scannerForm"
           class="glass-effect rounded-2xl p-8 hidden slide-up"
         >
-          <h2 class="text-xl font-bold text-white mb-6 text-center">
-            📱 QR Code Scanner
-          </h2>
+          <!-- Slot Selection - Moved to top for priority -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-white mb-4 text-center">
+              🕐 Select Current Slot
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-300 mb-2">
+                  Which slot are you managing?
+                </label>
+                <select
+                  id="slotSelector"
+                  class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-green-500 glow-border transition-all duration-300"
+                  onchange="updateSlotSelection()"
+                >
+                  <option value="">Choose a slot...</option>
+                  <option value="Day 1 - 22 Aug - Slot 1">
+                    Day 1 - 22 Aug - Slot 1 (10:00 AM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 2">
+                    Day 1 - 22 Aug - Slot 2 (11:00 AM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 3">
+                    Day 1 - 22 Aug - Slot 3 (12:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 4">
+                    Day 1 - 22 Aug - Slot 4 (01:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 5">
+                    Day 1 - 22 Aug - Slot 5 (02:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 6">
+                    Day 1 - 22 Aug - Slot 6 (03:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 7">
+                    Day 1 - 22 Aug - Slot 7 (03:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 8">
+                    Day 1 - 22 Aug - Slot 8 (05:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 9">
+                    Day 1 - 22 Aug - Slot 9 (06:00 PM)
+                  </option>
+                  <option value="Day 1 - 22 Aug - Slot 10">
+                    Day 1 - 22 Aug - Slot 10 (07:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 1">
+                    Day 2 - 23 Aug - Slot 1 (10:00 AM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 2">
+                    Day 2 - 23 Aug - Slot 2 (11:00 AM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 3">
+                    Day 2 - 23 Aug - Slot 3 (12:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 4">
+                    Day 2 - 23 Aug - Slot 4 (01:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 5">
+                    Day 2 - 23 Aug - Slot 5 (02:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 6">
+                    Day 2 - 23 Aug - Slot 6 (03:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 7">
+                    Day 2 - 23 Aug - Slot 7 (03:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 8">
+                    Day 2 - 23 Aug - Slot 8 (05:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 9">
+                    Day 2 - 23 Aug - Slot 9 (06:00 PM)
+                  </option>
+                  <option value="Day 2 - 23 Aug - Slot 10">
+                    Day 2 - 23 Aug - Slot 10 (07:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 1">
+                    Day 3 - 24 Aug - Slot 1 (10:00 AM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 2">
+                    Day 3 - 24 Aug - Slot 2 (11:00 AM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 3">
+                    Day 3 - 24 Aug - Slot 3 (12:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 4">
+                    Day 3 - 24 Aug - Slot 4 (01:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 5">
+                    Day 3 - 24 Aug - Slot 5 (02:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 6">
+                    Day 3 - 24 Aug - Slot 6 (03:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 7">
+                    Day 3 - 24 Aug - Slot 7 (03:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 8">
+                    Day 3 - 24 Aug - Slot 8 (05:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 9">
+                    Day 3 - 24 Aug - Slot 9 (06:00 PM)
+                  </option>
+                  <option value="Day 3 - 24 Aug - Slot 10">
+                    Day 3 - 24 Aug - Slot 10 (07:00 PM)
+                  </option>
+                </select>
+              </div>
+              <div id="selectedSlotInfo" class="hidden">
+                <div
+                  class="bg-green-500/20 border border-green-500/40 rounded-lg p-3"
+                >
+                  <p class="text-green-200 text-sm font-medium">
+                    ✅ Currently managing: <span id="selectedSlotText"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <!-- QR Scanner - Primary Feature -->
           <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-white text-center">
+              📱 QR Code Scanner
+            </h3>
             <div class="scanning-indicator">
               <div
                 id="qr-reader"
                 class="rounded-xl overflow-hidden shadow-lg"
               ></div>
             </div>
-
             <div class="text-center">
               <p class="text-gray-300 text-sm mb-2">
                 Point camera at the QR code to scan entry
@@ -434,8 +603,18 @@
             </div>
           </div>
 
-          <!-- Logout Button -->
+          <!-- Manual Entry Button -->
           <div class="mt-6 pt-6 border-t border-gray-600">
+            <button
+              onclick="showManualEntryModal()"
+              class="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
+            >
+              📝 Manual Entry
+            </button>
+          </div>
+
+          <!-- Logout Button -->
+          <div class="mt-8 pt-6 border-t border-gray-600">
             <button
               onclick="logout()"
               class="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
@@ -447,9 +626,71 @@
       </div>
     </div>
 
+    <!-- Manual Entry Modal -->
+    <div
+      id="manualEntryModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="glass-effect rounded-2xl p-8 w-full max-w-md mx-4 slide-up">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-white">📝 Manual Entry</h3>
+            <button
+              onclick="closeManualEntryModal()"
+              class="text-gray-400 hover:text-white transition-colors"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-300 mb-3">
+                Booking ID
+              </label>
+              <input
+                type="text"
+                id="manualBookingId"
+                class="w-full px-4 py-4 bg-gray-800/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-green-500 glow-border transition-all duration-300 text-center text-lg"
+                placeholder="Enter booking ID"
+                onkeypress="handleManualEntryKeypress(event)"
+              />
+            </div>
+
+            <div class="flex space-x-3">
+              <button
+                onclick="processManualEntry()"
+                class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
+              >
+                🔍 Check Booking
+              </button>
+              <button
+                onclick="closeManualEntryModal()"
+                class="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       // MD5 hash of password (same as admin for now, you can change this)
-      const ENTRY_PASSWORD_HASH = "1952680ed28891d8794eafdf0910ebda";
+      const ENTRY_PASSWORD_HASH = "0a7fe17e846e0e035cac91fff6ad7cef";
 
       let isAuthenticated = false;
       let html5QrcodeScanner = null;
@@ -532,6 +773,7 @@
 
         // Clear reservations data
         window.currentReservationsData = null;
+        window.location.href = "/org/index.html";
       }
 
       // Initialize QR Scanner
@@ -555,7 +797,15 @@
       function onScanSuccess(decodedText, decodedResult) {
         // Don't stop scanner - keep camera running
         // Just process the scanned booking ID
-        processEntry(decodedText);
+
+        // Get selected slot
+        const selectedSlot = document.getElementById("slotSelector").value;
+        if (!selectedSlot) {
+          showStatus("Please select a slot first", "error");
+          return;
+        }
+
+        processEntry(decodedText, selectedSlot);
       }
 
       // Handle QR scan failure
@@ -566,17 +816,76 @@
       }
 
       // Process entry verification
-      async function processEntry(bookingId) {
+      async function processEntry(bookingId, selectedSlot = null) {
         console.log("=== ENTRY PROCESSING START ===");
         console.log("Scanned Booking ID:", bookingId);
         console.log("Booking ID type:", typeof bookingId);
         console.log("Booking ID length:", bookingId.length);
+        console.log("Selected Slot:", selectedSlot);
+
+        // Store booking ID and slot for seat booking redirect
+        window.currentBookingId = bookingId;
+        window.currentSelectedSlot = selectedSlot;
 
         document.getElementById("loadingModal").classList.remove("hidden");
 
         try {
-          // Step 1: Check Payment Tracker tab - column A for booking ID existence
-          console.log("\n--- STEP 1: Payment Tracker Check ---");
+          // Step 1: Validate slot selection
+          if (!selectedSlot) {
+            showStatus("Please select a slot first", "error");
+            return;
+          }
+
+          // Step 2: Fetch user data for given booking ID
+          console.log("\n--- STEP 2: Fetch User Data ---");
+          const allReservationsData = await fetchReservationsData(bookingId);
+          console.log(
+            "All Reservations Data Count:",
+            allReservationsData.length
+          );
+          console.log("All Reservations Data:", allReservationsData);
+
+          if (!allReservationsData || allReservationsData.length === 0) {
+            showStatus("No reservations found for this booking ID", "error");
+            return;
+          }
+
+          // Step 3: Check if any slots in userdata match admin selected slot
+          console.log("\n--- STEP 3: Slot Matching Check ---");
+          const hasMatchingSlot = allReservationsData.some((row) => {
+            const slotName = row.c[0]?.v || row.c[1]?.v || "";
+            return (
+              String(slotName).toLowerCase() ===
+              String(selectedSlot).toLowerCase()
+            );
+          });
+
+          if (!hasMatchingSlot) {
+            console.log("❌ No bookings found for selected slot");
+            showStatus(
+              `No bookings found for ${selectedSlot}. Please check slot selection.`,
+              "error"
+            );
+            return;
+          }
+
+          // Step 4: Filter reservations by admin selected slot
+          const filteredReservationsData = filterReservationsBySlot(
+            allReservationsData,
+            selectedSlot
+          );
+          console.log(
+            "Filtered Reservations Data Count:",
+            filteredReservationsData.length
+          );
+          console.log("Filtered Reservations Data:", filteredReservationsData);
+          window.currentReservationsData = filteredReservationsData;
+
+          // Step 5: Cross checks (admin confirmation, entry status, etc.)
+          console.log("\n--- STEP 5: Cross Checks ---");
+
+          // 5.1: Check payment status
+          console.log("--- STEP 5.1: Payment Tracker Check ---");
           const paymentTrackerStatus = await checkPaymentTracker(bookingId);
           console.log("Payment Tracker Status:", paymentTrackerStatus);
 
@@ -586,57 +895,52 @@
             return;
           } else if (paymentTrackerStatus === "not_approved") {
             console.log("❌ Admin Confirmation Pending");
-            showStatus("Admin Confirmation Pending", "error");
+            showStatus("Admin Confirmation Pending", "warning");
+            showViewDetailsButton(); // Show View Details button
             return;
           }
 
           console.log("✅ Payment Tracker Check Passed");
 
-          // Step 2: Check Raw Data tab for existing entry in column I
-          console.log("\n--- STEP 2: Raw Data Duplicate Check ---");
-          const entryStatus = await checkExistingEntry(bookingId);
+          // 5.2: Check existing entry
+          console.log("--- STEP 5.2: Entry Status Check ---");
+          const entryStatus = await checkExistingEntry(bookingId, selectedSlot);
           console.log("Entry Status:", entryStatus);
 
-          if (entryStatus === "exists") {
-            console.log("❌ User already entered");
-            // Still fetch reservations data to show details
-            const reservationsData = await fetchReservationsData(bookingId);
-            console.log("Reservations Data Count:", reservationsData.length);
-            window.currentReservationsData = reservationsData;
+          // Step 6: Handle entry logging based on entry status
+          console.log("\n--- STEP 6: Entry Handling ---");
+          if (entryStatus === "new") {
+            console.log("New Entry - Log Entry");
+
+            // Log entry immediately for new users
+            console.log("--- STEP 6.1: Log Entry ---");
+            const logResult = await logEntry(bookingId, selectedSlot);
+            console.log("Log Result:", logResult);
+
+            if (logResult === "success") {
+              console.log("✅ Entry Logged Successfully");
+
+              console.log("--- STEP 6.2: Showing Success Status ---");
+              showStatus(
+                "Entry successful! Click 'View Details' to see reservation info.",
+                "success"
+              );
+              console.log("--- STEP 6.3: Showing View Details Button ---");
+              showViewDetailsButton(); // Show View Details button
+              console.log("✅ New entry process completed successfully");
+            } else {
+              console.log("❌ Error Logging Entry");
+              showStatus("Error logging entry", "error");
+            }
+          } else if (entryStatus === "exists") {
+            console.log("Existing Entry - Show Details");
 
             showStatus(
-              "User already entered. You can still view reservation details.",
-              "error"
+              "Entry already done. You can still view reservation details.",
+              "warning"
             );
-            showViewDetailsButton();
-            return;
-          }
-
-          console.log("✅ Raw Data Check Passed");
-
-          // Step 3: Fetch Reservations data for popup display
-          console.log("\n--- STEP 3: Fetch Reservations Data ---");
-          const reservationsData = await fetchReservationsData(bookingId);
-          console.log("Reservations Data Count:", reservationsData.length);
-          console.log("Reservations Data:", reservationsData);
-          window.currentReservationsData = reservationsData; // Store for popup
-
-          // Step 4: Log entry
-          console.log("\n--- STEP 4: Log Entry ---");
-          const logResult = await logEntry(bookingId);
-          console.log("Log Result:", logResult);
-
-          if (logResult === "success") {
-            console.log("✅ Entry Logged Successfully");
-            showStatus(
-              "Entry successful! Click 'View Details' to see reservation info.",
-              "success"
-            );
-            // Show the view details button
-            showViewDetailsButton();
-          } else {
-            console.log("❌ Error Logging Entry");
-            showStatus("Error logging entry", "error");
+            showViewDetailsButton(); // Show View Details button
+            populateReservationSummary(); // Populate the summary
           }
 
           console.log("=== ENTRY PROCESSING COMPLETE ===");
@@ -646,7 +950,6 @@
           showStatus("Error processing entry", "error");
         } finally {
           document.getElementById("loadingModal").classList.add("hidden");
-          // No need to restart scanner - it's already running
         }
       }
 
@@ -716,87 +1019,79 @@
       }
 
       // Check existing entry in Raw Data tab
-      async function checkExistingEntry(bookingId) {
+      async function checkExistingEntry(bookingId, selectedSlot) {
         const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
-        const gid = "0"; // Raw Data tab GID (usually 0 for first sheet)
+        const gid = "2113355260"; // Raw Data tab GID (usually 0 for first sheet)
 
         console.log("🔍 Checking Raw Data for existing entry...");
         console.log("Booking ID to check:", bookingId);
 
         try {
-          // Try multiple approaches to find the booking ID
-          // First, try searching as number
-          let query = encodeURIComponent(`SELECT I WHERE I = ${bookingId}`);
-          let url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
+          // Fetch all data from Raw Data sheet to search locally
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log("Raw Data Query (number):", query);
+          console.log("Raw Data Query (fetch all):", query);
           console.log("Raw Data URL:", url);
 
-          let response = await fetch(url);
+          const response = await fetch(url);
           console.log("Raw Data Response status:", response.status);
 
-          let text = await response.text();
+          const text = await response.text();
           console.log("Raw Data response text length:", text.length);
 
-          let jsonText = text.substring(47).slice(0, -2);
-          let data = JSON.parse(jsonText);
+          const jsonText = text.substring(47).slice(0, -2);
+          const data = JSON.parse(jsonText);
           console.log("Raw Data parsed data:", data);
 
-          // If we get an error, try searching as string
+          // Check if there's an error in the response
           if (data.status === "error") {
-            console.log(
-              "❌ Raw Data query error (number search):",
-              data.errors
-            );
-            console.log("🔄 Trying string search...");
-
-            query = encodeURIComponent(`SELECT I WHERE I = '${bookingId}'`);
-            url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
-
-            console.log("Raw Data Query (string):", query);
-            console.log("Raw Data URL (string):", url);
-
-            response = await fetch(url);
-            text = await response.text();
-            jsonText = text.substring(47).slice(0, -2);
-            data = JSON.parse(jsonText);
-            console.log("Raw Data parsed data (string search):", data);
-          }
-
-          // If still error, try a broader search
-          if (data.status === "error") {
-            console.log(
-              "❌ Raw Data query error (string search):",
-              data.errors
-            );
-            console.log("🔄 Trying broader search...");
-
-            query = encodeURIComponent(
-              `SELECT * WHERE I CONTAINS '${bookingId}'`
-            );
-            url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
-
-            console.log("Raw Data Query (contains):", query);
-            console.log("Raw Data URL (contains):", url);
-
-            response = await fetch(url);
-            text = await response.text();
-            jsonText = text.substring(47).slice(0, -2);
-            data = JSON.parse(jsonText);
-            console.log("Raw Data parsed data (contains search):", data);
-          }
-
-          // Final check
-          if (data.status === "error") {
-            console.log("❌ All Raw Data queries failed:", data.errors);
-            // If all queries fail, we should be more conservative and assume entry exists
-            console.log("⚠️ Assuming entry exists due to query failures");
+            console.log("❌ Raw Data query error:", data.errors);
+            console.log("⚠️ Assuming entry exists due to query error");
             return "exists";
           }
 
           console.log("Raw Data rows count:", data.table?.rows?.length || 0);
 
-          const result = data.table.rows.length > 0 ? "exists" : "not_found";
+          // Search through all rows for the booking ID in column I (index 8) AND slot in column J (index 9)
+          let found = false;
+          if (data.table && data.table.rows) {
+            data.table.rows.forEach((row, index) => {
+              // Check column I (index 8) for the booking ID
+              const columnI = row.c[8]?.v;
+              // Check column J (index 9) for the slot name
+              const columnJ = row.c[9]?.v;
+
+              console.log(
+                `Row ${index + 1}, Column I:`,
+                columnI,
+                `Column J:`,
+                columnJ,
+                `(type: ${typeof columnI})`
+              );
+
+              // Convert both to strings for consistent comparison
+              const columnIString = String(columnI || "");
+              const columnJString = String(columnJ || "");
+              const bookingIdString = String(bookingId || "");
+              const selectedSlotString = String(selectedSlot || "");
+
+              // Compare both booking ID AND slot
+              if (
+                columnIString === bookingIdString &&
+                columnJString === selectedSlotString
+              ) {
+                console.log(
+                  `✅ Found booking ID ${bookingId} for slot ${selectedSlot} in row ${
+                    index + 1
+                  }`
+                );
+                found = true;
+              }
+            });
+          }
+
+          const result = found ? "exists" : "new";
           console.log("Raw Data check result:", result);
           return result;
         } catch (error) {
@@ -821,12 +1116,11 @@
         console.log("Booking ID for reservations:", bookingId);
 
         try {
-          const query = encodeURIComponent(
-            `SELECT F, G, H, I, J WHERE I = ${bookingId}`
-          );
+          // First, try to get all data and filter locally
+          const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log("Reservations Query:", query);
+          console.log("Reservations Query (fetch all):", query);
           console.log("Reservations URL:", url);
 
           const response = await fetch(url);
@@ -847,13 +1141,52 @@
           }
 
           console.log(
-            "Reservations rows count:",
+            "Total Reservations rows count:",
             data.table?.rows?.length || 0
           );
 
-          const result = data.table.rows || [];
-          console.log("Reservations data result:", result);
-          return result;
+          // Filter rows locally where column I (index 8) matches the booking ID
+          const filteredRows = [];
+          if (data.table && data.table.rows) {
+            data.table.rows.forEach((row, index) => {
+              // Check column I (index 8) for the booking ID
+              const columnI = row.c[8]?.v; // Column I (index 8)
+              console.log(
+                `Row ${index + 1}, Column I:`,
+                columnI,
+                `(type: ${typeof columnI})`
+              );
+
+              // Convert both to strings for consistent comparison
+              const columnIString = String(columnI || "");
+              const bookingIdString = String(bookingId || "");
+
+              // Compare as strings
+              if (columnIString === bookingIdString) {
+                console.log(
+                  `✅ Found matching booking ID ${bookingId} in row ${
+                    index + 1
+                  }`
+                );
+                // Extract only columns F, G, H, I, J, K (indices 5, 6, 7, 8, 9, 10)
+                const filteredRow = {
+                  c: [
+                    row.c[5], // F
+                    row.c[6], // G
+                    row.c[7], // H
+                    row.c[8], // I
+                    row.c[9], // J
+                    row.c[10], // K
+                  ],
+                };
+                filteredRows.push(filteredRow);
+              }
+            });
+          }
+
+          console.log("Filtered Reservations rows count:", filteredRows.length);
+          console.log("Filtered Reservations data:", filteredRows);
+          return filteredRows;
         } catch (error) {
           console.error("❌ Error fetching reservations data:", error);
           console.error("Error details:", {
@@ -873,6 +1206,74 @@
         if (statusViewDetailsBtn) {
           statusViewDetailsBtn.classList.remove("hidden");
         }
+      }
+
+      // Populate reservation summary in status modal
+      async function populateReservationSummary() {
+        const bookingId = window.currentBookingId;
+        const selectedSlot = window.currentSelectedSlot;
+        if (!bookingId) return;
+
+        try {
+          // Fetch reservation data
+          const reservationsData = await fetchReservationsData(bookingId);
+
+          if (reservationsData && reservationsData.length > 0) {
+            const firstReservation = reservationsData[0];
+
+            // Extract data from the reservation (mapped indices: 0=F, 1=G, 2=H, 3=I, 4=J, 5=K)
+            const slotName = selectedSlot || "-";
+            const timestamp = firstReservation.c[1]?.v || "-";
+            const status = firstReservation.c[2]?.v || "-";
+            const bookedBy = firstReservation.c[3]?.v || "-";
+
+            // Collect seats only for the currently selected slot
+            const currentSlotSeats = reservationsData
+              .filter((reservation) => reservation.c[0]?.v === selectedSlot)
+              .map((reservation) => reservation.c[5]?.v)
+              .filter((seat) => seat && seat !== "")
+              .join(", ");
+
+            // Update summary elements
+            document.getElementById("summaryBookedBy").textContent = bookedBy;
+            document.getElementById("summarySlotName").textContent = slotName;
+            document.getElementById("summaryStatus").textContent = status;
+            document.getElementById("summarySeats").textContent =
+              currentSlotSeats || "-";
+
+            // Show the summary section
+            const summarySection =
+              document.getElementById("reservationSummary");
+            if (summarySection) {
+              summarySection.classList.remove("hidden");
+            }
+          }
+        } catch (error) {
+          console.error("Error populating reservation summary:", error);
+        }
+      }
+
+      // Continue to seat booking with URL parameters
+      function continueToSeatBooking() {
+        // Get booking ID and slot from current context
+        const bookingId = window.currentBookingId || "";
+        const selectedSlot = window.currentSelectedSlot || "";
+
+        console.log("Redirecting to seat booking with:");
+        console.log("- Booking ID:", bookingId);
+        console.log("- Selected Slot:", selectedSlot);
+
+        // Build URL with parameters
+        const url = new URL("org/seat.html", window.location.origin);
+        if (bookingId) {
+          url.searchParams.set("bookingId", bookingId);
+        }
+        if (selectedSlot) {
+          url.searchParams.set("slot", selectedSlot);
+        }
+
+        console.log("Redirecting to:", url.toString());
+        window.location.href = url.toString();
       }
 
       // Show reservations popup
@@ -896,13 +1297,14 @@
           const tr = document.createElement("tr");
           tr.className = "border-b border-gray-700";
 
-          // Process each column (F, G, H, I, J)
+          // Process each column (F, G, H, I, J, K mapped to 0, 1, 2, 3, 4, 5)
           const columns = [
             { index: 0, name: "Slot Name" },
             { index: 1, name: "Timestamp" },
             { index: 2, name: "Status" },
             { index: 3, name: "Booked By" },
             { index: 4, name: "Txn ID" },
+            { index: 5, name: "Table" },
           ];
 
           columns.forEach((col) => {
@@ -923,6 +1325,62 @@
 
           tableBody.appendChild(tr);
         });
+
+        // Add table assignments section if available
+        console.log(
+          "Checking for table assignments:",
+          window.currentTableAssignments
+        );
+        if (
+          window.currentTableAssignments &&
+          window.currentTableAssignments.length > 0
+        ) {
+          console.log("Found table assignments, creating section");
+          const tableAssignmentsSection = document.createElement("div");
+          tableAssignmentsSection.className =
+            "mt-6 pt-6 border-t border-gray-700";
+          tableAssignmentsSection.innerHTML = `
+              <h3 class="text-lg font-semibold text-white mb-4">Table Assignments</h3>
+              <div class="bg-gray-800 rounded-lg p-4">
+                ${window.currentTableAssignments
+                  .map(
+                    (assignment) => `
+                  <div class="flex justify-between items-center py-2 border-b border-gray-700 last:border-b-0">
+                    <span class="text-gray-300">${assignment.slot}</span>
+                    <span class="text-green-400 font-semibold">${assignment.table}</span>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            `;
+
+          // Insert after the table but before the close button
+          const closeButtonContainer = popup.querySelector(".mt-4.text-center");
+          console.log("Close button container found:", !!closeButtonContainer);
+          if (closeButtonContainer) {
+            closeButtonContainer.parentNode.insertBefore(
+              tableAssignmentsSection,
+              closeButtonContainer
+            );
+            console.log("Table assignments section inserted");
+          } else {
+            console.log(
+              "Close button container not found, trying alternative insertion"
+            );
+            // Try inserting after the table container
+            const tableContainer = popup.querySelector(".overflow-x-auto");
+            if (tableContainer) {
+              tableContainer.parentNode.insertBefore(
+                tableAssignmentsSection,
+                tableContainer.nextSibling
+              );
+              console.log("Table assignments section inserted after table");
+            }
+          }
+        } else {
+          console.log("No table assignments found or empty array");
+        }
 
         popup.classList.remove("hidden");
       }
@@ -988,23 +1446,912 @@
       }
 
       // Log entry to Google Form
-      async function logEntry(bookingId) {
+      async function logEntry(bookingId, slotName) {
+        console.log("📝 Logging entry for booking ID:", bookingId);
+        console.log("📝 Logging entry for slot:", slotName);
+
         const formData = new FormData();
-        formData.append("entry.1735629859", bookingId);
+        formData.append("entry.1735629859", bookingId); // Booking ID
+        formData.append("entry.1592144907", slotName); // Slot name
 
         const formUrl =
           "https://docs.google.com/forms/d/e/1FAIpQLSfbGZ2i3oJTEhSm15EJ7IPmIz6G29lzze4P2da-cXLYGn0xLg/formResponse";
 
+        console.log("Form URL:", formUrl);
+        console.log("Form data:", formData);
+
         try {
-          await fetch(formUrl, {
+          console.log("--- Submitting form ---");
+          const response = await fetch(formUrl, {
             method: "POST",
             mode: "no-cors",
             body: formData,
           });
+          console.log("Form submission completed");
+          console.log("Response status:", response.status);
+          console.log("Response type:", response.type);
+
+          // Since no-cors mode doesn't give us response details, we assume success
+          // but we can add a small delay to simulate the request
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          console.log("✅ Entry logged successfully");
           return "success";
         } catch (error) {
-          console.error("Error logging entry:", error);
+          console.error("❌ Error logging entry:", error);
           return "error";
+        }
+      }
+
+      // Handle table assignment
+      async function handleTableAssignment(bookingId, reservationsData) {
+        try {
+          // Extract unique slots from reservations data
+          const slots = extractUniqueSlots(reservationsData);
+
+          if (slots.length === 0) {
+            console.log("❌ No slots found in reservations data");
+            return;
+          }
+
+          // If multiple slots, show slot selection modal
+          if (slots.length > 1) {
+            showSlotSelectionModal(slots, bookingId);
+          } else {
+            // Single slot, proceed directly
+            await processTableAssignment(bookingId, slots[0]);
+          }
+        } catch (error) {
+          console.error("❌ Error in table assignment:", error);
+        }
+      }
+
+      // Extract unique slots from reservations data
+      function extractUniqueSlots(reservationsData) {
+        const slots = new Set();
+        reservationsData.forEach((row) => {
+          // Extract slot information from the data
+          // This depends on how slot info is stored in reservations
+          const slotInfo = row.c[0]?.v || row.c[1]?.v || ""; // Adjust based on actual data structure
+          if (slotInfo) {
+            slots.add(slotInfo);
+          }
+        });
+        return Array.from(slots);
+      }
+
+      // Show slot selection modal
+      function showSlotSelectionModal(slots, bookingId) {
+        const modal = document.createElement("div");
+        modal.className =
+          "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50";
+        modal.innerHTML = `
+          <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold mb-4">Select Slot for Table Assignment</h3>
+            <p class="text-gray-600 mb-4">This booking has multiple slots. Please select which slot to assign a table for:</p>
+            <div class="space-y-2 mb-4">
+              ${slots
+                .map(
+                  (slot) => `
+                <button 
+                  class="w-full text-left p-3 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onclick="selectSlotForTableAssignment('${slot}', '${bookingId}')"
+                >
+                  ${slot}
+                </button>
+              `
+                )
+                .join("")}
+            </div>
+            <button 
+              class="w-full bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+              onclick="closeSlotSelectionModal()"
+            >
+              Cancel
+            </button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        window.currentSlotModal = modal;
+      }
+
+      // Close slot selection modal
+      function closeSlotSelectionModal() {
+        if (window.currentSlotModal) {
+          document.body.removeChild(window.currentSlotModal);
+          window.currentSlotModal = null;
+        }
+      }
+
+      // Select slot for table assignment
+      async function selectSlotForTableAssignment(slotName, bookingId) {
+        closeSlotSelectionModal();
+        await processTableAssignment(bookingId, slotName);
+      }
+
+      // Process table assignment
+      async function processTableAssignment(bookingId, slotName) {
+        try {
+          console.log(
+            `🔍 Checking table assignment for booking ${bookingId}, slot ${slotName}`
+          );
+
+          // Check existing table assignment
+          const existingAssignment = await checkExistingTableAssignment(
+            bookingId,
+            slotName
+          );
+
+          if (existingAssignment) {
+            console.log(
+              `✅ Found existing table assignment: ${existingAssignment}`
+            );
+            showTableAssignmentStatus(
+              `Already assigned to ${existingAssignment}`,
+              "info"
+            );
+          } else {
+            console.log("❌ No existing table assignment found");
+            // Assign new table
+            const newTableAssignment = await assignNewTable(
+              bookingId,
+              slotName
+            );
+            if (newTableAssignment) {
+              console.log(`✅ Assigned to table: ${newTableAssignment}`);
+              showTableAssignmentStatus(
+                `Assigned to ${newTableAssignment}`,
+                "success"
+              );
+            } else {
+              console.log("❌ Failed to assign table");
+              showTableAssignmentStatus(
+                "Failed to assign table - all tables may be occupied",
+                "error"
+              );
+            }
+          }
+        } catch (error) {
+          console.error("❌ Error processing table assignment:", error);
+          showTableAssignmentStatus(
+            "Error processing table assignment",
+            "error"
+          );
+        }
+      }
+
+      // Check existing table assignment
+      async function checkExistingTableAssignment(bookingId, slotName) {
+        const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const gid = "365103881"; // VenueTableReservation tab GID
+
+        try {
+          const query = encodeURIComponent(
+            `SELECT * WHERE B = '${bookingId}' AND C = '${slotName}'`
+          );
+          const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
+
+          const response = await fetch(url);
+          const text = await response.text();
+          const jsonText = text.substring(47).slice(0, -2);
+          const data = JSON.parse(jsonText);
+
+          if (data.status === "error") {
+            console.log("❌ Error checking table assignment:", data.errors);
+            return null;
+          }
+
+          if (data.table && data.table.rows && data.table.rows.length > 0) {
+            // Found existing assignment
+            const row = data.table.rows[0];
+            const tableSeat = row.c[3]?.v || ""; // Column D: Table/Seat
+            return tableSeat;
+          }
+
+          return null; // No existing assignment
+        } catch (error) {
+          console.error("❌ Error checking table assignment:", error);
+          return null;
+        }
+      }
+
+      // Assign new table
+      async function assignNewTable(bookingId, slotName) {
+        try {
+          // Get available tables for the slot
+          const availableTables = await getAvailableTables(slotName);
+
+          if (availableTables.length === 0) {
+            console.log("❌ No available tables for this slot");
+            return null;
+          }
+
+          // Assign the first available table
+          const assignedTable = availableTables[0];
+
+          // Submit to table assignment form
+          const formUrl =
+            "https://docs.google.com/forms/d/e/1FAIpQLScr_5q__XyAbcK3wfBdKCEFwN-iDD6M21jU3U9Ss0u2FQRH0g/formResponse";
+
+          const formData = new FormData();
+          formData.append("entry.863334335", bookingId); // Booking ID
+          formData.append("entry.1779047001", slotName); // Slot Name
+          formData.append("entry.1374097765", assignedTable); // Table/Seat
+
+          const response = await fetch(formUrl, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+          });
+
+          console.log(`✅ Table assignment submitted: ${assignedTable}`);
+          return assignedTable;
+        } catch (error) {
+          console.error("❌ Error assigning table:", error);
+          return null;
+        }
+      }
+
+      // Get available tables for a slot
+      async function getAvailableTables(slotName) {
+        const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const gid = "365103881"; // VenueTableReservation tab GID
+
+        try {
+          // Get all table assignments for this slot
+          const query = encodeURIComponent(`SELECT D WHERE C = '${slotName}'`);
+          const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
+
+          const response = await fetch(url);
+          const text = await response.text();
+          const jsonText = text.substring(47).slice(0, -2);
+          const data = JSON.parse(jsonText);
+
+          if (data.status === "error") {
+            console.log("❌ Error getting available tables:", data.errors);
+            return [];
+          }
+
+          // Get all occupied tables for this slot
+          const occupiedTables = new Set();
+          if (data.table && data.table.rows) {
+            data.table.rows.forEach((row) => {
+              const tableSeat = row.c[0]?.v || ""; // Column D: Table/Seat
+              if (tableSeat) {
+                occupiedTables.add(tableSeat);
+              }
+            });
+          }
+
+          // All possible tables: A1, A2, B1, B2, C1, C2, D1, D2, E1, E2, F1, F2
+          const allTables = [
+            "A1",
+            "A2",
+            "B1",
+            "B2",
+            "C1",
+            "C2",
+            "D1",
+            "D2",
+            "E1",
+            "E2",
+            "F1",
+            "F2",
+          ];
+
+          // Return available tables
+          const availableTables = allTables.filter(
+            (table) => !occupiedTables.has(table)
+          );
+          console.log(
+            `Available tables for slot ${slotName}:`,
+            availableTables
+          );
+
+          return availableTables;
+        } catch (error) {
+          console.error("❌ Error getting available tables:", error);
+          return [];
+        }
+      }
+
+      // Show table assignment status
+      function showTableAssignmentStatus(message, type) {
+        const statusModal = document.createElement("div");
+        statusModal.className =
+          "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50";
+
+        const bgColor =
+          type === "success"
+            ? "bg-green-500"
+            : type === "error"
+            ? "bg-red-500"
+            : "bg-blue-500";
+
+        statusModal.innerHTML = `
+          <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div class="text-center">
+              <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full ${bgColor} mb-4">
+                <span class="text-white text-xl">${
+                  type === "success" ? "✅" : type === "error" ? "❌" : "ℹ️"
+                }</span>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">Table Assignment</h3>
+              <p class="text-gray-600 mb-4">${message}</p>
+              <button 
+                class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+                onclick="closeTableAssignmentStatus()"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(statusModal);
+        window.currentTableStatusModal = statusModal;
+      }
+
+      // Close table assignment status modal
+      function closeTableAssignmentStatus() {
+        if (window.currentTableStatusModal) {
+          document.body.removeChild(window.currentTableStatusModal);
+          window.currentTableStatusModal = null;
+        }
+      }
+
+      // Filter reservations by selected slot
+      function filterReservationsBySlot(reservationsData, selectedSlot) {
+        if (!selectedSlot) {
+          return reservationsData; // Return all if no slot selected
+        }
+
+        return reservationsData.filter((row) => {
+          // Extract slot information from the data
+          // This depends on how slot info is stored in reservations
+          const slotInfo = row.c[0]?.v || row.c[1]?.v || ""; // Adjust based on actual data structure
+          return slotInfo === selectedSlot;
+        });
+      }
+
+      // Table selection modal and all related functions removed - no longer needed
+
+      // Get table assignments for a specific booking
+      async function getTableAssignmentsForBooking(
+        bookingId,
+        selectedSlot = null
+      ) {
+        const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const gid = "365103881"; // VenueTableReservation tab GID
+
+        try {
+          // Convert bookingId to string to handle number vs string comparison
+          const bookingIdStr = String(bookingId);
+
+          // Fetch entire sheet and filter locally
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
+
+          console.log(
+            `🔍 Fetching entire VenueTableReservation sheet for booking: ${bookingIdStr}`
+          );
+          console.log("Selected Slot:", selectedSlot);
+          console.log("Query:", query);
+          console.log("URL:", url);
+
+          const response = await fetch(url);
+          const text = await response.text();
+          const jsonText = text.substring(47).slice(0, -2);
+          const data = JSON.parse(jsonText);
+
+          if (data.status === "error") {
+            console.log("❌ Error getting table assignments:", data.errors);
+            return [];
+          }
+
+          // Extract table assignments with local filtering
+          const tableAssignments = [];
+          if (data.table && data.table.rows) {
+            console.log("Total rows in sheet:", data.table.rows.length);
+
+            data.table.rows.forEach((row, index) => {
+              // Skip header row (index 0)
+              if (index === 0) return;
+
+              // Columns: A (Timestamp), B (Booking ID), C (Slot Name), D (Table/Seat)
+              const timestamp = row.c[0]?.v || "";
+              const bookingIdInSheet = String(row.c[1]?.v || ""); // Column B
+              const slotName = row.c[2]?.v || ""; // Column C
+              const tableSeat = row.c[3]?.v || ""; // Column D
+
+              console.log(
+                `Row ${index}: BookingID="${bookingIdInSheet}", Slot="${slotName}", Table="${tableSeat}"`
+              );
+
+              // Check if this row matches our booking ID
+              if (bookingIdInSheet === bookingIdStr) {
+                console.log(`✅ Found matching booking ID: ${bookingIdStr}`);
+
+                if (selectedSlot) {
+                  // Filter by selected slot
+                  if (
+                    String(slotName).toLowerCase() ===
+                    String(selectedSlot).toLowerCase()
+                  ) {
+                    tableAssignments.push({
+                      slot: slotName,
+                      table: tableSeat,
+                    });
+                    console.log(
+                      `✅ Found table assignment: ${tableSeat} for slot ${slotName}`
+                    );
+                  } else {
+                    console.log(
+                      `❌ Slot mismatch: "${slotName}" vs "${selectedSlot}"`
+                    );
+                  }
+                } else {
+                  // Include all assignments for this booking
+                  tableAssignments.push({
+                    slot: slotName,
+                    table: tableSeat,
+                  });
+                  console.log(
+                    `✅ Found table assignment: ${tableSeat} for slot ${slotName}`
+                  );
+                }
+              }
+            });
+          }
+
+          console.log(
+            `Total table assignments for booking ${bookingIdStr}:`,
+            tableAssignments
+          );
+          return tableAssignments;
+        } catch (error) {
+          console.error("❌ Error getting table assignments:", error);
+          return [];
+        }
+      }
+
+      // Get occupied tables for a specific slot
+      async function getOccupiedTablesForSlot(slotName) {
+        const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+        const gid = "365103881"; // VenueTableReservation tab GID
+
+        try {
+          // Query: Get all table assignments for this specific slot
+          const query = encodeURIComponent(`SELECT D WHERE C = '${slotName}'`);
+          const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
+
+          console.log(`🔍 Checking occupied tables for slot: ${slotName}`);
+          console.log("Query:", query);
+          console.log("URL:", url);
+
+          const response = await fetch(url);
+          const text = await response.text();
+          const jsonText = text.substring(47).slice(0, -2);
+          const data = JSON.parse(jsonText);
+
+          if (data.status === "error") {
+            console.log("❌ Error getting occupied tables:", data.errors);
+            return [];
+          }
+
+          // Extract occupied table codes from Column D
+          const occupiedTables = [];
+          if (data.table && data.table.rows) {
+            data.table.rows.forEach((row, index) => {
+              const tableSeat = row.c[0]?.v || ""; // Column D: Table/Seat
+              if (tableSeat) {
+                occupiedTables.push(tableSeat);
+                console.log(`Found occupied table: ${tableSeat}`);
+              }
+            });
+          }
+
+          console.log(
+            `Total occupied tables for slot ${slotName}:`,
+            occupiedTables
+          );
+          return occupiedTables;
+        } catch (error) {
+          console.error("❌ Error getting occupied tables:", error);
+          return [];
+        }
+      }
+
+      // Close manual table selection modal
+      function closeManualTableSelectionModal() {
+        console.log("Attempting to close table selection modal");
+        if (window.currentTableSelectionModal) {
+          console.log("Found modal, removing from DOM");
+          document.body.removeChild(window.currentTableSelectionModal);
+          window.currentTableSelectionModal = null;
+          window.selectedTables = []; // Clear selected tables
+        } else {
+          console.log("No modal found to close");
+          // Fallback: try to find modal by class
+          const modal = document.querySelector(
+            ".fixed.inset-0.bg-black.bg-opacity-50"
+          );
+          if (modal) {
+            console.log("Found modal by class, removing");
+            document.body.removeChild(modal);
+            window.selectedTables = [];
+          }
+        }
+      }
+
+      // Toggle table selection (for multiple selection)
+      async function toggleTableSelection(tableSeat, bookingId, slotName) {
+        if (!window.selectedTables) {
+          window.selectedTables = [];
+        }
+
+        // Get the remaining seats count from the modal
+        const selectedCountElement =
+          window.currentTableSelectionModal?.querySelector("#selectedCount");
+        const maxSelections = window.currentReservationsData?.length || 0;
+
+        // Calculate remaining seats to select (accounting for already assigned seats)
+        const existingUserAssignments = await getTableAssignmentsForBooking(
+          bookingId,
+          slotName
+        );
+        const existingSeatsCount = existingUserAssignments?.length || 0;
+        const remainingSeatsToSelect = maxSelections - existingSeatsCount;
+
+        // Find the button within the current modal only
+        const button = window.currentTableSelectionModal?.querySelector(
+          `[data-table="${tableSeat}"]`
+        );
+
+        if (!button) {
+          console.error(`Button for table ${tableSeat} not found`);
+          return;
+        }
+
+        if (window.selectedTables.includes(tableSeat)) {
+          // Deselect table
+          window.selectedTables = window.selectedTables.filter(
+            (table) => table !== tableSeat
+          );
+          // Reset to unselected state - keep all base classes
+          button.className =
+            "p-3 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-gray-700 table-selection-btn";
+          console.log(`Deselected table: ${tableSeat}`);
+          console.log(`Button classes after deselection:`, button.className);
+        } else {
+          // Check if we can select more tables
+          if (window.selectedTables.length >= maxSelections) {
+            console.log(`Cannot select more than ${maxSelections} tables`);
+            showTableAssignmentStatus(
+              `You can only select up to ${maxSelections} table(s)`,
+              "error"
+            );
+            return;
+          }
+
+          // Select table
+          window.selectedTables.push(tableSeat);
+          // Set to selected state - blue background and white text
+          button.className =
+            "p-3 border border-blue-500 rounded-lg bg-blue-500 text-white text-sm font-medium table-selection-btn";
+          console.log(`Selected table: ${tableSeat}`);
+          console.log(`Button classes after selection:`, button.className);
+        }
+
+        // Update the selection counter
+        if (selectedCountElement) {
+          selectedCountElement.textContent = window.selectedTables.length;
+          console.log(
+            `Counter updated: ${window.selectedTables.length} of ${maxSelections} tables selected`
+          );
+        } else {
+          console.error("Selected count element not found in modal");
+        }
+
+        // Update submit button state
+        const submitBtn = window.currentTableSelectionModal?.querySelector(
+          "#submitTableSelectionBtn"
+        );
+        if (submitBtn) {
+          console.log(
+            `Updating submit button state: ${window.selectedTables.length} of ${maxSelections} tables selected`
+          );
+          console.log(`Button disabled state before:`, submitBtn.disabled);
+
+          if (window.selectedTables.length === maxSelections) {
+            submitBtn.classList.remove("bg-gray-400", "cursor-not-allowed");
+            submitBtn.classList.add("bg-blue-500", "hover:bg-blue-600");
+            submitBtn.disabled = false;
+            console.log(
+              `Submit button enabled - ${window.selectedTables.length} of ${maxSelections} tables selected`
+            );
+          } else {
+            submitBtn.classList.remove("bg-blue-500", "hover:bg-blue-600");
+            submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+            submitBtn.disabled = true;
+            console.log(
+              `Submit button disabled - ${window.selectedTables.length} of ${maxSelections} tables selected`
+            );
+          }
+
+          console.log(`Button disabled state after:`, submitBtn.disabled);
+        } else {
+          console.error("Submit button not found in modal");
+        }
+
+        console.log("Currently selected tables:", window.selectedTables);
+
+        // Debug: Check all buttons in the modal
+        const allButtons = window.currentTableSelectionModal?.querySelectorAll(
+          ".table-selection-btn"
+        );
+        if (allButtons) {
+          console.log("All table buttons in modal:");
+          allButtons.forEach((btn) => {
+            const tableName = btn.getAttribute("data-table");
+            const isSelected = window.selectedTables.includes(tableName);
+            console.log(
+              `Table ${tableName}: selected=${isSelected}, classes=${btn.className}`
+            );
+          });
+        }
+      }
+
+      // Submit multiple table selections
+      async function submitTableSelection(bookingId, slotName) {
+        console.log("🚀 submitTableSelection called with:");
+        console.log("- bookingId:", bookingId);
+        console.log("- slotName:", slotName);
+        console.log("- selectedTables:", window.selectedTables);
+        console.log(
+          "- currentReservationsData:",
+          window.currentReservationsData
+        );
+
+        if (!window.selectedTables || window.selectedTables.length === 0) {
+          console.log("❌ No tables selected");
+          showTableAssignmentStatus(
+            "Please select at least one table",
+            "error"
+          );
+          return;
+        }
+
+        // Validate that selected tables match the remaining seats needed
+        const maxSelections = window.currentReservationsData?.length || 0;
+        const existingUserAssignments = await getTableAssignmentsForBooking(
+          bookingId,
+          slotName
+        );
+        const existingSeatsCount = existingUserAssignments?.length || 0;
+        const remainingSeatsToSelect = maxSelections - existingSeatsCount;
+
+        console.log("- maxSelections:", maxSelections);
+        console.log("- existingSeatsCount:", existingSeatsCount);
+        console.log("- remainingSeatsToSelect:", remainingSeatsToSelect);
+        console.log("- selectedTables.length:", window.selectedTables.length);
+
+        if (window.selectedTables.length !== remainingSeatsToSelect) {
+          console.log("❌ Table count mismatch");
+          showTableAssignmentStatus(
+            `Please select exactly ${remainingSeatsToSelect} table(s) to complete your booking`,
+            "error"
+          );
+          return;
+        }
+
+        // Store selected tables before closing modal (to prevent clearing)
+        const tablesToSubmit = [...window.selectedTables];
+        console.log(`Tables to submit:`, tablesToSubmit);
+
+        closeManualTableSelectionModal();
+
+        try {
+          console.log(
+            `Submitting ${tablesToSubmit.length} table assignments for booking ${bookingId}`
+          );
+
+          // Submit each table assignment
+          for (const tableSeat of tablesToSubmit) {
+            const formUrl =
+              "https://docs.google.com/forms/d/e/1FAIpQLScr_5q__XyAbcK3wfBdKCEFwN-iDD6M21jU3U9Ss0u2FQRH0g/formResponse";
+
+            const formData = new FormData();
+            formData.append("entry.863334335", bookingId); // Booking ID
+            formData.append("entry.1779047001", slotName); // Slot Name
+            formData.append("entry.1374097765", tableSeat); // Table/Seat
+
+            console.log(`Submitting table assignment for ${tableSeat}:`);
+            console.log(`- Booking ID: ${bookingId}`);
+            console.log(`- Slot Name: ${slotName}`);
+            console.log(`- Table/Seat: ${tableSeat}`);
+            console.log(`- Form URL: ${formUrl}`);
+
+            console.log(`Attempting to submit form for ${tableSeat}...`);
+
+            try {
+              // Method 1: Try fetch with no-cors
+              const response = await fetch(formUrl, {
+                method: "POST",
+                body: formData,
+                mode: "no-cors",
+              });
+
+              console.log(`✅ Table assignment submitted: ${tableSeat}`);
+              console.log(`Response status: ${response.status}`);
+              console.log(`Response type: ${response.type}`);
+
+              // Since no-cors mode doesn't give us response details, we'll assume success
+              // but add a small delay to ensure the form submission completes
+              await new Promise((resolve) => setTimeout(resolve, 500));
+            } catch (error) {
+              console.error(
+                `❌ Error submitting form for ${tableSeat}:`,
+                error
+              );
+
+              // Method 2: Try alternative submission method
+              console.log(
+                `Trying alternative submission method for ${tableSeat}...`
+              );
+              try {
+                // Create a hidden iframe to submit the form
+                const iframe = document.createElement("iframe");
+                iframe.style.display = "none";
+                document.body.appendChild(iframe);
+
+                // Create form element
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = formUrl;
+                form.target = iframe.name;
+
+                // Add form fields
+                const fields = [
+                  { name: "entry.863334335", value: bookingId },
+                  { name: "entry.1779047001", value: slotName },
+                  { name: "entry.1374097765", value: tableSeat },
+                ];
+
+                fields.forEach((field) => {
+                  const input = document.createElement("input");
+                  input.type = "hidden";
+                  input.name = field.name;
+                  input.value = field.value;
+                  form.appendChild(input);
+                });
+
+                // Submit form
+                document.body.appendChild(form);
+                form.submit();
+
+                // Clean up
+                setTimeout(() => {
+                  document.body.removeChild(form);
+                  document.body.removeChild(iframe);
+                }, 1000);
+
+                console.log(
+                  `✅ Alternative submission completed for ${tableSeat}`
+                );
+              } catch (altError) {
+                console.error(
+                  `❌ Alternative submission also failed for ${tableSeat}:`,
+                  altError
+                );
+                throw error; // Throw original error
+              }
+            }
+          }
+
+          const tableList = tablesToSubmit.join(", ");
+          const successMessage =
+            existingSeatsCount > 0
+              ? `Additional seats assigned: ${tableList} (Total: ${
+                  existingSeatsCount + tablesToSubmit.length
+                } seats)`
+              : `Assigned to: ${tableList}`;
+          console.log(`Showing success message: ${successMessage}`);
+          showTableAssignmentStatus(successMessage, "success");
+
+          // Clear selected tables
+          window.selectedTables = [];
+
+          // NOW log the entry after successful table assignment
+          console.log(
+            "--- Logging entry after successful table assignment ---"
+          );
+
+          const logResult = await logEntry(bookingId, slotName);
+          console.log("Entry log result:", logResult);
+
+          if (logResult === "success") {
+            console.log("✅ Entry logged successfully after table assignment");
+            // Show final success message
+            showStatus(
+              "Entry successful! Click 'View Details' to see reservation info.",
+              "success"
+            );
+            showViewDetailsButton(false); // Show View Details button after table assignment
+          } else {
+            console.log("❌ Error logging entry after table assignment");
+            showStatus(
+              "Entry logged but table assignment may have failed",
+              "warning"
+            );
+          }
+        } catch (error) {
+          console.error("❌ Error assigning tables:", error);
+          showTableAssignmentStatus("Error assigning tables", "error");
+        }
+      }
+
+      // Test form submission (for debugging)
+      async function testFormSubmission() {
+        const testBookingId = "TEST123";
+        const testSlotName = "Day 1 - 22 Aug - Slot 1";
+        const testTableSeat = "A1";
+
+        const formUrl =
+          "https://docs.google.com/forms/d/e/1FAIpQLScr_5q__XyAbcK3wfBdKCEFwN-iDD6M21jU3U9Ss0u2FQRH0g/formResponse";
+
+        const formData = new FormData();
+        formData.append("entry.863334335", testBookingId);
+        formData.append("entry.1779047001", testSlotName);
+        formData.append("entry.1374097765", testTableSeat);
+
+        console.log("🧪 Testing form submission...");
+        console.log("Form URL:", formUrl);
+        console.log("Form Data:", {
+          bookingId: testBookingId,
+          slotName: testSlotName,
+          tableSeat: testTableSeat,
+        });
+
+        try {
+          const response = await fetch(formUrl, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+          });
+
+          console.log("✅ Test form submission completed");
+          console.log("Response status:", response.status);
+          console.log("Response type:", response.type);
+        } catch (error) {
+          console.error("❌ Test form submission failed:", error);
+        }
+      }
+
+      // Legacy function for single table assignment (kept for compatibility)
+      async function selectTableForAssignment(tableSeat, bookingId, slotName) {
+        closeManualTableSelectionModal();
+
+        try {
+          // Submit to table assignment form
+          const formUrl =
+            "https://docs.google.com/forms/d/e/1FAIpQLScr_5q__XyAbcK3wfBdKCEFwN-iDD6M21jU3U9Ss0u2FQRH0g/formResponse";
+
+          const formData = new FormData();
+          formData.append("entry.863334335", bookingId); // Booking ID
+          formData.append("entry.1779047001", slotName); // Slot Name
+          formData.append("entry.1374097765", tableSeat); // Table/Seat
+
+          const response = await fetch(formUrl, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+          });
+
+          console.log(`✅ Table assignment submitted: ${tableSeat}`);
+          showTableAssignmentStatus(`Assigned to ${tableSeat}`, "success");
+        } catch (error) {
+          console.error("❌ Error assigning table:", error);
+          showTableAssignmentStatus("Error assigning table", "error");
         }
       }
 
@@ -1061,6 +2408,83 @@
           authenticate();
         }
       });
+
+      // Handle manual entry keypress (Enter key)
+      // Handle login keypress
+      function handleLoginKeypress(event) {
+        if (event.key === "Enter") {
+          authenticate();
+        }
+      }
+
+      // Show manual entry modal
+      function showManualEntryModal() {
+        const modal = document.getElementById("manualEntryModal");
+        const input = document.getElementById("manualBookingId");
+
+        // Clear previous input
+        input.value = "";
+
+        // Show modal
+        modal.classList.remove("hidden");
+
+        // Focus on input
+        setTimeout(() => {
+          input.focus();
+        }, 100);
+      }
+
+      // Close manual entry modal
+      function closeManualEntryModal() {
+        const modal = document.getElementById("manualEntryModal");
+        modal.classList.add("hidden");
+      }
+
+      // Handle manual entry keypress
+      function handleManualEntryKeypress(event) {
+        if (event.key === "Enter") {
+          processManualEntry();
+        }
+      }
+
+      // Update slot selection display
+      function updateSlotSelection() {
+        const slotSelector = document.getElementById("slotSelector");
+        const selectedSlotInfo = document.getElementById("selectedSlotInfo");
+        const selectedSlotText = document.getElementById("selectedSlotText");
+
+        if (slotSelector.value) {
+          selectedSlotText.textContent = `Currently scanning for: ${slotSelector.value}`;
+          selectedSlotInfo.classList.remove("hidden");
+        } else {
+          selectedSlotInfo.classList.add("hidden");
+        }
+      }
+
+      // Process manual entry
+      function processManualEntry() {
+        const bookingId = document
+          .getElementById("manualBookingId")
+          .value.trim();
+
+        if (!bookingId) {
+          showStatus("Please enter a booking ID", "error");
+          return;
+        }
+
+        // Check if slot is selected
+        const selectedSlot = document.getElementById("slotSelector").value;
+        if (!selectedSlot) {
+          showStatus("Please select a slot first", "error");
+          return;
+        }
+
+        // Close the modal
+        closeManualEntryModal();
+
+        // Process the entry using the same logic as QR scan
+        processEntry(bookingId, selectedSlot);
+      }
 
       // Initialize
       document.addEventListener("DOMContentLoaded", function () {
