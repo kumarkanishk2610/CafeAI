@@ -427,25 +427,12 @@
             class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
           >
             <div
-              class="mobile-summary-number sm:text-2xl font-bold text-white"
-              id="totalOrders"
-            >
-              -
-            </div>
-            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
-              Total Orders
-            </div>
-          </div>
-          <div
-            class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
-          >
-            <div
               class="mobile-summary-number sm:text-2xl font-bold text-orange-400"
               id="totalOmurice"
             >
               -
             </div>
-            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
+            <div class="mobile-summary-label sm:text-white sm:text-sm">
               Omurice
             </div>
           </div>
@@ -458,7 +445,7 @@
             >
               -
             </div>
-            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
+            <div class="mobile-summary-label sm:text-white sm:text-sm">
               Curry Rice
             </div>
           </div>
@@ -467,12 +454,25 @@
           >
             <div
               class="mobile-summary-number sm:text-2xl font-bold text-blue-400"
-              id="totalDrinks"
+              id="totalIcedTea"
             >
               -
             </div>
-            <div class="mobile-summary-label sm:text-gray-400 sm:text-sm">
-              Drinks
+            <div class="mobile-summary-label sm:text-white sm:text-sm">
+              Iced Tea
+            </div>
+          </div>
+          <div
+            class="glass-effect rounded-xl mobile-summary p-3 sm:p-4 text-center mobile-card"
+          >
+            <div
+              class="mobile-summary-number sm:text-2xl font-bold text-gray-400"
+              id="totalPlainWater"
+            >
+              -
+            </div>
+            <div class="mobile-summary-label sm:text-white sm:text-sm">
+              Plain Water
             </div>
           </div>
         </div>
@@ -711,16 +711,26 @@
         try {
           showLoadingModal();
 
-          // Fetch food items data
-          const foodItemsData = await fetchFoodItemsData(currentSlot);
-
-          // Fetch table reservations data
-          const tableReservationsData = await fetchTableReservationsData(
-            currentSlot
-          );
+          // Fetch all required data
+          const [
+            foodItemsData,
+            tableReservationsData,
+            transactionIdsData,
+            paymentTrackerData,
+          ] = await Promise.all([
+            fetchFoodItemsData(currentSlot),
+            fetchTableReservationsData(currentSlot),
+            fetchTransactionIdsData(),
+            fetchPaymentTrackerData(),
+          ]);
 
           // Combine and display data
-          displayKitchenData(foodItemsData, tableReservationsData);
+          displayKitchenData(
+            foodItemsData,
+            tableReservationsData,
+            transactionIdsData,
+            paymentTrackerData
+          );
 
           hideLoadingModal();
         } catch (error) {
@@ -779,6 +789,68 @@
         return data.table?.rows || [];
       }
 
+      // Fetch transaction IDs data
+      async function fetchTransactionIdsData() {
+        const response = await fetch(
+          `https://docs.google.com/spreadsheets/d/1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc/gviz/tq?tqx=out:json&tq=SELECT%20B%20WHERE%20B%20IS%20NOT%20NULL&gid=318313778`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const data = JSON.parse(text.substring(47, text.length - 2));
+
+        if (data.status === "error") {
+          throw new Error(
+            `Query error: ${data.errors?.[0]?.message || "Unknown error"}`
+          );
+        }
+
+        console.log("Transaction IDs Data:", data.table?.rows);
+        return data.table?.rows || [];
+      }
+
+      // Fetch payment tracker data
+      async function fetchPaymentTrackerData() {
+        const response = await fetch(
+          `https://docs.google.com/spreadsheets/d/1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc/gviz/tq?tqx=out:json&tq=SELECT%20*&gid=364335196`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const data = JSON.parse(text.substring(47, text.length - 2));
+
+        if (data.status === "error") {
+          throw new Error(
+            `Query error: ${data.errors?.[0]?.message || "Unknown error"}`
+          );
+        }
+
+        console.log("Raw Payment Tracker Data:", data.table?.rows);
+        console.log("Payment Tracker Columns:", data.table?.cols);
+
+        // Process all data locally
+        const allRows = data.table?.rows || [];
+        console.log("Total rows in Payment Tracker:", allRows.length);
+
+        if (allRows.length > 0) {
+          console.log("Sample rows from Payment Tracker:");
+          allRows.slice(0, 3).forEach((row, index) => {
+            console.log(
+              `Row ${index}:`,
+              row.c.map((col, colIndex) => `Col${colIndex}:${col?.v}`)
+            );
+          });
+        }
+
+        return allRows;
+      }
+
       // Fetch table reservations data
       async function fetchTableReservationsData(slot) {
         const response = await fetch(
@@ -805,10 +877,77 @@
       }
 
       // Display kitchen data
-      function displayKitchenData(foodItemsData, tableReservationsData) {
+      function displayKitchenData(
+        foodItemsData,
+        tableReservationsData,
+        transactionIdsData,
+        paymentTrackerData
+      ) {
         console.log("Processing data...");
         console.log("Food Items Data:", foodItemsData);
         console.log("Table Reservations Data:", tableReservationsData);
+        console.log("Transaction IDs Data:", transactionIdsData);
+        console.log("Payment Tracker Data:", paymentTrackerData);
+        console.log("Payment Tracker Data Length:", paymentTrackerData.length);
+        if (paymentTrackerData.length > 0) {
+          console.log("First row sample:", paymentTrackerData[0]);
+          console.log(
+            "All columns in first row:",
+            paymentTrackerData[0].c.map(
+              (col, index) => `Column ${index}: ${col?.v}`
+            )
+          );
+        }
+        console.log(
+          "Payment Tracker Data Details:",
+          paymentTrackerData.map((row) => ({
+            bookingId: row.c[0]?.v,
+            paymentConfirmed: row.c[1]?.v,
+            rawValue: row.c[1],
+            allColumns: row.c.map((col, index) => `Col${index}:${col?.v}`),
+          }))
+        );
+
+        // Create a set of valid booking IDs from transaction IDs
+        const validBookingIds = new Set();
+        transactionIdsData.forEach((row) => {
+          const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
+          if (bookingId) {
+            validBookingIds.add(bookingId);
+          }
+        });
+
+        console.log("Valid Booking IDs:", Array.from(validBookingIds));
+
+        // Create a map of booking ID to payment confirmation status
+        const paymentStatusMap = {};
+        paymentTrackerData.forEach((row) => {
+          const bookingId = row.c[0]?.v || ""; // Column A - Booking ID
+          const paymentValue = row.c[4]?.v; // Column E - Payment Confirmation (5th column, index 4)
+          const paymentValueType = typeof paymentValue;
+          const paymentConfirmed =
+            paymentValue === "TRUE" ||
+            paymentValue === true ||
+            paymentValue === "true" ||
+            paymentValue === "True" ||
+            paymentValue === "YES" ||
+            paymentValue === "Yes" ||
+            paymentValue === "yes";
+          console.log(
+            `Payment status for ${bookingId}: raw=${paymentValue}, type=${paymentValueType}, parsed=${paymentConfirmed}`
+          );
+          if (bookingId) {
+            paymentStatusMap[bookingId] = paymentConfirmed;
+          }
+        });
+
+        console.log("Payment Status Map:", paymentStatusMap);
+        console.log(
+          "Payment Status Map Details:",
+          Object.entries(paymentStatusMap).map(
+            ([id, status]) => `${id}: ${status}`
+          )
+        );
 
         // Create a map of booking ID to table/seat
         const tableMap = {};
@@ -834,6 +973,13 @@
 
         foodItemsData.forEach((row) => {
           const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
+
+          // Skip if booking ID is not in valid transaction IDs
+          if (!validBookingIds.has(bookingId)) {
+            console.log(`Skipping invalid booking ID: ${bookingId}`);
+            return;
+          }
+
           const omurice = parseInt(row.c[2]?.v || 0); // Column D - Omurice Qty
           const curryRice = parseInt(row.c[3]?.v || 0); // Column E - Curry Rice Qty
           const icedTea = parseInt(row.c[4]?.v || 0); // Column F - Iced Tea Qty
@@ -843,6 +989,10 @@
           console.log(`Processing booking: ${bookingId}, items: ${totalItems}`);
 
           if (totalItems > 0) {
+            const paymentConfirmed = paymentStatusMap[bookingId] || false;
+            console.log(
+              `Order ${bookingId}: payment status = ${paymentConfirmed}`
+            );
             orders.push({
               bookingId,
               omurice,
@@ -851,6 +1001,7 @@
               plainWater,
               totalItems,
               tables: tableMap[bookingId] || [],
+              paymentConfirmed: paymentConfirmed,
             });
 
             totalOmurice += omurice;
@@ -859,11 +1010,27 @@
           }
         });
 
+        // Calculate individual drink counts
+        let totalIcedTea = 0;
+        let totalPlainWater = 0;
+        foodItemsData.forEach((row) => {
+          const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
+
+          // Skip if booking ID is not in valid transaction IDs
+          if (!validBookingIds.has(bookingId)) {
+            return;
+          }
+
+          totalIcedTea += parseInt(row.c[4]?.v || 0); // Column F - Iced Tea Qty
+          totalPlainWater += parseInt(row.c[5]?.v || 0); // Column G - Plain Water Qty
+        });
+
         // Update summary cards
-        document.getElementById("totalOrders").textContent = orders.length;
         document.getElementById("totalOmurice").textContent = totalOmurice;
         document.getElementById("totalCurryRice").textContent = totalCurryRice;
-        document.getElementById("totalDrinks").textContent = totalDrinks;
+        document.getElementById("totalIcedTea").textContent = totalIcedTea;
+        document.getElementById("totalPlainWater").textContent =
+          totalPlainWater;
 
         // Create table cards
         const tableCardsContainer = document.getElementById(
@@ -947,34 +1114,65 @@
                 ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Seated</span>'
                 : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">Pending</span>';
 
+            const paymentStatus = order.paymentConfirmed
+              ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">✅ Paid</span>'
+              : '<span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">❌ Unpaid</span>';
+
             return `
                <div class="glass-effect rounded-lg p-3 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300">
                  <div class="flex items-center justify-between mb-3">
                    <div class="flex items-center gap-3">
-                     <span class="text-white font-mono text-sm">${order.bookingId}</span>
+                     <span class="text-white font-mono text-sm">${
+                       order.bookingId
+                     }</span>
                      <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">${tableSeats}</span>
                    </div>
                    <div class="flex items-center gap-2">
                      ${status}
+                     ${paymentStatus}
                    </div>
                  </div>
                  <div class="grid grid-cols-2 gap-3 text-xs">
+                   ${
+                     order.omurice > 0
+                       ? `
                    <div class="flex justify-between items-center">
                      <span class="text-orange-400">Omurice:</span>
                      <span class="text-white font-bold">${order.omurice}</span>
                    </div>
+                   `
+                       : ""
+                   }
+                   ${
+                     order.curryRice > 0
+                       ? `
                    <div class="flex justify-between items-center">
                      <span class="text-yellow-400">Curry:</span>
                      <span class="text-white font-bold">${order.curryRice}</span>
                    </div>
+                   `
+                       : ""
+                   }
+                   ${
+                     order.icedTea > 0
+                       ? `
                    <div class="flex justify-between items-center">
                      <span class="text-blue-400">Tea:</span>
                      <span class="text-white font-bold">${order.icedTea}</span>
                    </div>
+                   `
+                       : ""
+                   }
+                   ${
+                     order.plainWater > 0
+                       ? `
                    <div class="flex justify-between items-center">
                      <span class="text-gray-400">Water:</span>
                      <span class="text-white font-bold">${order.plainWater}</span>
                    </div>
+                   `
+                       : ""
+                   }
                  </div>
                </div>
              `;
@@ -984,10 +1182,10 @@
 
       // Clear kitchen data
       function clearKitchenData() {
-        document.getElementById("totalOrders").textContent = "-";
         document.getElementById("totalOmurice").textContent = "-";
         document.getElementById("totalCurryRice").textContent = "-";
-        document.getElementById("totalDrinks").textContent = "-";
+        document.getElementById("totalIcedTea").textContent = "-";
+        document.getElementById("totalPlainWater").textContent = "-";
 
         document.getElementById("ordersListContainer").innerHTML = `
            <div class="text-center py-8 text-gray-500">
