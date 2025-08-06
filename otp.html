@@ -172,7 +172,7 @@
                   <button
                     type="button"
                     id="sendOtpBtn"
-                    class="w-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white px-4 py-2 rounded-xl font-semibold shadow card-hover"
+                    class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-4 py-3 rounded-xl font-semibold shadow-lg card-hover transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-300 focus:ring-opacity-50"
                   >
                     Send OTP
                   </button>
@@ -302,9 +302,9 @@
         }
       })();
       const OTP_FORM_URL =
-        "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
-      const OTP_BOOKING_ENTRY = "entry.2132914483";
-      const OTP_EMAIL_ENTRY = "entry.187307928";
+        "https://docs.google.com/forms/d/e/1FAIpQLSemxmJ85jxEP1sXmlUpzSzAmB54XcJvg1tmtDbor9QpELGRfg/formResponse";
+      const OTP_BOOKING_ENTRY = "entry.777211195";
+      const OTP_EMAIL_ENTRY = "entry.1068172299";
       let otpSent = false;
       document.getElementById("sendOtpBtn").onclick = async function () {
         if (!otpSent) {
