@@ -962,7 +962,8 @@
         console.log("Final table map:", tableMap);
 
         // Process food items data
-        const orders = [];
+        const paidOrders = [];
+        const unpaidOrders = [];
         let totalOmurice = 0;
         let totalCurryRice = 0;
         let totalDrinks = 0;
@@ -989,7 +990,8 @@
             console.log(
               `Order ${bookingId}: payment status = ${paymentConfirmed}`
             );
-            orders.push({
+
+            const orderData = {
               bookingId,
               omurice,
               curryRice,
@@ -998,27 +1000,27 @@
               totalItems,
               tables: tableMap[bookingId] || [],
               paymentConfirmed: paymentConfirmed,
-            });
+            };
 
-            totalOmurice += omurice;
-            totalCurryRice += curryRice;
-            totalDrinks += icedTea + plainWater;
+            // Separate paid and unpaid orders
+            if (paymentConfirmed) {
+              paidOrders.push(orderData);
+              // Only add to totals if paid
+              totalOmurice += omurice;
+              totalCurryRice += curryRice;
+              totalDrinks += icedTea + plainWater;
+            } else {
+              unpaidOrders.push(orderData);
+            }
           }
         });
 
-        // Calculate individual drink counts
+        // Calculate individual drink counts (only for paid orders)
         let totalIcedTea = 0;
         let totalPlainWater = 0;
-        foodItemsData.forEach((row) => {
-          const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
-
-          // Skip if booking ID is not in valid transaction IDs
-          if (!validBookingIds.has(bookingId)) {
-            return;
-          }
-
-          totalIcedTea += parseInt(row.c[4]?.v || 0); // Column F - Iced Tea Qty
-          totalPlainWater += parseInt(row.c[5]?.v || 0); // Column G - Plain Water Qty
+        paidOrders.forEach((order) => {
+          totalIcedTea += order.icedTea;
+          totalPlainWater += order.plainWater;
         });
 
         // Update summary cards
@@ -1028,12 +1030,15 @@
         document.getElementById("totalPlainWater").textContent =
           totalPlainWater;
 
+        // Combine all orders for processing
+        const allOrders = [...paidOrders, ...unpaidOrders];
+
         // Create table cards
         const tableCardsContainer = document.getElementById(
           "tableCardsContainer"
         );
 
-        if (orders.length === 0) {
+        if (allOrders.length === 0) {
           tableCardsContainer.innerHTML = `
              <div class="col-span-full text-center py-8 text-gray-500">
                No orders found for this slot
@@ -1052,8 +1057,8 @@
           F: { seats: [], orders: [], totalItems: 0 },
         };
 
-        // Process orders and assign to tables
-        orders.forEach((order) => {
+        // Process orders and assign to tables (only paid orders for table assignment)
+        paidOrders.forEach((order) => {
           order.tables.forEach((tableSeat) => {
             const tableLetter = tableSeat.charAt(0); // A, B, C, D, E, or F
             const seatNumber = tableSeat.charAt(1); // 1 or 2
@@ -1073,7 +1078,7 @@
           "ordersListContainer"
         );
 
-        if (orders.length === 0) {
+        if (allOrders.length === 0) {
           ordersListContainer.innerHTML = `
              <div class="text-center py-8 text-gray-500">
                No orders found for this slot
@@ -1082,8 +1087,8 @@
           return;
         }
 
-        // Sort orders by seat assignment
-        const sortedOrders = orders.sort((a, b) => {
+        // Sort paid orders by seat assignment
+        const sortedPaidOrders = paidOrders.sort((a, b) => {
           // If both have seats, sort alphabetically
           if (a.tables.length > 0 && b.tables.length > 0) {
             return a.tables.join(", ").localeCompare(b.tables.join(", "));
@@ -1099,7 +1104,13 @@
           return String(a.bookingId).localeCompare(String(b.bookingId));
         });
 
-        ordersListContainer.innerHTML = sortedOrders
+        // Sort unpaid orders by booking ID
+        const sortedUnpaidOrders = unpaidOrders.sort((a, b) => {
+          return String(a.bookingId).localeCompare(String(b.bookingId));
+        });
+
+        // Create HTML for paid orders
+        const paidOrdersHTML = sortedPaidOrders
           .map((order) => {
             const tableSeats =
               order.tables.length > 0
@@ -1174,6 +1185,97 @@
              `;
           })
           .join("");
+
+        // Create HTML for unpaid orders
+        const unpaidOrdersHTML = sortedUnpaidOrders
+          .map((order) => {
+            const tableSeats =
+              order.tables.length > 0
+                ? order.tables.join(", ")
+                : "Not assigned";
+            const status =
+              order.tables.length > 0
+                ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Seated</span>'
+                : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">Pending</span>';
+
+            const paymentStatus = order.paymentConfirmed
+              ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">✅ Paid</span>'
+              : '<span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">❌ Unpaid</span>';
+
+            return `
+               <div class="glass-effect rounded-lg p-3 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300 opacity-60">
+                 <div class="flex items-center justify-between mb-3">
+                   <div class="flex items-center gap-3">
+                     <span class="text-white font-mono text-sm">${
+                       order.bookingId
+                     }</span>
+                     <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">${tableSeats}</span>
+                   </div>
+                   <div class="flex items-center gap-2">
+                     ${status}
+                     ${paymentStatus}
+                   </div>
+                 </div>
+                 <div class="grid grid-cols-2 gap-3 text-xs">
+                   ${
+                     order.omurice > 0
+                       ? `
+                   <div class="flex justify-between items-center">
+                     <span class="text-orange-400">Omurice:</span>
+                     <span class="text-white font-bold">${order.omurice}</span>
+                   </div>
+                   `
+                       : ""
+                   }
+                   ${
+                     order.curryRice > 0
+                       ? `
+                   <div class="flex justify-between items-center">
+                     <span class="text-yellow-400">Curry:</span>
+                     <span class="text-white font-bold">${order.curryRice}</span>
+                   </div>
+                   `
+                       : ""
+                   }
+                   ${
+                     order.icedTea > 0
+                       ? `
+                   <div class="flex justify-between items-center">
+                     <span class="text-blue-400">Tea:</span>
+                     <span class="text-white font-bold">${order.icedTea}</span>
+                   </div>
+                   `
+                       : ""
+                   }
+                   ${
+                     order.plainWater > 0
+                       ? `
+                   <div class="flex justify-between items-center">
+                     <span class="text-gray-400">Water:</span>
+                     <span class="text-white font-bold">${order.plainWater}</span>
+                   </div>
+                   `
+                       : ""
+                   }
+                 </div>
+               </div>
+             `;
+          })
+          .join("");
+
+        // Combine paid and unpaid orders with separator
+        const separatorHTML =
+          unpaidOrders.length > 0
+            ? `
+          <div class="text-center py-4">
+            <div class="text-gray-500 text-sm font-semibold">Unpaid Orders</div>
+            <div class="w-full h-px bg-gray-600 mt-2"></div>
+          </div>
+        `
+            : "";
+
+        ordersListContainer.innerHTML =
+          paidOrdersHTML + separatorHTML + unpaidOrdersHTML;
       }
 
       // Clear kitchen data

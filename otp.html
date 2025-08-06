@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Kyaa! – OTP Verification</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          -60deg,
+          #fff1f2 0%,
+          #ffe4e6 25%,
+          #fce7f3 50%,
+          #ffe5f8 75%,
+          #fff1f2 100%
+        );
+        background-size: 400% 400%;
+        animation: grad 18s ease infinite;
+      }
+      @keyframes grad {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .glow-animation {
+        animation: glow 2s ease-in-out infinite;
+      }
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 5px rgba(236, 72, 153, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(236, 72, 153, 0.8);
+        }
+        100% {
+          box-shadow: 0 0 5px rgba(236, 72, 153, 0.4);
+        }
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .input-focus {
+        transition: all 0.3s ease;
+      }
+      .input-focus:focus {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <header
+      class="fixed inset-x-0 top-0 bg-white/60 backdrop-blur-md shadow-sm z-40"
+    >
+      <div class="flex items-center h-14 px-4">
+        <a href="index.html" class="flex items-center hover:opacity-80">
+          <img src="logo.png" class="h-10 w-10 rounded-full" alt="logo" />
+          <h1
+            class="ml-2 text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent uppercase tracking-wide"
+          >
+            Cafe Kyaa!
+          </h1>
+        </a>
+        <span
+          class="ml-auto text-xs font-medium text-rose-600 whitespace-nowrap break-words"
+          >Anime India 2025 · Mumbai</span
+        >
+      </div>
+    </header>
+    <main class="pt-20 flex flex-col items-center p-4">
+      <div class="w-full max-w-md space-y-6">
+        <div class="fade-in">
+          <div
+            class="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-white to-pink-50 p-6 shadow-2xl border border-pink-100"
+          >
+            <div class="relative z-10">
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg"
+                >
+                  <svg
+                    class="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold text-gray-800 mb-1">
+                    OTP Verification
+                  </h2>
+                  <p class="text-gray-600 font-medium">
+                    Cafe Kyaa! Email Verification
+                  </p>
+                </div>
+              </div>
+              <form id="otpForm" class="space-y-4">
+                <div class="flex flex-col gap-2">
+                  <div
+                    class="bg-pink-50 border border-pink-200 rounded-xl p-3 mb-2"
+                  >
+                    <div class="text-xs text-gray-500 font-semibold">
+                      Booking ID
+                    </div>
+                    <div
+                      id="bookingIdDisplay"
+                      class="font-bold text-lg text-pink-700 select-all"
+                    ></div>
+                    <div class="text-xs text-gray-500 font-semibold mt-2">
+                      Email
+                    </div>
+                    <div
+                      id="emailDisplay"
+                      class="font-medium text-gray-700 select-all"
+                    ></div>
+                  </div>
+                </div>
+                <div class="flex gap-2 flex-col sm:flex-row mt-2">
+                  <button
+                    type="button"
+                    id="sendOtpBtn"
+                    class="w-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white px-4 py-2 rounded-xl font-semibold shadow card-hover"
+                  >
+                    Send OTP
+                  </button>
+                                     <div id="otpInputContainer" class="flex flex-nowrap gap-1 justify-center overflow-x-auto hidden w-full max-w-full">
+                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="0" />
+                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="1" />
+                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="2" />
+                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="3" />
+                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="4" />
+                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="5" />
+                   </div>
+                  <button
+                    type="button"
+                    id="verifyOtpBtn"
+                    class="bg-gradient-to-r from-green-400 to-emerald-400 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-2 rounded-xl font-semibold shadow card-hover hidden"
+                  >
+                    Verify OTP
+                  </button>
+                </div>
+                                 <div id="otpStatus" class="text-sm mt-1"></div>
+                 <div
+                   id="otpHelpTip"
+                   class="text-xs text-gray-500 mt-2 bg-yellow-50 border border-yellow-200 rounded p-2 hidden"
+                 >
+                   <span class="font-semibold">Did not receive OTP?</span> Verify
+                   that you have entered the right email, and check your spam
+                   folder once.
+                 </div>
+                <hr></hr>
+                <div class="mt-8 flex items-start gap-3">
+                  <div
+                    class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+                  >
+                    <svg
+                      class="w-5 h-5 text-blue-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-800 mb-1 text-sm">
+                      Need Help?
+                    </h4>
+                    <p class="text-xs text-gray-600 break-words">
+                      You can reach out to us by raising a ticket via
+                      <a
+                        href="https://forms.gle/e5BpBj6z9hTnk1Kt7"
+                        target="_blank"
+                        class="text-blue-600 underline hover:text-blue-800 font-medium"
+                        >this form</a
+                      >. We will try to get back to you as soon as possible.
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      function hash6DigitNumber(num) {
+        const str = num.toString().padStart(6, "0");
+        const primes = [31, 37, 41, 43, 47, 53];
+        let hash = 0;
+        for (let i = 0; i < 6; i++) {
+          hash += str.charCodeAt(i) * primes[i];
+        }
+        const result = (hash % 1000000).toString().padStart(6, "0");
+        return result;
+      }
+      const SHEET_ID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+      const SHEET_GID = "2113355260";
+      const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingId = urlParams.get("bookingId");
+      document.getElementById("bookingIdDisplay").innerText = bookingId || "";
+      async function fetchEmailForBookingId(bookingId) {
+        const query = encodeURIComponent("SELECT B, E");
+        const url = SHEET_URL + `&tq=${query}`;
+        console.log(
+          "[OTP] Fetching ALL emails and hashes for local search. BookingId:",
+          bookingId
+        );
+        console.log("[OTP] Fetch URL:", url);
+        try {
+          const res = await fetch(url);
+          const text = await res.text();
+          console.log("[OTP] Raw response:", text.substring(0, 200));
+          const json = JSON.parse(text.substring(47, text.length - 2));
+          console.log("[OTP] Parsed JSON:", json);
+          if (json.table.rows.length > 0) {
+            for (const row of json.table.rows) {
+              const email = row.c[0]?.v;
+              const hash = row.c[1]?.v;
+              console.log(`[OTP] Row: email=${email}, hash=${hash}`);
+              if (String(hash).trim() === String(bookingId).trim()) {
+                console.log("[OTP] Found email for bookingId:", email);
+                return email;
+              }
+            }
+            console.log("[OTP] No matching bookingId found in local data");
+          } else {
+            console.log("[OTP] No rows in sheet");
+          }
+        } catch (e) {
+          console.error("[OTP] Error fetching email:", e);
+        }
+        return "";
+      }
+      (async () => {
+        if (bookingId) {
+          const email = await fetchEmailForBookingId(bookingId);
+          document.getElementById("emailDisplay").innerText = email;
+          window._otpEmail = email;
+          if (!email) {
+            document.getElementById("otpStatus").innerText =
+              "❌ Email not found for this Booking ID. Please check your link or contact support.";
+            document.getElementById("sendOtpBtn").disabled = true;
+          }
+        }
+      })();
+      const OTP_FORM_URL =
+        "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
+      const OTP_BOOKING_ENTRY = "entry.2132914483";
+      const OTP_EMAIL_ENTRY = "entry.187307928";
+      let otpSent = false;
+      document.getElementById("sendOtpBtn").onclick = async function () {
+        if (!otpSent) {
+          const email = window._otpEmail || "";
+          if (!bookingId || !email) {
+            document.getElementById("otpStatus").innerText =
+              "Booking ID or Email missing.";
+            return;
+          }
+                     document.getElementById("sendOtpBtn").classList.add("hidden");
+           document.getElementById("otpInputContainer").classList.remove("hidden");
+           document.getElementById("verifyOtpBtn").classList.remove("hidden");
+           document.querySelector('.otp-digit[data-index="0"]').focus();
+          const formData = new FormData();
+          formData.append(OTP_BOOKING_ENTRY, bookingId);
+          formData.append(OTP_EMAIL_ENTRY, email);
+          await fetch(OTP_FORM_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: formData,
+          });
+                     document.getElementById("otpStatus").innerText =
+             "OTP sent to your email.";
+           document.getElementById("otpHelpTip").classList.remove("hidden");
+           otpSent = true;
+        }
+      };
+             document.getElementById("verifyOtpBtn").onclick = function () {
+         const otpDigits = Array.from(document.querySelectorAll('.otp-digit')).map(input => input.value).join('');
+         if (!otpDigits || otpDigits.length !== 6) {
+           document.getElementById("otpStatus").innerText =
+             "Enter the 6-digit OTP.";
+           return;
+         }
+                 const expectedOtp = hash6DigitNumber(bookingId);
+         console.log("[OTP] User entered OTP:", otpDigits);
+         console.log("[OTP] Expected OTP (hash of bookingId):", expectedOtp);
+         if (otpDigits === expectedOtp) {
+          console.log("[OTP] OTP verified successfully!");
+          if (!document.getElementById("otpSuccessModal")) {
+            const modal = document.createElement("div");
+            modal.id = "otpSuccessModal";
+            modal.className = "fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50";
+            modal.innerHTML = `
+              <div class=\"bg-white rounded-2xl p-8 shadow-2xl text-center max-w-sm mx-4\">
+                <svg id=\"checkmarkSvg\" class=\"w-16 h-16 mx-auto mb-6\" viewBox=\"0 0 48 48\">
+                  <circle cx=\"24\" cy=\"24\" r=\"22\" fill=\"none\" stroke=\"#22c55e\" stroke-width=\"3\"/>
+                  <path id=\"checkmarkPath\" fill=\"none\" stroke=\"#22c55e\" stroke-width=\"5\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" d=\"M14 26 L22 34 L36 16\"/>
+                </svg>
+                <h2 class=\"text-xl font-semibold text-gray-800 mb-2\">OTP verified!</h2>
+                <p class=\"text-gray-600\">Redirecting to slot selection…</p>
+              </div>
+            `;
+            document.body.appendChild(modal);
+            // Animate the checkmark
+            const path = document.getElementById("checkmarkPath");
+            const length = path.getTotalLength();
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+            path.style.transition = "stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1)";
+            setTimeout(() => {
+              path.style.strokeDashoffset = 0;
+            }, 100);
+          }
+          document.getElementById("verifyOtpBtn").disabled = true;
+          setTimeout(function () {
+            window.location.href = `slotselection.html?code=${encodeURIComponent(
+              bookingId
+            )}`;
+          }, 1700);
+                 } else {
+           console.log("[OTP] OTP verification failed.");
+                       document.getElementById("otpStatus").innerHTML =
+              '<div class="flex items-center gap-2 text-red-600"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>Invalid OTP. Please check and try again.</div>';
+            // Clear all OTP input fields for retry
+            document.querySelectorAll('.otp-digit').forEach(input => input.value = "");
+            document.querySelector('.otp-digit[data-index="0"]').focus();
+         }
+      };
+             // Add event listeners for OTP digit fields
+       document.addEventListener('DOMContentLoaded', function() {
+         const otpInputs = document.querySelectorAll('.otp-digit');
+         const verifyBtn = document.getElementById('verifyOtpBtn');
+         
+         otpInputs.forEach((input, index) => {
+           input.addEventListener('input', function(e) {
+             // Clear status when user starts typing
+             document.getElementById("otpStatus").innerText = "";
+             
+             // Only allow numbers
+             this.value = this.value.replace(/[^0-9]/g, '');
+             
+             // Move to next field if current field has a value
+             if (this.value && index < 5) {
+               otpInputs[index + 1].focus();
+             }
+             // Auto-submit if all fields are filled
+             const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
+             if (allFilled) {
+               verifyBtn.click();
+             }
+           });
+           
+           input.addEventListener('keydown', function(e) {
+             // Handle backspace
+             if (e.key === 'Backspace' && !this.value && index > 0) {
+               otpInputs[index - 1].focus();
+             }
+           });
+           
+           input.addEventListener('paste', function(e) {
+             e.preventDefault();
+             const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+             
+             // Fill all fields with pasted data
+             otpInputs.forEach((input, i) => {
+               input.value = pastedData[i] || '';
+             });
+             
+             // Focus the next empty field or the last field
+             const nextEmptyIndex = pastedData.length < 6 ? pastedData.length : 5;
+             otpInputs[nextEmptyIndex].focus();
+             // Auto-submit if all fields are filled after paste
+             const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
+             if (allFilled) {
+               verifyBtn.click();
+             }
+           });
+         });
+       });
+    </script>
+  </body>
+</html>

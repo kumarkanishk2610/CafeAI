@@ -267,7 +267,7 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                    Continue with Booking
+                    Continue
                   </span>
                 </button>
               </form>
@@ -385,8 +385,9 @@
               body: formData,
             });
 
-            const params = new URLSearchParams({ code });
-            location.href = `slotselection.html?${params}`;
+            // Redirect to OTP page with bookingId
+            const params = new URLSearchParams({ bookingId: code });
+            location.href = `otp.html?${params}`;
           } catch (err) {
             console.error(err);
             document.getElementById("loadingModal").classList.add("hidden");
