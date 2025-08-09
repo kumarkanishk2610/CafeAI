@@ -176,14 +176,14 @@
                   >
                     Send OTP
                   </button>
-                                     <div id="otpInputContainer" class="flex flex-nowrap gap-1 justify-center overflow-x-auto hidden w-full max-w-full">
-                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="0" />
-                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="1" />
-                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="2" />
-                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="3" />
-                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="4" />
-                     <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit w-8 h-10 sm:w-10 sm:h-12 text-center text-lg font-bold border-2 border-gray-300 rounded-lg input-focus bg-white shadow-sm" data-index="5" />
-                   </div>
+                   <input
+                     id="otpInput"
+                     type="tel"
+                     inputmode="numeric"
+                     maxlength="6"
+                     placeholder="Enter 6-digit OTP"
+                     class="px-4 py-3 border border-gray-300 rounded-xl input-focus bg-white shadow-sm flex-1 hidden text-center font-bold text-lg"
+                   />
                   <button
                     type="button"
                     id="verifyOtpBtn"
@@ -291,13 +291,34 @@
       }
       (async () => {
         if (bookingId) {
+          // Show loading state
+          document.getElementById("emailDisplay").innerText = "Loading...";
+          
+          // Disable button and show loading text
+          const sendOtpBtn = document.getElementById("sendOtpBtn");
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.innerText = "Loading user details...";
+          sendOtpBtn.classList.add("opacity-75", "cursor-not-allowed");
+          
           const email = await fetchEmailForBookingId(bookingId);
+          
+          // Wait at least 2 seconds before showing result
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
           document.getElementById("emailDisplay").innerText = email;
           window._otpEmail = email;
+          
           if (!email) {
             document.getElementById("otpStatus").innerText =
               "❌ Email not found for this Booking ID. Please check your link or contact support.";
-            document.getElementById("sendOtpBtn").disabled = true;
+            // Keep button disabled with error state
+            sendOtpBtn.innerText = "Email not found";
+          } else {
+            document.getElementById("otpStatus").innerText = "";
+            // Re-enable button
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.innerText = "Send OTP";
+            sendOtpBtn.classList.remove("opacity-75", "cursor-not-allowed");
           }
         }
       })();
@@ -315,9 +336,9 @@
             return;
           }
                      document.getElementById("sendOtpBtn").classList.add("hidden");
-           document.getElementById("otpInputContainer").classList.remove("hidden");
+           document.getElementById("otpInput").classList.remove("hidden");
            document.getElementById("verifyOtpBtn").classList.remove("hidden");
-           document.querySelector('.otp-digit[data-index="0"]').focus();
+           document.getElementById("otpInput").focus();
           const formData = new FormData();
           formData.append(OTP_BOOKING_ENTRY, bookingId);
           formData.append(OTP_EMAIL_ENTRY, email);
@@ -332,17 +353,17 @@
            otpSent = true;
         }
       };
-             document.getElementById("verifyOtpBtn").onclick = function () {
-         const otpDigits = Array.from(document.querySelectorAll('.otp-digit')).map(input => input.value).join('');
-         if (!otpDigits || otpDigits.length !== 6) {
+                    document.getElementById("verifyOtpBtn").onclick = function () {
+         const otp = document.getElementById("otpInput").value.trim();
+         if (!otp || otp.length !== 6) {
            document.getElementById("otpStatus").innerText =
              "Enter the 6-digit OTP.";
            return;
          }
-                 const expectedOtp = hash6DigitNumber(bookingId);
-         console.log("[OTP] User entered OTP:", otpDigits);
+         const expectedOtp = hash6DigitNumber(bookingId);
+         console.log("[OTP] User entered OTP:", otp);
          console.log("[OTP] Expected OTP (hash of bookingId):", expectedOtp);
-         if (otpDigits === expectedOtp) {
+         if (otp === expectedOtp) {
           console.log("[OTP] OTP verified successfully!");
           if (!document.getElementById("otpSuccessModal")) {
             const modal = document.createElement("div");
@@ -379,61 +400,23 @@
            console.log("[OTP] OTP verification failed.");
                        document.getElementById("otpStatus").innerHTML =
               '<div class="flex items-center gap-2 text-red-600"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>Invalid OTP. Please check and try again.</div>';
-            // Clear all OTP input fields for retry
-            document.querySelectorAll('.otp-digit').forEach(input => input.value = "");
-            document.querySelector('.otp-digit[data-index="0"]').focus();
+            // Clear the OTP input field for retry
+            document.getElementById("otpInput").value = "";
+            document.getElementById("otpInput").focus();
          }
       };
-             // Add event listeners for OTP digit fields
-       document.addEventListener('DOMContentLoaded', function() {
-         const otpInputs = document.querySelectorAll('.otp-digit');
-         const verifyBtn = document.getElementById('verifyOtpBtn');
+       // Add event listener for OTP input field
+       document.getElementById("otpInput").addEventListener("input", function (e) {
+         // Clear status when user starts typing
+         document.getElementById("otpStatus").innerText = "";
          
-         otpInputs.forEach((input, index) => {
-           input.addEventListener('input', function(e) {
-             // Clear status when user starts typing
-             document.getElementById("otpStatus").innerText = "";
-             
-             // Only allow numbers
-             this.value = this.value.replace(/[^0-9]/g, '');
-             
-             // Move to next field if current field has a value
-             if (this.value && index < 5) {
-               otpInputs[index + 1].focus();
-             }
-             // Auto-submit if all fields are filled
-             const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
-             if (allFilled) {
-               verifyBtn.click();
-             }
-           });
-           
-           input.addEventListener('keydown', function(e) {
-             // Handle backspace
-             if (e.key === 'Backspace' && !this.value && index > 0) {
-               otpInputs[index - 1].focus();
-             }
-           });
-           
-           input.addEventListener('paste', function(e) {
-             e.preventDefault();
-             const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
-             
-             // Fill all fields with pasted data
-             otpInputs.forEach((input, i) => {
-               input.value = pastedData[i] || '';
-             });
-             
-             // Focus the next empty field or the last field
-             const nextEmptyIndex = pastedData.length < 6 ? pastedData.length : 5;
-             otpInputs[nextEmptyIndex].focus();
-             // Auto-submit if all fields are filled after paste
-             const allFilled = Array.from(otpInputs).every(inp => inp.value.length === 1);
-             if (allFilled) {
-               verifyBtn.click();
-             }
-           });
-         });
+         // Only allow numbers
+         this.value = this.value.replace(/[^0-9]/g, '');
+         
+         // Auto-submit if 6 digits are entered
+         if (this.value.length === 6) {
+           document.getElementById("verifyOtpBtn").click();
+         }
        });
     </script>
   </body>
