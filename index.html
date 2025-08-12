@@ -373,10 +373,9 @@
                     >1</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600"
-                      >Respect & Courtesy:</span
-                    >
-                    Treat maids, staff, and fellow guests with kindness.
+                    <span class="font-medium text-pink-600">Arrival Time:</span>
+                    Please arrive 15 minutes before your selected slot time so
+                    we can start the session on time.
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -385,10 +384,10 @@
                     >2</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600"
-                      >Consent First:</span
-                    >
-                    No physical contact or photography without permission.
+                    <span class="font-medium text-pink-600">Props & Bags:</span>
+                    Please avoid entering the café with cosplay props, or with
+                    heavy, large, or multiple bags (very small café… sorry
+                    master/princess).
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -397,8 +396,8 @@
                     >3</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600">Voice Level:</span>
-                    Keep conversations at a gentle indoor volume.
+                    <span class="font-medium text-pink-600">Respect:</span>
+                    Be respectful to other guests & staff during the session.
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -407,10 +406,9 @@
                     >4</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600"
-                      >Food & Drinks:</span
-                    >
-                    No outside consumables inside.
+                    <span class="font-medium text-pink-600">Group Entry:</span>
+                    When coming in a big group, please divide yourselves into
+                    pairs of 2 for easier access to the café.
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -420,9 +418,11 @@
                   >
                   <div>
                     <span class="font-medium text-pink-600"
-                      >Health & Safety:</span
+                      >Seating Arrangements:</span
                     >
-                    Follow staff guidance at all times.
+                    Due to very limited seating, you may be paired with guests
+                    outside your group. Pairing is done on a first-come,
+                    first-served basis. Please plan accordingly!
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -431,8 +431,9 @@
                     >6</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600">Slot Timing:</span>
-                    Arrive 5 min early; 30‑min slots are strict.
+                    <span class="font-medium text-pink-600">Booking:</span>
+                    Limited seats only—please book your tickets early to avoid
+                    disappointment.
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -442,9 +443,10 @@
                   >
                   <div>
                     <span class="font-medium text-pink-600"
-                      >Payment Verification:</span
+                      >Cosplay Consent:</span
                     >
-                    Show your QR confirmation at entry.
+                    Cosplay is not consent—please be respectful and ask for
+                    permission before filming or touching the maids.
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -453,10 +455,9 @@
                     >8</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600"
-                      >Refund Policy:</span
-                    >
-                    50 % refund up to 24 h before; none after slot chosen.
+                    <span class="font-medium text-pink-600">Behavior:</span>
+                    Any guest found causing trouble will be asked to leave
+                    immediately (escorted out if necessary).
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -465,10 +466,21 @@
                     >9</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600"
-                      >Prohibited Items:</span
-                    >
-                    Weapons, alcohol, illicit substances.
+                    <span class="font-medium text-pink-600">Venue Entry:</span>
+                    The ticket to the Maid Café does not include entry to the
+                    venue.
+                    <strong>
+                      You need to buy a separate ticket for Anime India (<a
+                        href="https://www.district.in/events/anime-india-mumbai-aug22-2025-buy-tickets"
+                        target="_blank"
+                        style="
+                          color: #0066ff;
+                          /* text-decoration: underline; */
+                          font-weight: bold;
+                        "
+                        >tickets available here</a
+                      >).
+                    </strong>
                   </div>
                 </li>
                 <li class="flex items-start gap-3 break-words">
@@ -477,8 +489,9 @@
                     >10</span
                   >
                   <div>
-                    <span class="font-medium text-pink-600">Have Fun! 🎀</span>
-                    Immerse yourself in the kawaii spirit!
+                    <span class="font-medium text-pink-600">Support:</span>
+                    In case you need any help, feel free to reach out to us via
+                    this form.
                   </div>
                 </li>
               </ol>
@@ -589,7 +602,7 @@
         timerId = setInterval(() => {
           remaining--;
           countEl.textContent = remaining;
-          if (remaining <= 30) {
+          if (remaining <= 0) {
             clearInterval(timerId);
             timerTxt.classList.add("hidden");
             updateButtonState();

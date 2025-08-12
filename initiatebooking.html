@@ -343,13 +343,17 @@
       const CODE_ENTRY = "entry.152647991";
 
       function generateBookingCode(email, mobile, seats) {
-        const timestamp = Date.now();
-        const raw = `${email}${mobile}${seats}${timestamp}`;
-        let hash = 0;
-        for (let i = 0; i < raw.length; i++) {
-          hash = (hash * 31 + raw.charCodeAt(i)) >>> 0;
-        }
-        return (hash % 1000000).toString().padStart(6, "0");
+        let code;
+        do {
+          const timestamp = Date.now();
+          const raw = `${email}${mobile}${seats}${timestamp}`;
+          let hash = 0;
+          for (let i = 0; i < raw.length; i++) {
+            hash = (hash * 31 + raw.charCodeAt(i)) >>> 0;
+          }
+          code = (hash % 1000000).toString().padStart(6, "0");
+        } while (code.startsWith("0"));
+        return code;
       }
 
       document

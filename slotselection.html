@@ -1060,7 +1060,9 @@
         <div class="text-sm text-gray-600">
           <span class="font-medium text-gray-800">Selected:</span> ${selected}
           ${
-            showAlert
+            seatsLeft === 0
+              ? `<br><span class="text-xs text-red-600 font-medium">Currently unavailable. Please try again later.</span>`
+              : showAlert
               ? `<br><span class="text-xs text-orange-600 font-medium">Only ${seatsLeft} seats left!</span>`
               : ""
           }
