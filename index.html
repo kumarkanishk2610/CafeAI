@@ -20,12 +20,11 @@
       }
       html {
         --vh: 1vh;
-        scroll-behavior: smooth;
         scroll-padding-top: 72px;
       }
       body {
         font-family: "Quicksand", sans-serif;
-        min-height: calc(var(--vh) * 100);
+        min-height: 100vh;
         padding: var(--sat) 0 var(--sab);
         background: linear-gradient(
           -60deg,
@@ -240,7 +239,7 @@
     <!-- WELCOME -->
     <section
       id="welcome"
-      class="flex flex-col items-center justify-center text-center px-4 h-screen"
+      class="flex flex-col items-center justify-center text-center px-4 min-h-screen"
     >
       <!-- Hero Section -->
       <div class="relative z-10 max-w-4xl mx-auto">
@@ -337,7 +336,7 @@
       <!-- RULES -->
       <section
         id="rules"
-        class="hidden fade w-full max-w-4xl px-6 py-0 space-y-6 overflow-x-hidden"
+        class="hidden fade w-full max-w-4xl px-6 py-0 space-y-6"
       >
         <div class="fade-in">
           <!-- Decorative elements -->

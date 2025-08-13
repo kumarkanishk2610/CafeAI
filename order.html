@@ -156,7 +156,7 @@
     <!-- User Details Popup -->
     <div
       id="userDetailsPopup"
-      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+              class="fixed top-16 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
     >
       <div class="space-y-3 min-w-[280px]">
         <div class="flex items-center justify-between">
@@ -256,18 +256,30 @@
             >
               <path
                 fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Seats:</span>
+            <span id="popupSeats" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
                 d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
                 clip-rule="evenodd"
               ></path>
             </svg>
-            <span class="text-gray-600">Total:</span>
-            <span class="font-bold text-gray-800"
-              >₹<span id="popupAmount">0</span></span
-            >
-            <span class="text-gray-600"
-              >(<span id="popupSeats">0</span> seats)</span
-            >
+            <span class="text-gray-600">Amount:</span>
+            <span id="popupAmount" class="font-semibold text-gray-800"></span>
           </div>
+          <div id="popupDiscountInfo" class="text-sm text-gray-500 ml-6"></div>
         </div>
       </div>
     </div>
@@ -769,7 +781,7 @@
             alert(
               "Payment timeout occurred. Your booking has expired. You will be redirected to the booking failed page."
             );
-            window.location.href = "bookingfailed.html";
+            window.location.href = `bookingfailed.html?bookingId=${encodeURIComponent(bookingId)}`;
             return;
           }
 
@@ -1199,16 +1211,16 @@
                     <div class="flex items-center gap-4">
                       <button 
                         class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-200 hover:scale-105 flex-shrink-0"
-                        onclick="showItemInfo('plainWater', 'Plain Water', 'Plain water — the original, undefeated beverage. No sugar, no caffeine, no fancy garnish, just… water. It won’t wow your taste buds, but it’ll keep you alive, which is kind of important. Universally available, zero calories, and somehow still the drink people forget to have until they’re dehydrated.', 'assets/orderitems/plainwater.png')"
-                        title="View Plain Water details"
+                        onclick="showItemInfo('plainWater', 'Cola', 'Cola — the bubbly troublemaker of beverages. Packed with sugar, caffeine, and enough fizz to tickle your nose into next week. It’s not here to hydrate you; it’s here to hijack your taste buds and make you crave more. Deliciously addictive, questionably nutritious, and somehow the drink people swear they’re “quitting” every Monday.', 'assets/orderitems/plainwater.png')"
+                        title="View Cola details"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                       </button>
                       <div>
-                        <h5 class="text-base font-semibold text-gray-800">Plain Water</h5>
-                        <p class="text-xs text-gray-500">Fresh drinking water</p>
+                        <h5 class="text-base font-semibold text-gray-800">Cola</h5>
+                        <p class="text-xs text-gray-500">Refreshing Cola</p>
                       </div>
                     </div>
                     <div class="flex items-center gap-3">
@@ -1659,13 +1671,13 @@
           userMobile = userDetails.mobile;
           userSeats = userDetails.seats;
           userBookingId = bookingId;
-          userAmount = userDetails.seats * 500; // Calculate amount
+          userAmount = await PriceUtility.calculateAmount(userDetails.seats); // Calculate amount with dynamic pricing
 
           console.log("Global variables set:");
           console.log("Email:", userEmail);
           console.log("Mobile:", userMobile);
           console.log("Seats:", userSeats);
-          console.log("Amount:", userSeats * 500);
+          console.log("Amount:", userAmount);
           console.log("Max Seats:", userSeats);
 
           // Update UI elements (only those that still exist)
@@ -1848,11 +1860,59 @@
         // User Details Popup Functionality
         let isPopupOpen = false;
 
-        const togglePopup = (show) => {
+        const togglePopup = async (show) => {
           const popup = document.getElementById("userDetailsPopup");
           const btn = document.getElementById("userDetailsBtn");
           
           if (show) {
+            // Update popup amount with discount information
+            const popupAmountEl = document.getElementById("popupAmount");
+            const popupDiscountInfoEl = document.getElementById("popupDiscountInfo");
+            
+            if (popupAmountEl) {
+              try {
+                const discountData = await PriceUtility.getCurrentDiscountData();
+                if (
+                  discountData.discountName &&
+                  Math.abs(discountData.discountPercent) > 0
+                ) {
+                  // Calculate pre-discount total amount
+                  const preDiscountTotal = userSeats * discountData.preDiscountPrice;
+                  const currentTotal = userAmount;
+                  popupAmountEl.innerHTML = `
+                    <span class="text-gray-400" style="text-decoration: line-through;">₹${preDiscountTotal}</span>
+                    <span class="text-green-600">₹${currentTotal}</span>
+                  `;
+                  
+                  // Show discount info in popup
+                  if (popupDiscountInfoEl) {
+                    const absDiscountPercent = Math.abs(discountData.discountPercent);
+                    popupDiscountInfoEl.innerHTML = `
+                      <span class="text-green-600 font-medium">${discountData.discountName}</span>
+                      <span class="text-gray-500"> (${absDiscountPercent.toFixed(1)}% off)</span>
+                    `;
+                  }
+                } else {
+                  // No discount, show normal amount
+                  popupAmountEl.textContent = `₹${userAmount}`;
+                  
+                  // Hide discount info in popup
+                  if (popupDiscountInfoEl) {
+                    popupDiscountInfoEl.innerHTML = "";
+                  }
+                }
+              } catch (error) {
+                console.error("Error updating popup amount:", error);
+                // Fallback to normal amount display
+                popupAmountEl.textContent = `₹${userAmount}`;
+                
+                // Hide discount info in popup
+                if (popupDiscountInfoEl) {
+                  popupDiscountInfoEl.innerHTML = "";
+                }
+              }
+            }
+            
             popup.classList.remove("hidden");
             setTimeout(() => {
               popup.classList.remove("opacity-0", "scale-95");
@@ -1871,13 +1931,60 @@
         };
 
         // Initialize user details popup
-        const initializeUserDetailsPopup = () => {
+        const initializeUserDetailsPopup = async () => {
           // Populate popup with user data
           document.getElementById("popupEmail").textContent = userEmail || "";
           document.getElementById("popupBookingId").textContent = userBookingId || "";
           document.getElementById("popupMobile").textContent = userMobile || "";
-          document.getElementById("popupAmount").textContent = userAmount || "0";
           document.getElementById("popupSeats").textContent = userSeats || "0";
+          
+          // Update popup amount with discount information
+          const popupAmountEl = document.getElementById("popupAmount");
+          const popupDiscountInfoEl = document.getElementById("popupDiscountInfo");
+          
+          if (popupAmountEl) {
+            try {
+              const discountData = await PriceUtility.getCurrentDiscountData();
+              if (
+                discountData.discountName &&
+                Math.abs(discountData.discountPercent) > 0
+              ) {
+                // Calculate pre-discount total amount
+                const preDiscountTotal = userSeats * discountData.preDiscountPrice;
+                const currentTotal = userAmount;
+                popupAmountEl.innerHTML = `
+                  <span class="text-gray-400" style="text-decoration: line-through;">₹${preDiscountTotal}</span>
+                  <span class="text-green-600">₹${currentTotal}</span>
+                `;
+                
+                // Show discount info in popup
+                if (popupDiscountInfoEl) {
+                  const absDiscountPercent = Math.abs(discountData.discountPercent);
+                  popupDiscountInfoEl.innerHTML = `
+                    <span class="text-green-600 font-medium">${discountData.discountName}</span>
+                    <span class="text-gray-500"> (${absDiscountPercent.toFixed(1)}% off)</span>
+                  `;
+                }
+              } else {
+                // No discount, show normal amount
+                popupAmountEl.textContent = `₹${userAmount}`;
+                
+                // Hide discount info in popup
+                if (popupDiscountInfoEl) {
+                  popupDiscountInfoEl.innerHTML = "";
+                }
+              }
+            } catch (error) {
+              console.error("Error updating popup amount:", error);
+              // Fallback to normal amount display
+              popupAmountEl.textContent = `₹${userAmount}`;
+              
+              // Hide discount info in popup
+              if (popupDiscountInfoEl) {
+                popupDiscountInfoEl.innerHTML = "";
+              }
+            }
+          }
         };
 
         // User details button click handler
@@ -1909,7 +2016,9 @@
         });
 
         // Initialize user details popup when page loads
-        initializeUserDetailsPopup();
+        (async () => {
+          await initializeUserDetailsPopup();
+        })();
 
         // Continue button handler
         document
@@ -2011,5 +2120,6 @@
         <p class="text-gray-600 text-sm" id="itemInfoDescription"></p>
       </div>
     </div>
+    <script src="price-utility.js"></script>
   </body>
 </html>

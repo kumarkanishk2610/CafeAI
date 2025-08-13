@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Pricing Test - Cafe Kyaa!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #ec4899, #f43f5e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-pink-100 via-rose-50 to-pink-100"
+  >
+    <div class="container mx-auto px-4 py-8">
+      <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <h1 class="text-4xl font-bold gradient-text mb-2">
+            Dynamic Pricing Test
+          </h1>
+          <p class="text-gray-600">
+            Testing the dynamic pricing system for Cafe Kyaa!
+          </p>
+        </div>
+
+        <!-- Price Display Card -->
+        <div class="glass-effect rounded-2xl p-6 mb-6 shadow-xl">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+            Current Price
+          </h2>
+          <div class="text-center">
+            <div
+              class="text-4xl font-bold gradient-text mb-2"
+              id="currentPrice"
+            >
+              Loading...
+            </div>
+            <p class="text-gray-600">per seat</p>
+          </div>
+          <div class="mt-4 text-center">
+            <button
+              id="refreshBtn"
+              class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200"
+            >
+              Refresh Price
+            </button>
+          </div>
+        </div>
+
+        <!-- Discount Information Card -->
+        <div class="glass-effect rounded-2xl p-6 mb-6 shadow-xl">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+            Discount Information
+          </h2>
+          <div class="text-center" id="discountInfo">
+            <div class="text-gray-600">Loading discount info...</div>
+          </div>
+        </div>
+
+        <!-- Calculator Card -->
+        <div class="glass-effect rounded-2xl p-6 mb-6 shadow-xl">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+            Price Calculator
+          </h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2"
+                >Number of Seats</label
+              >
+              <input
+                type="number"
+                id="seatInput"
+                min="1"
+                max="10"
+                value="2"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              />
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-semibold text-gray-800 mb-2">
+                Total Amount
+              </div>
+              <div class="text-3xl font-bold gradient-text" id="totalAmount">
+                -
+              </div>
+            </div>
+            <div class="text-center">
+              <button
+                id="calculateBtn"
+                class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200"
+              >
+                Calculate
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="glass-effect rounded-2xl p-6 shadow-xl">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+            System Status
+          </h2>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-700">Price Source:</span>
+              <span class="text-sm font-mono bg-gray-100 px-2 py-1 rounded"
+                >Google Sheet</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-700">Cache Status:</span>
+              <span
+                id="cacheStatus"
+                class="text-sm font-mono bg-yellow-100 px-2 py-1 rounded"
+                >Unknown</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-700">Last Updated:</span>
+              <span
+                id="lastUpdated"
+                class="text-sm font-mono bg-gray-100 px-2 py-1 rounded"
+                >-</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="price-utility.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const currentPriceEl = document.getElementById("currentPrice");
+        const totalAmountEl = document.getElementById("totalAmount");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const calculateBtn = document.getElementById("calculateBtn");
+        const seatInput = document.getElementById("seatInput");
+        const cacheStatusEl = document.getElementById("cacheStatus");
+        const lastUpdatedEl = document.getElementById("lastUpdated");
+
+        // Load initial price
+        await loadCurrentPrice();
+
+        // Refresh button handler
+        refreshBtn.addEventListener("click", async () => {
+          refreshBtn.disabled = true;
+          refreshBtn.textContent = "Refreshing...";
+
+          try {
+            await PriceUtility.refreshPrice();
+            await loadCurrentPrice();
+            updateStatus();
+          } catch (error) {
+            console.error("Error refreshing price:", error);
+          } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = "Refresh Price";
+          }
+        });
+
+        // Calculate button handler
+        calculateBtn.addEventListener("click", async () => {
+          const seats = parseInt(seatInput.value);
+          if (seats < 1 || seats > 10) {
+            alert("Please enter a valid number of seats (1-10)");
+            return;
+          }
+
+          calculateBtn.disabled = true;
+          calculateBtn.textContent = "Calculating...";
+
+          try {
+            const total = await PriceUtility.calculateAmount(seats);
+            totalAmountEl.textContent = `₹${total}`;
+          } catch (error) {
+            console.error("Error calculating amount:", error);
+            totalAmountEl.textContent = "Error";
+          } finally {
+            calculateBtn.disabled = false;
+            calculateBtn.textContent = "Calculate";
+          }
+        });
+
+        // Auto-calculate when seats change
+        seatInput.addEventListener("input", async () => {
+          const seats = parseInt(seatInput.value);
+          if (seats >= 1 && seats <= 10) {
+            try {
+              const total = await PriceUtility.calculateAmount(seats);
+              totalAmountEl.textContent = `₹${total}`;
+            } catch (error) {
+              console.error("Error calculating amount:", error);
+            }
+          }
+        });
+
+        async function loadCurrentPrice() {
+          try {
+            const price = await PriceUtility.getCurrentPrice();
+            currentPriceEl.textContent = `₹${price}`;
+
+            // Load discount information
+            try {
+              const discountData = await PriceUtility.getCurrentDiscountData();
+              const discountInfoEl = document.getElementById("discountInfo");
+
+              if (
+                discountData.discountName &&
+                discountData.discountPercent > 0
+              ) {
+                const absDiscountPercent = Math.abs(
+                  discountData.discountPercent
+                );
+                discountInfoEl.innerHTML = `
+                  <div class="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                    <div class="text-lg font-semibold text-yellow-800 mb-2">${
+                      discountData.discountName
+                    }</div>
+                    <div class="text-sm text-yellow-700">
+                      <div class="flex items-center justify-center gap-4 text-lg">
+                        <span class="text-gray-600 line-through">₹${
+                          discountData.preDiscountPrice
+                        }</span>
+                        <span class="text-green-600 font-bold">₹${
+                          discountData.price
+                        }</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">${Math.round(
+                          absDiscountPercent
+                        )}% OFF</span>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              } else {
+                discountInfoEl.innerHTML = `
+                  <div class="text-gray-600 p-4">
+                    <div class="text-lg font-semibold text-gray-700 mb-2">No Active Discount</div>
+                    <div class="text-sm">Current price: ₹${price}</div>
+                  </div>
+                `;
+              }
+            } catch (error) {
+              console.error("Error loading discount info:", error);
+              document.getElementById("discountInfo").innerHTML = `
+                <div class="text-red-600 p-4">Error loading discount info</div>
+              `;
+            }
+
+            updateStatus();
+          } catch (error) {
+            console.error("Error loading price:", error);
+            currentPriceEl.textContent = "Error";
+          }
+        }
+
+        function updateStatus() {
+          // Update cache status (this would need to be exposed from the utility)
+          cacheStatusEl.textContent = "Active";
+          cacheStatusEl.className =
+            "text-sm font-mono bg-green-100 px-2 py-1 rounded";
+
+          // Update last updated time
+          const now = new Date();
+          lastUpdatedEl.textContent = now.toLocaleTimeString();
+        }
+
+        // Initial status update
+        updateStatus();
+      });
+    </script>
+  </body>
+</html>

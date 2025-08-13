@@ -179,7 +179,7 @@
     <!-- User Details Popup -->
     <div
       id="userDetailsPopup"
-      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+      class="fixed top-16 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
     >
       <div class="space-y-3 min-w-[280px]">
         <div class="flex items-center justify-between">
@@ -279,18 +279,30 @@
             >
               <path
                 fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Seats:</span>
+            <span id="popupSeats" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
                 d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
                 clip-rule="evenodd"
               ></path>
             </svg>
-            <span class="text-gray-600">Total:</span>
-            <span class="font-bold text-gray-800"
-              >₹<span id="popupAmount">0</span></span
-            >
-            <span class="text-gray-600"
-              >(<span id="popupSeats">0</span> seats)</span
-            >
+            <span class="text-gray-600">Amount:</span>
+            <span id="popupAmount" class="font-semibold text-gray-800"></span>
           </div>
+          <div id="popupDiscountInfo" class="text-sm text-gray-500 ml-6"></div>
         </div>
       </div>
     </div>
@@ -664,14 +676,238 @@
         }
       };
 
+      // Sheet configuration - same as order.html
+      const userDetailsSheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+      const userDetailsSheetName = "Raw Data";
+
+      // Function to fetch user details from Google Sheet - same as order.html
+      async function fetchUserDetails(bookingId) {
+        console.log("=== FETCH USER DETAILS START ===");
+        console.log("Input booking ID:", JSON.stringify(bookingId));
+        console.log("Sheet ID:", userDetailsSheetID);
+        console.log("Sheet Name:", userDetailsSheetName);
+
+        try {
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${userDetailsSheetName}&tq=${query}`;
+
+          console.log("Query URL:", url);
+          console.log("Making fetch request...");
+
+          const response = await fetch(url);
+          console.log("Response status:", response.status);
+          console.log("Response ok:", response.ok);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.text();
+          console.log("Response data length:", data.length);
+          console.log(
+            "Raw response (first 500 chars):",
+            data.substring(0, 500)
+          );
+
+          // Parse the response
+          const jsonStart = data.indexOf("{");
+          const jsonEnd = data.lastIndexOf("}") + 1;
+          const jsonData = data.substring(jsonStart, jsonEnd);
+
+          console.log("Parsing JSON response...");
+          const json = JSON.parse(jsonData);
+          console.log("JSON parsed successfully");
+          console.log("JSON structure:", Object.keys(json));
+
+          const rows = json.table.rows;
+          console.log("Total rows in sheet:", rows.length);
+
+          // Search for the booking ID
+          console.log("Searching for booking ID:", JSON.stringify(bookingId));
+          console.log("First few rows for debugging:");
+
+          for (let i = 0; i < Math.min(3, rows.length); i++) {
+            const row = rows[i];
+            const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+            console.log(
+              `Row ${i}: col0="${row.c[0]?.v || ""}", col1="${
+                row.c[1]?.v || ""
+              }", col2="${row.c[2]?.v || ""}", col3="${
+                row.c[3]?.v || ""
+              }", col4="${hashValue}", col5="${row.c[5]?.v || ""}", col6="${
+                row.c[6]?.v || ""
+              }", col7="${row.c[7]?.v || ""}", col8="${
+                row.c[8]?.v || ""
+              }", col9="${row.c[9]?.v || ""}", col10="${row.c[10]?.v || ""}"`
+            );
+          }
+
+          for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+
+            console.log(
+              `Row ${i}: Hash value = "${hashValue}", looking for "${bookingId}"`
+            );
+
+            if (hashValue === bookingId) {
+              console.log(
+                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = true`
+              );
+
+              // Additional debugging for type checking
+              console.log(
+                `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
+                  hashValue.length
+                }`
+              );
+              console.log(
+                `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
+                  bookingId.length
+                }`
+              );
+              console.log(
+                `Row ${i} - hashValue char codes: ${Array.from(hashValue)
+                  .map((c) => c.charCodeAt(0))
+                  .join(", ")}`
+              );
+              console.log(
+                `Row ${i} - bookingId char codes: ${Array.from(bookingId)
+                  .map((c) => c.charCodeAt(0))
+                  .join(", ")}`
+              );
+
+              // Try trimming both values
+              const trimmedHash = hashValue.trim();
+              const trimmedBookingId = bookingId.trim();
+              console.log(`Row ${i} - hashValue trimmed: "${trimmedHash}"`);
+              console.log(
+                `Row ${i} - bookingId trimmed: "${trimmedBookingId}"`
+              );
+              console.log(
+                `Row ${i} - trimmed comparison: "${trimmedHash}" === "${trimmedBookingId}" = ${
+                  trimmedHash === trimmedBookingId
+                }`
+              );
+
+              if (trimmedHash === trimmedBookingId) {
+                console.log(
+                  `Found matching booking ID in row ${i} (exact match)`
+                );
+
+                const userDetails = {
+                  email: row.c[1]?.v || "",
+                  seats: parseInt(row.c[2]?.v) || 0,
+                  mobile: row.c[3]?.v || "",
+                  hash: row.c[4]?.v || "",
+                };
+
+                console.log("User details found:", userDetails);
+                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                return userDetails;
+              }
+            } else {
+              console.log(
+                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = false`
+              );
+            }
+          }
+
+          console.log("No matching booking ID found");
+          console.log("=== FETCH USER DETAILS FAILED ===");
+          return null;
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+          console.log("=== FETCH USER DETAILS FAILED ===");
+          return null;
+        }
+      }
+
       // Initialize user details popup
-      const initializeUserDetails = () => {
-        // Populate popup with user data
-        document.getElementById("popupEmail").textContent = ""; // Will be populated if available
-        document.getElementById("popupBookingId").textContent = bookingId || "";
-        document.getElementById("popupMobile").textContent = ""; // Will be populated if available
-        document.getElementById("popupAmount").textContent = "0"; // Will be populated if available
-        document.getElementById("popupSeats").textContent = "0"; // Will be populated if available
+      const initializeUserDetails = async () => {
+        try {
+          // Fetch user details using the booking ID
+          const userDetails = await fetchUserDetails(bookingId);
+
+          if (userDetails) {
+            // Populate popup with user data
+            document.getElementById("popupEmail").textContent =
+              userDetails.email || "";
+            document.getElementById("popupBookingId").textContent =
+              bookingId || "";
+            document.getElementById("popupMobile").textContent =
+              userDetails.mobile || "";
+            document.getElementById("popupSeats").textContent =
+              userDetails.seats || "0";
+
+            // Calculate and display amount
+            try {
+              // Import PriceUtility if available, otherwise show placeholder
+              if (typeof PriceUtility !== "undefined") {
+                const currentTotal = await PriceUtility.calculateAmount(
+                  userDetails.seats
+                );
+                document.getElementById(
+                  "popupAmount"
+                ).textContent = `₹${currentTotal}`;
+
+                // Try to get discount information
+                const discountData =
+                  await PriceUtility.getCurrentDiscountData();
+                const popupDiscountInfoEl =
+                  document.getElementById("popupDiscountInfo");
+
+                if (
+                  discountData.discountName &&
+                  Math.abs(discountData.discountPercent) > 0 &&
+                  popupDiscountInfoEl
+                ) {
+                  const absDiscountPercent = Math.abs(
+                    discountData.discountPercent
+                  );
+                  popupDiscountInfoEl.innerHTML = `
+                    <span class="text-green-600 font-medium">${
+                      discountData.discountName
+                    }</span>
+                    <span class="text-gray-500"> (${Math.round(
+                      absDiscountPercent
+                    )}% off)</span>
+                  `;
+                }
+              } else {
+                document.getElementById("popupAmount").textContent = "₹--";
+              }
+            } catch (error) {
+              console.error("Error calculating amount:", error);
+              document.getElementById("popupAmount").textContent = "₹--";
+            }
+          } else {
+            // Fallback if user details not found
+            document.getElementById("popupEmail").textContent = "Not available";
+            document.getElementById("popupBookingId").textContent =
+              bookingId || "";
+            document.getElementById("popupMobile").textContent =
+              "Not available";
+            document.getElementById("popupAmount").textContent = "₹--";
+            document.getElementById("popupSeats").textContent = "--";
+          }
+
+          // Clear discount info if no discount data
+          const popupDiscountInfoEl =
+            document.getElementById("popupDiscountInfo");
+          if (popupDiscountInfoEl && !popupDiscountInfoEl.innerHTML.trim()) {
+            popupDiscountInfoEl.innerHTML = "";
+          }
+        } catch (error) {
+          console.error("Error initializing user details:", error);
+          // Set fallback values
+          document.getElementById("popupEmail").textContent = "Error loading";
+          document.getElementById("popupBookingId").textContent =
+            bookingId || "";
+          document.getElementById("popupMobile").textContent = "Error loading";
+          document.getElementById("popupAmount").textContent = "₹--";
+          document.getElementById("popupSeats").textContent = "--";
+        }
       };
 
       // User details button click handler
@@ -707,7 +943,9 @@
       });
 
       // Initialize user details when page loads
-      initializeUserDetails();
+      (async () => {
+        await initializeUserDetails();
+      })();
 
       // Copy booking ID function
       function copyBookingId() {
@@ -769,5 +1007,6 @@
       setVH();
       addEventListener("resize", setVH);
     </script>
+    <script src="price-utility.js"></script>
   </body>
 </html>

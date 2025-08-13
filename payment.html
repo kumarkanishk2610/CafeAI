@@ -191,7 +191,7 @@
     <!-- User Details Popup -->
     <div
       id="userDetailsPopup"
-      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+      class="fixed top-16 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
     >
       <div class="space-y-3 min-w-[280px]">
         <div class="flex items-center justify-between">
@@ -291,18 +291,30 @@
             >
               <path
                 fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Seats:</span>
+            <span id="popupSeats" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
                 d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
                 clip-rule="evenodd"
               ></path>
             </svg>
-            <span class="text-gray-600">Total:</span>
-            <span class="font-bold text-gray-800"
-              >₹<span id="popupAmount">0</span></span
-            >
-            <span class="text-gray-600"
-              >(<span id="popupSeats">0</span> seats)</span
-            >
+            <span class="text-gray-600">Amount:</span>
+            <span id="popupAmount" class="font-semibold text-gray-800"></span>
           </div>
+          <div id="popupDiscountInfo" class="text-sm text-gray-500 ml-6"></div>
         </div>
       </div>
     </div>
@@ -420,65 +432,15 @@
                     ></div>
                   </div>
                 </div>
-                <!-- Disclaimer -->
-                <div
-                  class="mb-0 p-4 bg-green-50 rounded-lg border border-green-200 mb-4"
-                >
-                  <p class="text-sm text-green-800 leading-relaxed mb-4">
-                    <span>Important: </span> Fill your
-                    <strong>Booking ID in the UPI Payment Note</strong> for
-                    faster processing!
-                  </p>
-                  <!-- Booking ID Display -->
-                  <div
-                    class="mb-0 px-2 p-1 bg-red-50 rounded-lg border border-red-200"
-                  >
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2">
-                        <span class="text-sm font-medium text-red-700"
-                          >Booking ID:</span
-                        >
-                        <span
-                          id="displayBookingId"
-                          class="text-sm font-semibold text-gray-800"
-                        ></span>
-                      </div>
-                      <button
-                        id="copyBookingIdBtn"
-                        class="text-pink-600 hover:text-pink-700 transition-colors p-1 rounded-md hover:bg-pink-50"
-                        title="Copy Booking ID"
-                      >
-                        <svg
-                          class="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 mb-4 text-center">
-                  <strong
-                    >Make sure to enter your Transaction ID below after Payment!
-                  </strong>
-                </p>
               </div>
 
-              <!-- Combined Copy Booking ID & Download QR Button -->
+              <!-- Download QR Button -->
               <button
-                id="copyAndDownloadBtn"
-                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                id="downloadQrBtn"
+                class="w-full max-w-md bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
                 type="button"
               >
-                <svg
+                <!--<svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="48"
                   height="24"
@@ -489,19 +451,13 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <!-- Copy Icon (left) -->
-                  <rect x="4" y="4" width="12" height="12" rx="2" ry="2" />
-                  <rect x="8" y="8" width="12" height="12" rx="2" ry="2" />
-
-                  <!-- Download Icon (right) -->
                   <path d="M34 4v6" />
                   <path d="M31 7l3 3 3-3" />
                   <rect x="28" y="16" width="12" height="2" rx="1" ry="1" />
-                </svg>
+                </svg>-->
 
                 <div class="text-center">
-                  <div>Copy Booking ID &</div>
-                  <div>Save UPI QR to Gallery</div>
+                  <div>Download UPI QR</div>
                 </div>
               </button>
 
@@ -509,21 +465,8 @@
               <button
                 onclick="openModal()"
                 id="havingtroublebutton"
-                class="mt-4 bg-orange-50 hover:bg-orange-100 text-orange-700 hover:text-orange-800 font-medium px-4 py-2 rounded-lg border border-orange-200 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
+                class="mt-4 w-full max-w-md text-gray-500 hover:text-gray-700 text-sm underline decoration-gray-300 hover:decoration-gray-500 transition-all duration-200"
               >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
                 Having trouble with QR Payment?
               </button>
               <!-- UPI Transaction Confirmation -->
@@ -1106,6 +1049,7 @@
       </div>
     </div>
 
+    <script src="price-utility.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         // --- all your current script code goes inside here ---
@@ -1133,8 +1077,7 @@
           document.getElementById("bookingIdTextModal");
 
         const qrImg = document.getElementById("qrImage");
-        const copyAndDownloadBtn =
-          document.getElementById("copyAndDownloadBtn");
+        const downloadQrBtn = document.getElementById("downloadQrBtn");
 
         const manualPayBtn = document.getElementById("manualPayBtn");
         const manualModal = document.getElementById("manualModal");
@@ -1465,7 +1408,9 @@
               alert(
                 "Payment timeout occurred. Your booking has expired. You will be redirected to the booking failed page."
               );
-              window.location.href = "bookingfailed.html";
+              window.location.href = `bookingfailed.html?bookingId=${encodeURIComponent(
+                code
+              )}`;
               return;
             }
 
@@ -1575,7 +1520,7 @@
             const email = userDetails.email;
             const mobile = userDetails.mobile;
             const seats = userDetails.seats;
-            const amount = seats * 500;
+            const amount = await PriceUtility.calculateAmount(seats);
 
             console.log("Global variables set:");
             console.log(`Email: ${email}`);
@@ -1603,14 +1548,15 @@
             upiURL = buildUPI(email, seats, amount);
             console.log("UPI URL built:", upiURL);
 
-            // Set up QR code - try pre-stored QR first, fallback to generated QR
-            const qrFilePath = getQRFilePath(amount);
-            if (qrFilePath) {
-              console.log("Using pre-stored QR code:", qrFilePath);
+            // Set up QR code - always fetch from configured folder
+            try {
+              const qrFilePath = await getQRFilePath(amount);
+              console.log("Using folder-based QR code:", qrFilePath);
               qrImg.src = qrFilePath;
-            } else {
+            } catch (error) {
+              console.error("Error loading QR code:", error);
+              // Fallback to generated QR code if folder-based fails
               console.log("Using generated QR code (fallback)");
-              // Set up QR code directly
               qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
                 upiURL
               )}`;
@@ -1620,7 +1566,7 @@
             initializeCountdownTimer(code);
 
             // Initialize user details popup
-            initializeUserDetailsPopup();
+            await initializeUserDetailsPopup();
 
             // Hide loading modal
             document.getElementById("loadingModal").classList.add("hidden");
@@ -1643,26 +1589,23 @@
 
         /* ---------- helpers ---------- */
 
-        // Function to get pre-stored QR code file path based on amount
-        const getQRFilePath = (amount) => {
-          // Map amounts to QR file names
-          const qrFileMap = {
-            500: "assets/upiqr/500.png",
-            1000: "assets/upiqr/1000.png",
-            1500: "assets/upiqr/1500.png",
-            2000: "assets/upiqr/2000.png",
-            2500: "assets/upiqr/2500.png",
-            3000: "assets/upiqr/3000.png",
-            3500: "assets/upiqr/3500.png",
-            4000: "assets/upiqr/4000.png",
-            4500: "assets/upiqr/4500.png",
-            5000: "assets/upiqr/5000.png",
-            5500: "assets/upiqr/5500.png",
-            6000: "assets/upiqr/6000.png",
-            // Add more mappings as needed
-          };
+        // Function to get QR code file path from configured folder (always returns a path, never null)
+        const getQRFilePath = async (amount) => {
+          try {
+            // Get the QR folder from the Google Sheet configuration
+            const qrFolder = await PriceUtility.getCurrentQRFolder();
+            console.log("[QR] Using QR folder:", qrFolder);
 
-          return qrFileMap[amount] || null;
+            // Construct the file path based on the configured folder
+            const qrFilePath = `assets/${qrFolder}/${amount}.png`;
+            console.log("[QR] Constructed QR path:", qrFilePath);
+
+            return qrFilePath;
+          } catch (error) {
+            console.error("[QR] Error getting QR folder:", error);
+            // Fallback to default folder
+            return `assets/upiqr/${amount}.png`;
+          }
         };
 
         const buildUPI = (e, s, a) =>
@@ -1881,6 +1824,40 @@
             upiFormData.append("entry.1522002465", bookingId); // Booking ID
             upiFormData.append("entry.1130423461", upiTransactionNumberValue); // UPI Transaction Number
 
+            // Get the QR folder name for submission
+            let qrFolderName = "upiqr"; // Default fallback
+            try {
+              qrFolderName = await PriceUtility.getCurrentQRFolder();
+            } catch (error) {
+              console.error(
+                "Error getting QR folder for form submission:",
+                error
+              );
+            }
+            upiFormData.append("entry.1621166332", qrFolderName); // Folder Name
+            console.log("QR Folder name submitted:", qrFolderName);
+
+            // Get the amount for submission
+            let amountValue = "0"; // Default fallback
+            try {
+              if (typeof PriceUtility !== "undefined") {
+                const currentTotal = await PriceUtility.calculateAmount(seats);
+                amountValue = currentTotal.toString();
+                console.log(
+                  `Calculated amount for ${seats} seats: ₹${currentTotal}`
+                );
+              } else {
+                console.warn(
+                  "PriceUtility not available, using default amount"
+                );
+              }
+            } catch (error) {
+              console.error("Error getting amount for form submission:", error);
+              console.log("Using default amount due to error");
+            }
+            upiFormData.append("entry.964038986", amountValue); // Amount
+            console.log("Amount submitted:", amountValue);
+
             try {
               await fetch(upiFormURL, {
                 method: "POST",
@@ -1957,36 +1934,32 @@
           }
         };
 
-        document.getElementById("copyAndDownloadBtn").onclick =
-          async function () {
-            // Copy booking ID
-            await copy(code, this);
+        document.getElementById("downloadQrBtn").onclick = async function () {
+          // Download QR code (force download even for cross-origin images)
+          try {
+            const qrImage = document.getElementById("qrImage");
+            const response = await fetch(qrImage.src, { mode: "cors" });
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.download = "cafe-kyaa-qr.png";
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
 
-            // Download QR code (force download even for cross-origin images)
-            try {
-              const qrImage = document.getElementById("qrImage");
-              const response = await fetch(qrImage.src, { mode: "cors" });
-              const blob = await response.blob();
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.download = "cafe-kyaa-qr.png";
-              link.href = url;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
-
-              // Show next steps modal after successful copy and download
-              document
-                .getElementById("nextStepsModal")
-                .classList.remove("hidden");
-            } catch (err) {
-              alert(
-                "Couldn't download the QR code. Please long‑press or right‑click the image instead."
-              );
-              console.error(err);
-            }
-          };
+            // Show success message
+            alert(
+              "QR code downloaded successfully! Check your downloads folder."
+            );
+          } catch (err) {
+            alert(
+              "Couldn't download the QR code. Please long‑press or right‑click the image instead."
+            );
+            console.error(err);
+          }
+        };
       });
     </script>
     <!-- Loading Modal with Spinner -->
@@ -2007,141 +1980,7 @@
       </div>
     </div>
 
-    <!-- Next Steps Modal -->
-    <div
-      id="nextStepsModal"
-      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
-    >
-      <div
-        class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl relative animate-fadeIn mx-4"
-      >
-        <button
-          onclick="closeNextStepsModal()"
-          class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl font-bold"
-        >
-          &times;
-        </button>
-
-        <div class="text-center mb-6">
-          <div
-            class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4"
-          >
-            <svg
-              class="w-8 h-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-2">Ready to Pay!</h3>
-          <p class="text-gray-600">
-            Your booking ID is copied and QR is downloaded
-          </p>
-        </div>
-
-        <div class="space-y-4">
-          <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-            <div
-              class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            >
-              <span class="text-white text-xs font-bold">1</span>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-blue-800">Open your UPI app</p>
-              <p class="text-xs text-blue-600 mt-1">
-                Launch GPay, Paytm, PhonePe, or any UPI app
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
-            <div
-              class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            >
-              <span class="text-white text-xs font-bold">2</span>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-purple-800">
-                Scan the downloaded QR
-              </p>
-              <p class="text-xs text-purple-600 mt-1">
-                Upload the QR image you just downloaded
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-            <div
-              class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            >
-              <span class="text-white text-xs font-bold">3</span>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-green-800">
-                Paste booking ID in note
-              </p>
-              <p class="text-xs text-green-600 mt-1">
-                Paste the copied booking ID in the UPI payment note
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
-            <div
-              class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            >
-              <span class="text-white text-xs font-bold">4</span>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-orange-800">
-                Complete payment
-              </p>
-              <p class="text-xs text-orange-600 mt-1">
-                Review amount and confirm the payment
-              </p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3 p-3 bg-pink-50 rounded-lg">
-            <div
-              class="w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            >
-              <span class="text-white text-xs font-bold">5</span>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-pink-800">
-                Come back to booking
-              </p>
-              <p class="text-xs text-pink-600 mt-1">
-                Return to this page to confirm your payment
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-6 pt-4 border-t border-gray-200">
-          <button
-            onclick="closeNextStepsModal()"
-            class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-          >
-            Got it!
-          </button>
-        </div>
-      </div>
-    </div>
-
     <script>
-      function closeNextStepsModal() {
-        document.getElementById("nextStepsModal").classList.add("hidden");
-      }
-
       // Toast notification function
       const showToast = (message) => {
         const toastContainer = document.getElementById("toastContainer");
@@ -2249,7 +2088,7 @@
       };
 
       // Initialize user details popup
-      const initializeUserDetailsPopup = () => {
+      const initializeUserDetailsPopup = async () => {
         // Get user data from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const bookingId = urlParams.get("code");
@@ -2262,10 +2101,77 @@
             bookingId || "";
           document.getElementById("popupMobile").textContent =
             window.userDetails.mobile || "";
-          document.getElementById("popupAmount").textContent =
-            window.userDetails.seats * 500 || "0";
           document.getElementById("popupSeats").textContent =
             window.userDetails.seats || "0";
+
+          // Update popup amount with discount information
+          const popupAmountEl = document.getElementById("popupAmount");
+          const popupDiscountInfoEl =
+            document.getElementById("popupDiscountInfo");
+
+          if (popupAmountEl && window.userDetails) {
+            try {
+              const discountData = await PriceUtility.getCurrentDiscountData();
+              if (
+                discountData.discountName &&
+                Math.abs(discountData.discountPercent) > 0
+              ) {
+                // Calculate pre-discount total amount
+                const preDiscountTotal =
+                  window.userDetails.seats * discountData.preDiscountPrice;
+                const currentTotal = await PriceUtility.calculateAmount(
+                  window.userDetails.seats
+                );
+                popupAmountEl.innerHTML = `
+                   <span class="text-gray-400" style="text-decoration: line-through;">₹${preDiscountTotal}</span>
+                   <span class="text-green-600">₹${currentTotal}</span>
+                 `;
+
+                // Show discount info in popup
+                if (popupDiscountInfoEl) {
+                  const absDiscountPercent = Math.abs(
+                    discountData.discountPercent
+                  );
+                  popupDiscountInfoEl.innerHTML = `
+                    <span class="text-green-600 font-medium">${
+                      discountData.discountName
+                    }</span>
+                    <span class="text-gray-500"> (${Math.round(
+                      absDiscountPercent
+                    )}% off)</span>
+                  `;
+                }
+              } else {
+                // No discount, show normal amount
+                const currentTotal = await PriceUtility.calculateAmount(
+                  window.userDetails.seats
+                );
+                popupAmountEl.textContent = `₹${currentTotal}`;
+
+                // Hide discount info in popup
+                if (popupDiscountInfoEl) {
+                  popupDiscountInfoEl.innerHTML = "";
+                }
+              }
+            } catch (error) {
+              console.error("Error updating popup amount:", error);
+              // Fallback to normal amount display
+              const currentTotal = await PriceUtility.calculateAmount(
+                window.userDetails.seats
+              );
+              popupAmountEl.textContent = `₹${currentTotal}`;
+
+              // Hide discount info in popup
+              if (popupDiscountInfoEl) {
+                popupDiscountInfoEl.innerHTML = "";
+              }
+            }
+          } else if (popupAmountEl) {
+            popupAmountEl.textContent = "0";
+            if (popupDiscountInfoEl) {
+              popupDiscountInfoEl.innerHTML = "";
+            }
+          }
         } else {
           // Fallback to just booking ID if user details not loaded yet
           document.getElementById("popupEmail").textContent = "";
@@ -2274,6 +2180,13 @@
           document.getElementById("popupMobile").textContent = "";
           document.getElementById("popupAmount").textContent = "0";
           document.getElementById("popupSeats").textContent = "0";
+
+          // Clear discount information
+          const popupDiscountInfoEl =
+            document.getElementById("popupDiscountInfo");
+          if (popupDiscountInfoEl) {
+            popupDiscountInfoEl.innerHTML = "";
+          }
         }
       };
 
@@ -2321,7 +2234,9 @@
       });
 
       // Initialize user details popup when page loads (will be called again after user details are loaded)
-      initializeUserDetailsPopup();
+      (async () => {
+        await initializeUserDetailsPopup();
+      })();
     </script>
   </body>
 </html>

@@ -164,7 +164,7 @@
     <!-- User Details Popup -->
     <div
       id="userDetailsPopup"
-      class="fixed top-20 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
+      class="fixed top-16 right-4 bg-white rounded-lg shadow-lg border border-pink-200 p-4 z-50 hidden transform transition-all duration-200 opacity-0 scale-95"
     >
       <div class="space-y-3 min-w-[280px]">
         <div class="flex items-center justify-between">
@@ -264,18 +264,30 @@
             >
               <path
                 fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Seats:</span>
+            <span id="popupSeats" class="font-semibold text-gray-800"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4 text-pink-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
                 d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
                 clip-rule="evenodd"
               ></path>
             </svg>
-            <span class="text-gray-600">Total:</span>
-            <span class="font-bold text-gray-800"
-              >₹<span id="popupAmount">0</span></span
-            >
-            <span class="text-gray-600"
-              >(<span id="popupSeats">0</span> seats)</span
-            >
+            <span class="text-gray-600">Amount:</span>
+            <span id="popupAmount" class="font-semibold text-gray-800"></span>
           </div>
+          <div id="popupDiscountInfo" class="text-sm text-gray-500 ml-6"></div>
         </div>
       </div>
     </div>
@@ -292,9 +304,9 @@
               <h3 class="text-xl font-bold text-gray-800 mb-2">
                 Select Your Preferred Timing!
               </h3>
-              <p class="text-gray-600">
-                Choose the day and time that work best for you.
-              </p>
+              <div id="topDiscountBanner" class="mb-4">
+                <!-- Early Bird Discount will be populated here -->
+              </div>
             </div>
 
             <!-- Day Selection Controls -->
@@ -429,6 +441,7 @@
     </div>
 
     <!-- JavaScript -->
+    <script src="price-utility.js"></script>
     <script>
       // ===== REFERRER CHECK =====
       /*<const allowedReferrer = window.location.origin + "/initiatebooking.html";
@@ -909,7 +922,7 @@
           email = userDetails.email;
           mobile = userDetails.mobile;
           seats = userDetails.seats;
-          amount = seats * 500;
+          amount = await PriceUtility.calculateAmount(seats);
           maxSeats = seats;
 
           console.log("Global variables set:");
@@ -1009,7 +1022,7 @@
 
       // ===== TABLE RENDERING =====
 
-      const renderTable = (day = 1) => {
+      const renderTable = async (day = 1) => {
         const startIdx = (day - 1) * 10;
         const endIdx = startIdx + 10;
         const visibleRows = allRows.slice(startIdx, endIdx);
@@ -1058,13 +1071,14 @@
           <div class="w-px h-8 bg-gray-200"></div>
         </div>
         <div class="text-sm text-gray-600">
-          <span class="font-medium text-gray-800">Selected:</span> ${selected}
           ${
             seatsLeft === 0
-              ? `<br><span class="text-xs text-red-600 font-medium">Currently unavailable. Please try again later.</span>`
-              : showAlert
-              ? `<br><span class="text-xs text-orange-600 font-medium">Only ${seatsLeft} seats left!</span>`
-              : ""
+              ? `<span class="text-xs text-red-600 font-medium">Sold Out!</span>`
+              : `<span class="font-medium text-gray-800">Selected:</span> ${selected}${
+                  showAlert
+                    ? `<br><span class="text-xs text-orange-600 font-medium">Only ${seatsLeft} seats left!</span>`
+                    : ""
+                }`
           }
         </div>
       </div>
@@ -1087,19 +1101,20 @@
 
         // Attach button event listeners
         document.querySelectorAll(".incBtn").forEach((btn) => {
-          btn.onclick = () => updateSelection(btn.dataset.slot, 1);
+          btn.onclick = async () => await updateSelection(btn.dataset.slot, 1);
         });
 
         document.querySelectorAll(".decBtn").forEach((btn) => {
-          btn.onclick = () => updateSelection(btn.dataset.slot, -1);
+          btn.onclick = async () => await updateSelection(btn.dataset.slot, -1);
         });
 
-        updateSummary();
+        await updateSummary();
+        await updateTopDiscountBanner();
       };
 
       // ===== SELECTION MANAGEMENT =====
 
-      const updateSelection = (slotId, delta) => {
+      const updateSelection = async (slotId, delta) => {
         const row = allRows.find((r) => r.c[0]?.v === slotId);
         const available = +row?.c[1]?.v || 0;
         const current = selection[slotId] || 0;
@@ -1112,18 +1127,19 @@
           totalSelected--;
         }
 
-        renderTable(+document.getElementById("daySelector").value);
+        await renderTable(+document.getElementById("daySelector").value);
       };
 
-      const updateSummary = () => {
+      const updateSummary = async () => {
         const summaryDiv = document.getElementById("selectionSummary");
-        summaryDiv.innerHTML = `
+        console.log("[SlotSelection] updateSummary called");
 
-                      <div class="text-center mb-4">
-              <div class="text-sm text-gray-700">
-                <span class="font-semibold text-green-600">${totalSelected}</span> of <span class="font-semibold text-gray-800">${maxSeats}</span> seats selected
-              </div>
+        summaryDiv.innerHTML = `
+          <div class="text-center mb-4">
+            <div class="text-sm text-gray-700">
+              <span class="font-semibold text-green-600">${totalSelected}</span> of <span class="font-semibold text-gray-800">${maxSeats}</span> seats selected
             </div>
+          </div>
           <button id="confirmBtn" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-3 rounded-lg font-semibold text-lg transition-all duration-200 ${
             totalSelected !== maxSeats
               ? "opacity-50 cursor-not-allowed"
@@ -1702,14 +1718,68 @@
       const closePopupBtn = document.getElementById("closePopupBtn");
 
       // Toggle popup function
-      const togglePopup = (show) => {
+      const togglePopup = async (show) => {
         if (show) {
           // Populate popup with current data from global variables
           document.getElementById("popupEmail").textContent = email;
           document.getElementById("popupBookingId").textContent = bookingId;
           document.getElementById("popupMobile").textContent = mobile;
-          document.getElementById("popupAmount").textContent = amount;
           document.getElementById("popupSeats").textContent = seats;
+
+          // Update popup amount with discount information
+          const popupAmountEl = document.getElementById("popupAmount");
+          const popupDiscountInfoEl =
+            document.getElementById("popupDiscountInfo");
+
+          if (popupAmountEl) {
+            try {
+              const discountData = await PriceUtility.getCurrentDiscountData();
+              if (
+                discountData.discountName &&
+                Math.abs(discountData.discountPercent) > 0
+              ) {
+                // Calculate pre-discount total amount
+                const preDiscountTotal = seats * discountData.preDiscountPrice;
+                const currentTotal = amount;
+                popupAmountEl.innerHTML = `
+                  <span class="text-gray-400" style="text-decoration: line-through;">₹${preDiscountTotal}</span>
+                  <span class="text-green-600">₹${currentTotal}</span>
+                `;
+
+                // Show discount info in popup
+                if (popupDiscountInfoEl) {
+                  const absDiscountPercent = Math.abs(
+                    discountData.discountPercent
+                  );
+                  popupDiscountInfoEl.innerHTML = `
+                    <span class="text-green-600 font-medium">${
+                      discountData.discountName
+                    }</span>
+                                            <span class="text-gray-500"> (${Math.round(
+                                              absDiscountPercent
+                                            )}% off)</span>
+                  `;
+                }
+              } else {
+                // No discount, show normal amount
+                popupAmountEl.textContent = `₹${amount}`;
+
+                // Hide discount info in popup
+                if (popupDiscountInfoEl) {
+                  popupDiscountInfoEl.innerHTML = "";
+                }
+              }
+            } catch (error) {
+              console.error("Error updating popup amount:", error);
+              // Fallback to normal amount display
+              popupAmountEl.textContent = `₹${amount}`;
+
+              // Hide discount info in popup
+              if (popupDiscountInfoEl) {
+                popupDiscountInfoEl.innerHTML = "";
+              }
+            }
+          }
 
           // Show popup with animation
           userDetailsPopup.classList.remove("hidden");
@@ -1779,6 +1849,75 @@
       // ===== INITIALIZATION =====
 
       setInterval(fetchAndRenderTable, 5000);
+
+      // ===== DISCOUNT BANNER MANAGEMENT =====
+      const updateTopDiscountBanner = async () => {
+        const bannerDiv = document.getElementById("topDiscountBanner");
+        if (!bannerDiv) return;
+
+        try {
+          const discountData = await PriceUtility.getCurrentDiscountData();
+
+          if (
+            discountData.discountName &&
+            Math.abs(discountData.discountPercent) > 0
+          ) {
+            const absDiscountPercent = Math.abs(discountData.discountPercent);
+            bannerDiv.innerHTML = `
+              <div class="relative overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200 shadow-lg relative">
+                  <!-- Background Pattern -->
+                  <div class="absolute inset-0 opacity-10">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-300 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div class="absolute bottom-0 left-0 w-24 h-24 bg-orange-300 rounded-full translate-y-12 -translate-x-12"></div>
+                  </div>
+                  
+                  <!-- Main Content -->
+                  <div class="relative z-10 text-center">
+                    <div class="flex items-center justify-center gap-2 mb-3">
+                      <div class="w-8 h-8 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                      </div>
+                      <span class="text-lg font-bold text-amber-800">${
+                        discountData.discountName
+                      }</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-center gap-3 text-base">
+                      <span class="text-gray-600 text-base line-through font-medium">₹${
+                        discountData.preDiscountPrice
+                      }</span>
+                      <div class="flex items-center justify-center gap-3 text-base">
+
+                        <span class="text-green-600 text-base font-extrabold font-medium">₹${
+                          discountData.price
+                        }</span>
+                      </div>
+                      <span class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        ${Math.round(absDiscountPercent)}% OFF
+                      </span>
+                    </div>
+                    
+                    <div class="mt-3 text-xs text-amber-700 font-medium">
+                      ⏰ Limited time offer - Book now to secure your discount!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            bannerDiv.innerHTML = "";
+          }
+        } catch (error) {
+          console.error(
+            "[SlotSelection] Error updating top discount banner:",
+            error
+          );
+          bannerDiv.innerHTML = "";
+        }
+      };
     </script>
   </body>
 </html>
