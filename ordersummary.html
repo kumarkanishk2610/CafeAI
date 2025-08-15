@@ -983,7 +983,7 @@
                           }
                           ${
                             foodDetail.plainWater > 0
-                              ? `<div class="flex justify-between"><span>Plain Water</span><span class="font-medium">${foodDetail.plainWater}</span></div>`
+                              ? `<div class="flex justify-between"><span>Cola</span><span class="font-medium">${foodDetail.plainWater}</span></div>`
                               : ""
                           }
                         </div>
@@ -1101,13 +1101,13 @@
                 } else {
                   // No discount, show normal amount with gradient
                   amtTitleContainer.classList.add("gradient-text");
-                  amtTitleEl.textContent = amount;
+                  amtTitleEl.innerHTML = `₹${amount}`;
                 }
               } catch (error) {
                 console.error("Error updating amount display:", error);
                 // Fallback to normal amount display with gradient
                 amtTitleContainer.classList.add("gradient-text");
-                amtTitleEl.textContent = amount;
+                amtTitleEl.innerHTML = `₹${amount}`;
               }
             }
 
