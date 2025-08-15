@@ -467,12 +467,54 @@
           displayElement.classList.add("bg-green-100", "text-green-800");
           copyBtn.classList.remove("opacity-50", "cursor-not-allowed");
           copyBtn.classList.add("cursor-pointer");
+
+          // Auto-fill Google Form with booking ID
+          autoFillGoogleForm(bookingId);
         } else {
           displayElement.textContent = "Not Available";
           displayElement.classList.remove("bg-amber-100", "bg-green-100");
           displayElement.classList.add("bg-gray-100", "text-gray-600");
           copyBtn.classList.add("opacity-50", "cursor-not-allowed");
           copyBtn.classList.remove("cursor-pointer");
+        }
+      }
+
+      // Function to automatically fill Google Form
+      function autoFillGoogleForm(bookingId) {
+        try {
+          // Create a hidden iframe to submit the form
+          const iframe = document.createElement("iframe");
+          iframe.style.display = "none";
+          iframe.name = "google-form-submit";
+          document.body.appendChild(iframe);
+
+          // Create the form
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action =
+            "https://docs.google.com/forms/d/e/1FAIpQLSfW1UutpcaLlCjRKDz2KsGg6UNufs4A7t3_R0GinrfyFRLWkg/formResponse";
+          form.target = "google-form-submit";
+
+          // Add the booking ID field (entry.957231997)
+          const bookingIdInput = document.createElement("input");
+          bookingIdInput.type = "hidden";
+          bookingIdInput.name = "entry.957231997";
+          bookingIdInput.value = bookingId;
+          form.appendChild(bookingIdInput);
+
+          // Submit the form
+          document.body.appendChild(form);
+          form.submit();
+
+          // Clean up
+          setTimeout(() => {
+            document.body.removeChild(form);
+            document.body.removeChild(iframe);
+          }, 1000);
+
+          console.log("Google Form auto-filled with booking ID:", bookingId);
+        } catch (error) {
+          console.error("Error auto-filling Google Form:", error);
         }
       }
 
