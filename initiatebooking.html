@@ -342,6 +342,39 @@
       const MOBILE_ENTRY = "entry.1424067072";
       const CODE_ENTRY = "entry.152647991";
 
+      // Check if a booking ID already exists in Google Sheet (Raw Data, column E "Hash")
+      async function bookingIdExists(bookingId) {
+        try {
+          const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
+          const sheetName = "Raw Data";
+          const query = encodeURIComponent("SELECT *");
+          const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&tq=${query}`;
+
+          const response = await fetch(url);
+          if (!response.ok) return false;
+          const data = await response.text();
+
+          const jsonStart = data.indexOf("{");
+          const jsonEnd = data.lastIndexOf("}") + 1;
+          const jsonData = data.substring(jsonStart, jsonEnd);
+          const json = JSON.parse(jsonData);
+          const rows = json.table?.rows || [];
+
+          for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
+            if (hashValue && hashValue === String(bookingId).trim()) {
+              return true;
+            }
+          }
+          return false;
+        } catch (err) {
+          console.error("Error checking booking ID existence:", err);
+          // On errors, do not block progression by default
+          return false;
+        }
+      }
+
       function generateBookingCode(email, mobile, seats) {
         let code;
         do {
@@ -371,6 +404,21 @@
 
           const code = generateBookingCode(email.toLowerCase(), mobile, seats);
           console.log("Generated Booking Code:", code);
+
+          // Show loading while checking for duplicate booking ID
+          document.getElementById("loadingModal").classList.remove("hidden");
+          document.getElementById("submitBtn").disabled = true;
+
+          // Ensure generated booking ID is unique; if not, force restart
+          const duplicate = await bookingIdExists(code);
+          if (duplicate) {
+            alert(
+              "A booking with the generated ID already exists. Please start again."
+            );
+            // Send user back to the beginning of the flow
+            location.href = "index.html";
+            return;
+          }
 
           const formData = new FormData();
           formData.append(EMAIL_ENTRY, email);

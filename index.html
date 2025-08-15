@@ -24,8 +24,9 @@
       }
       body {
         font-family: "Quicksand", sans-serif;
-        min-height: 100vh;
-        padding: var(--sat) 0 var(--sab);
+        height: 100vh;
+        overflow: hidden;
+        padding: var(--sat) 0 0;
         background: linear-gradient(
           -60deg,
           #fff1f2 0%,
@@ -331,12 +332,12 @@
     <!-- MAIN -->
     <main
       id="content"
-      class="hidden pt-20 flex flex-col items-center w-full text-gray-800 overflow-x-hidden"
+      class="hidden mt-14 flex flex-col items-center w-full text-gray-800 overflow-hidden h-[calc(100vh-3.5rem)]"
     >
       <!-- RULES -->
       <section
         id="rules"
-        class="hidden fade w-full max-w-4xl px-6 py-0 space-y-6"
+        class="hidden fade w-full h-full px-6 pt-6 pb-6 overflow-y-auto overflow-x-hidden"
       >
         <div class="fade-in">
           <!-- Decorative elements -->
@@ -347,7 +348,7 @@
             class="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
           ></div>
 
-          <div class="relative z-10">
+          <div class="relative z-10 max-w-4xl mx-auto w-full">
             <!-- Header -->
 
             <!-- Rules List -->
@@ -577,7 +578,6 @@
         document.getElementById("content").classList.remove("hidden");
         document.body.classList.remove("bubbles", "justify-center");
         document.body.classList.add("bg-gray-50", "text-gray-800");
-        window.scrollTo({ top: 0, behavior: "auto" });
         startTimer();
       });
 
@@ -590,7 +590,6 @@
         document.getElementById("content").classList.remove("hidden");
         document.body.classList.remove("bubbles", "justify-center");
         document.body.classList.add("bg-gray-50", "text-gray-800");
-        window.scrollTo({ top: 0, behavior: "auto" });
         startTimer();
       });
 
