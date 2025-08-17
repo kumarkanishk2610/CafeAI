@@ -26,7 +26,7 @@
         font-family: "Quicksand", sans-serif;
         height: 100vh;
         overflow: hidden;
-        padding: var(--sat) 0 0;
+        padding: var(--sat) 0 var(--sab);
         background: linear-gradient(
           -60deg,
           #fff1f2 0%,
@@ -241,6 +241,7 @@
     <section
       id="welcome"
       class="flex flex-col items-center justify-center text-center px-4 min-h-screen"
+      style="padding-bottom: calc(2rem + var(--sab))"
     >
       <!-- Hero Section -->
       <div class="relative z-10 max-w-4xl mx-auto">
@@ -338,6 +339,7 @@
       <section
         id="rules"
         class="hidden fade w-full h-full px-6 pt-6 pb-6 overflow-y-auto overflow-x-hidden"
+        style="padding-bottom: calc(1.5rem + var(--sab))"
       >
         <div class="fade-in">
           <!-- Decorative elements -->
@@ -505,7 +507,7 @@
             <div
               class="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
             >
-              <div class="space-y-4">
+              <div class="space-y-4 mb-4">
                 <label
                   class="inline-flex items-start gap-3 text-sm text-gray-700 cursor-pointer"
                 >
@@ -547,6 +549,10 @@
                 </div>
               </div>
             </div>
+            <br />
+            <br />
+            <br />
+            <br />
           </div>
         </div>
       </section>
