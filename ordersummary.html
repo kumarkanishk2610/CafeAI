@@ -526,14 +526,10 @@
         const params = new URLSearchParams(location.search);
         const code = params.get("code")?.trim() || "";
 
-        // Debug logging
-        console.log("=== URL PARAMETERS DEBUG ===");
-        console.log("Raw URL:", window.location.href);
-        console.log("URL search params:", location.search);
-        console.log("Code:", code, "| Valid:", !!code);
+        // Debug logging removed
 
         if (!code) {
-          console.error("=== REDIRECTING DUE TO MISSING BOOKING ID ===");
+          // === REDIRECTING DUE TO MISSING BOOKING ID ===
           alert("Missing booking ID. Redirecting to initiate payment page...");
           setTimeout(() => {
             location.replace("initiatebooking.html");
@@ -558,48 +554,43 @@
         // ===== FETCH USER DETAILS BY BOOKING ID =====
         const fetchUserDetailsByBookingId = async (bookingId) => {
           try {
-            console.log("=== FETCH USER DETAILS START ===");
-            console.log(`Input booking ID: "${bookingId}"`);
-            console.log(`Sheet ID: ${userDetailsSheetID}`);
-            console.log(`Sheet Name: ${userDetailsSheetName}`);
+            // === FETCH USER DETAILS START ===
+            // Input booking ID: bookingId
+            // Sheet ID: userDetailsSheetID
+            // Sheet Name: userDetailsSheetName
 
             // Fetch the entire sheet data
             const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
               userDetailsSheetName
             )}&tq=${encodeURIComponent("SELECT *")}`;
 
-            console.log(`Query URL: ${userUrl}`);
+            // Query URL: userUrl
 
-            console.log("Making fetch request...");
+            // Making fetch request...
             const response = await fetch(userUrl);
-            console.log(`Response status: ${response.status}`);
-            console.log(`Response ok: ${response.ok}`);
+            // Response status: response.status
+            // Response ok: response.ok
 
             const data = await response.text();
-            console.log(`Response data length: ${data.length}`);
-            console.log(`Response data preview: ${data.substring(0, 200)}...`);
+            // Response data length: data.length
+            // Response data preview: data.substring(0, 200)
 
             // Parse the response
             const json = JSON.parse(data.substring(47).slice(0, -2));
             const rows = json.table.rows;
 
-            console.log(`Total rows: ${rows.length}`);
+            // Total rows: rows.length
 
             // Debug: Show all booking IDs in the sheet
-            console.log("=== ALL BOOKING IDs IN SHEET ===");
-            console.log(`Total rows in sheet: ${rows.length}`);
-            console.log(`Looking for booking ID: "${bookingId}"`);
+            // === ALL BOOKING IDs IN SHEET ===
+            // Total rows in sheet: rows.length
+            // Looking for booking ID: bookingId
 
             // Show first row to understand column structure (no header assumption)
             if (rows.length > 0) {
               const firstRow = rows[0];
-              console.log("=== FIRST ROW STRUCTURE ===");
-              console.log(
-                "First row structure:",
-                firstRow.c
-                  ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
-                  .join(", ")
-              );
+              // === FIRST ROW STRUCTURE ===
+              // First row structure: firstRow.c?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`).join(", ")
             }
 
             // Show first 20 rows with more details
@@ -610,17 +601,10 @@
               const seats = row.c[2]?.v;
               const mobile = row.c[3]?.v;
 
-              console.log(
-                `Row ${i}: Hash="${hashValue}" | Email="${email}" | Seats="${seats}" | Mobile="${mobile}"`
-              );
+              // Row i: Hash=hashValue | Email=email | Seats=seats | Mobile=mobile
 
               // Show full row structure for debugging
-              console.log(
-                `Row ${i} full structure:`,
-                row.c
-                  ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
-                  .join(", ")
-              );
+              // Row i full structure: row.c?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`).join(", ")
             }
 
             // Also check if the booking ID exists anywhere in the sheet
@@ -631,21 +615,17 @@
               for (let col = 0; col < (row.c?.length || 0); col++) {
                 const cellValue = row.c[col]?.v;
                 if (cellValue && String(cellValue).includes(bookingId)) {
-                  console.log(
-                    `Booking ID "${bookingId}" found in row ${i}, column ${col} with value: "${cellValue}"`
-                  );
+                  // Booking ID bookingId found in row i, column col with value: cellValue
                   foundInSheet = true;
                 }
               }
             }
 
             if (!foundInSheet) {
-              console.log(
-                `Booking ID "${bookingId}" NOT found anywhere in the sheet`
-              );
+              // Booking ID bookingId NOT found anywhere in the sheet
             }
 
-            console.log("=== END BOOKING IDs DEBUG ===");
+            // === END BOOKING IDs DEBUG ===
 
             // Search for the booking ID
             for (let i = 0; i < rows.length; i++) {
@@ -655,12 +635,8 @@
               const hashValue = row.c[4]?.v; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
               const hashValueStr = hashValue ? String(hashValue) : "";
 
-              console.log(
-                `Row ${i} - hashValue: "${hashValueStr}" (type: ${typeof hashValue})`
-              );
-              console.log(
-                `Row ${i} - bookingId: "${bookingId}" (type: ${typeof bookingId})`
-              );
+              // Row i - hashValue: hashValueStr (type: typeof hashValue)
+              // Row i - bookingId: bookingId (type: typeof bookingId)
 
               // Additional debugging for data type issues
               const hashValueNum = parseInt(hashValueStr);
@@ -672,11 +648,7 @@
                 hashValueNum === bookingIdNum ||
                 (hashValueNum && hashValueNum === bookingIdNum)
               ) {
-                console.log(
-                  `Found matching booking ID in row ${i} using standard column mapping (${
-                    hashValueStr === bookingId ? "exact match" : "trimmed match"
-                  })`
-                );
+                // Found matching booking ID in row i using standard column mapping (hashValueStr === bookingId ? "exact match" : "trimmed match")
 
                 const userDetails = {
                   email: row.c[1]?.v || "", // B column (Email) - 2nd column (0-indexed as 1)
@@ -685,15 +657,13 @@
                   hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
                 };
 
-                console.log(`User details found:`, userDetails);
-                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                // User details found: userDetails
+                // === FETCH USER DETAILS SUCCESS ===
                 return userDetails;
               }
 
               // If standard mapping didn't work, search all columns
-              console.log(
-                `Standard mapping failed for row ${i}, searching all columns...`
-              );
+              // Standard mapping failed for row i, searching all columns...
               for (let col = 0; col < (row.c?.length || 0); col++) {
                 const cellValue = row.c[col]?.v;
                 const cellValueStr = cellValue ? String(cellValue) : "";
@@ -703,9 +673,7 @@
                   cellValueStr.trim() === bookingId.trim() ||
                   parseInt(cellValueStr) === parseInt(bookingId)
                 ) {
-                  console.log(
-                    `Found matching booking ID in row ${i}, column ${col} with value: "${cellValueStr}"`
-                  );
+                  // Found matching booking ID in row i, column col with value: cellValueStr
 
                   // Try to find email, seats, mobile in adjacent columns
                   const email =
@@ -737,27 +705,22 @@
                     hash: cellValue,
                   };
 
-                  console.log(
-                    `User details found using column search:`,
-                    userDetails
-                  );
-                  console.log("=== FETCH USER DETAILS SUCCESS ===");
+                  // User details found using column search: userDetails
+                  // === FETCH USER DETAILS SUCCESS ===
                   return userDetails;
                 }
               }
             }
 
-            console.warn(
-              `No user details found for booking ID: "${bookingId}"`
-            );
-            console.log("All rows checked, no match found");
-            console.log("=== FETCH USER DETAILS FAILED ===");
+            // No user details found for booking ID: bookingId
+            // All rows checked, no match found
+            // === FETCH USER DETAILS FAILED ===
             return null;
           } catch (error) {
-            console.error("=== ERROR IN FETCH USER DETAILS ===");
-            console.error("Error details:", error);
-            console.error("Error message:", error.message);
-            console.error("Error stack:", error.stack);
+            // === ERROR IN FETCH USER DETAILS ===
+            // Error details: error
+            // Error message: error.message
+            // Error stack: error.stack
             return null;
           }
         };
@@ -771,21 +734,21 @@
          */
         const fetchSlotDetails = async (bookingId) => {
           try {
-            console.log("=== FETCHING SLOT DETAILS ===");
-            console.log(`Booking ID: ${bookingId}`);
+            // === FETCHING SLOT DETAILS ===
+            // Booking ID: bookingId
 
             const url = `https://docs.google.com/spreadsheets/d/${availabilityUpdaterSheetID}/gviz/tq?sheet=${encodeURIComponent(
               availabilityUpdaterSheetName
             )}&tq=${encodeURIComponent("SELECT *")}`;
 
-            console.log("Fetching from URL:", url);
+            // Fetching from URL: url
 
             const response = await fetch(url);
             const data = await response.text();
             const json = JSON.parse(data.substring(47).slice(0, -2));
             const rows = json.table.rows;
 
-            console.log("Total rows fetched:", rows.length);
+            // Total rows fetched: rows.length
 
             const slotDetails = [];
 
@@ -806,10 +769,10 @@
               }
             }
 
-            console.log("Slot details found:", slotDetails);
+            // Slot details found: slotDetails
             return slotDetails;
           } catch (error) {
-            console.error("Error fetching slot details:", error);
+            // Error fetching slot details: error
             return [];
           }
         };
@@ -821,21 +784,21 @@
          */
         const fetchFoodDetails = async (bookingId) => {
           try {
-            console.log("=== FETCHING FOOD DETAILS ===");
-            console.log(`Booking ID: ${bookingId}`);
+            // === FETCHING FOOD DETAILS ===
+            // Booking ID: bookingId
 
             const url = `https://docs.google.com/spreadsheets/d/${foodItemsSheetID}/gviz/tq?sheet=${encodeURIComponent(
               foodItemsSheetName
             )}&tq=${encodeURIComponent("SELECT *")}`;
 
-            console.log("Fetching from URL:", url);
+            // Fetching from URL: url
 
             const response = await fetch(url);
             const data = await response.text();
             const json = JSON.parse(data.substring(47).slice(0, -2));
             const rows = json.table.rows;
 
-            console.log("Total rows fetched:", rows.length);
+            // Total rows fetched: rows.length
 
             const foodDetails = [];
 
@@ -860,10 +823,10 @@
               }
             }
 
-            console.log("Food details found:", foodDetails);
+            // Food details found: foodDetails
             return foodDetails;
           } catch (error) {
-            console.error("Error fetching food details:", error);
+            // Error fetching food details: error
             return [];
           }
         };
@@ -875,13 +838,13 @@
          */
         const updateOrderSummary = (slotDetails, foodDetails) => {
           try {
-            console.log("=== UPDATING ORDER SUMMARY ===");
+            // === UPDATING ORDER SUMMARY ===
 
             const orderSummaryContainer = document.getElementById(
               "orderSummaryContainer"
             );
             if (!orderSummaryContainer) {
-              console.error("Order summary container not found");
+              // Order summary container not found
               return;
             }
 
@@ -997,67 +960,61 @@
             }
 
             orderSummaryContainer.innerHTML = summaryHTML;
-            console.log("Order summary updated successfully");
+            // Order summary updated successfully
           } catch (error) {
-            console.error("Error updating order summary:", error);
+            // Error updating order summary: error
           }
         };
 
         // ===== INITIALIZE USER DETAILS =====
         const initializeUserDetails = async () => {
           try {
-            console.log("=== INITIALIZE USER DETAILS START ===");
-            console.log(`Booking ID from URL: "${code}"`);
-            console.log(`Sheet ID: ${userDetailsSheetID}`);
-            console.log(`Sheet Name: ${userDetailsSheetName}`);
+            // === INITIALIZE USER DETAILS START ===
+            // Booking ID from URL: code
+            // Sheet ID: userDetailsSheetID
+            // Sheet Name: userDetailsSheetName
 
             // Show loading state
             document.getElementById("loadingModal").classList.remove("hidden");
 
             // Wait 2 seconds before fetching user details from Raw Data
-            console.log("Waiting 2 seconds before fetching...");
+            // Waiting 2 seconds before fetching...
             await new Promise((resolve) => setTimeout(resolve, 500));
-            console.log(
-              "2-second wait completed, now fetching user details..."
-            );
+            // 2-second wait completed, now fetching user details...
 
             // Fetch user details from sheet
             const userDetails = await fetchUserDetailsByBookingId(code);
 
-            console.log("User details returned:", userDetails);
+            // User details returned: userDetails
 
             if (!userDetails) {
-              console.error(
-                "No user details found - redirecting to initiatebooking.html"
-              );
+              // No user details found - redirecting to initiatebooking.html
               alert("Invalid booking ID. Please try again.");
               location.replace("initiatebooking.html");
               return;
             }
 
             // Validate user details
-            console.log("Validating user details:");
-            console.log(`Email: "${userDetails.email}"`);
-            console.log(`Mobile: "${userDetails.mobile}"`);
-            console.log(`Seats: ${userDetails.seats}`);
+            // Validating user details:
+            // Email: userDetails.email
+            // Mobile: userDetails.mobile
+            // Seats: userDetails.seats
 
             if (
               !userDetails.email ||
               !userDetails.mobile ||
               userDetails.seats < 1
             ) {
-              console.error(
-                "Invalid user details - redirecting to initiatebooking.html"
-              );
-              console.error(`Email valid: ${!!userDetails.email}`);
-              console.error(`Mobile valid: ${!!userDetails.mobile}`);
-              console.error(`Seats valid: ${userDetails.seats >= 1}`);
+              // Invalid user details - redirecting to initiatebooking.html
+              // Email valid: !!userDetails.email
+              // Mobile valid: !!userDetails.mobile
+              // Seats valid: userDetails.seats >= 1
               alert("Invalid user details. Please try again.");
               location.replace("initiatebooking.html");
               return;
             }
 
-            console.log("User details validation passed");
+            // User details validation passed
 
             // Set global variables
             window.userDetails = userDetails; // Store globally for later access
@@ -1066,11 +1023,11 @@
             const seats = userDetails.seats;
             const amount = await PriceUtility.calculateAmount(seats);
 
-            console.log("Global variables set:");
-            console.log(`Email: ${email}`);
-            console.log(`Mobile: ${mobile}`);
-            console.log(`Seats: ${seats}`);
-            console.log(`Amount: ${amount}`);
+            // Global variables set:
+            // Email: email
+            // Mobile: mobile
+            // Seats: seats
+            // Amount: amount
 
             // Update UI elements
             const seatCountEl = document.getElementById("seatCount");
@@ -1104,7 +1061,7 @@
                   amtTitleEl.innerHTML = `₹${amount}`;
                 }
               } catch (error) {
-                console.error("Error updating amount display:", error);
+                // Error updating amount display: error
                 // Fallback to normal amount display with gradient
                 amtTitleContainer.classList.add("gradient-text");
                 amtTitleEl.innerHTML = `₹${amount}`;
@@ -1154,7 +1111,7 @@
                   }
                 }
               } catch (error) {
-                console.error("Error updating price display:", error);
+                // Error updating price display: error
                 // Fallback to normal price display
                 const currentPrice = await PriceUtility.getCurrentPrice();
                 priceDisplayEl.innerHTML = `₹${currentPrice} each`;
@@ -1166,24 +1123,24 @@
               }
             }
 
-            console.log("UI elements updated successfully");
+            // UI elements updated successfully
 
             // Fetch and display order summary
             try {
-              console.log("=== FETCHING ORDER SUMMARY ===");
+              // === FETCHING ORDER SUMMARY ===
               const [slotDetails, foodDetails] = await Promise.all([
                 fetchSlotDetails(code),
                 fetchFoodDetails(code),
               ]);
 
-              console.log("Order summary data fetched:");
-              console.log("Slot details:", slotDetails);
-              console.log("Food details:", foodDetails);
+              // Order summary data fetched:
+              // Slot details: slotDetails
+              // Food details: foodDetails
 
               // Update the order summary display
               updateOrderSummary(slotDetails, foodDetails);
             } catch (error) {
-              console.error("Error fetching order summary:", error);
+              // Error fetching order summary: error
               // Show error message in order summary
               const orderSummaryContainer = document.getElementById(
                 "orderSummaryContainer"
@@ -1203,14 +1160,14 @@
             // Hide loading modal
             document.getElementById("loadingModal").classList.add("hidden");
 
-            console.log("Loading modal hidden, starting application...");
+            // Loading modal hidden, starting application...
 
-            console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
+            // === INITIALIZE USER DETAILS COMPLETED ===
           } catch (error) {
-            console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
-            console.error("Error details:", error);
-            console.error("Error message:", error.message);
-            console.error("Error stack:", error.stack);
+            // === ERROR IN INITIALIZE USER DETAILS ===
+            // Error details: error
+            // Error message: error.message
+            // Error stack: error.stack
             alert("Failed to load user details. Please try again.");
             location.replace("initiatebooking.html");
           }
@@ -1302,7 +1259,7 @@
                 }
               }
             } catch (error) {
-              console.error("Error updating popup amount:", error);
+              // Error updating popup amount: error
               // Fallback to normal amount display
               const currentTotal = await PriceUtility.calculateAmount(
                 window.userDetails.seats
@@ -1410,8 +1367,8 @@
 
         const initializeCountdownTimer = async (bookingId) => {
           try {
-            console.log("=== INITIALIZING COUNTDOWN TIMER ===");
-            console.log("Booking ID:", bookingId);
+            // === INITIALIZING COUNTDOWN TIMER ===
+            // Booking ID: bookingId
 
             // Fetch data from Slot Blocking Sources sheet
             const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
@@ -1421,14 +1378,14 @@
               sheetName
             )}&tq=${query}`;
 
-            console.log("Fetching data from:", url);
+            // Fetching data from: url
 
             const response = await fetch(url);
             const data = await response.text();
             const json = JSON.parse(data.substring(47).slice(0, -2));
             const rows = json.table.rows;
 
-            console.log("Total rows fetched:", rows.length);
+            // Total rows fetched: rows.length
 
             // Find the last occurrence of the booking ID with status "Processing"
             let lastProcessingEntry = null;
@@ -1444,10 +1401,7 @@
             }
 
             if (!lastProcessingEntry) {
-              console.error(
-                "No Processing entry found for booking ID:",
-                bookingId
-              );
+              // No Processing entry found for booking ID: bookingId
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
@@ -1455,12 +1409,12 @@
             // Extract timestamp from the first column
             const timestampStr = lastProcessingEntry.c[0]?.v;
             if (!timestampStr) {
-              console.error("No timestamp found in Processing entry");
+              // No timestamp found in Processing entry
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
 
-            console.log("Found Processing entry timestamp:", timestampStr);
+            // Found Processing entry timestamp: timestampStr
 
             // Parse the timestamp from Google Sheets format
             let timestamp;
@@ -1485,10 +1439,7 @@
                   parseInt(second)
                 );
               } else {
-                console.error(
-                  "Could not parse timestamp format:",
-                  timestampStr
-                );
+                // Could not parse timestamp format: timestampStr
                 document.getElementById("countdownTimer").textContent = "N/A";
                 return;
               }
@@ -1498,20 +1449,20 @@
             }
 
             if (isNaN(timestamp.getTime())) {
-              console.error("Invalid timestamp after parsing:", timestampStr);
+              // Invalid timestamp after parsing: timestampStr
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
 
             const tPlus10 = new Date(timestamp.getTime() + 10 * 60 * 1000); // T + 10 minutes
 
-            console.log("Original timestamp:", timestamp);
-            console.log("T+10 deadline:", tPlus10);
+            // Original timestamp: timestamp
+            // T+10 deadline: tPlus10
 
             // Start countdown
             updateCountdown(tPlus10);
           } catch (error) {
-            console.error("Error initializing countdown timer:", error);
+            // Error initializing countdown timer: error
             document.getElementById("countdownTimer").textContent = "Error";
           }
         };
@@ -1528,10 +1479,10 @@
               timeoutOccurred = true;
               clearInterval(countdownInterval);
 
-              console.log("=== TIMEOUT OCCURRED ===");
-              console.log("Current time:", now);
-              console.log("Deadline:", deadline);
-              console.log("Time left:", timeLeft);
+              // === TIMEOUT OCCURRED ===
+              // Current time: now
+              // Deadline: deadline
+              // Time left: timeLeft
 
               // Show timeout message
               document.getElementById("countdownTimer").textContent = "00:00";
@@ -1555,11 +1506,7 @@
 
             // Check for valid numbers
             if (isNaN(minutes) || isNaN(seconds)) {
-              console.error("Invalid time calculation:", {
-                timeLeft,
-                minutes,
-                seconds,
-              });
+              // Invalid time calculation: { timeLeft, minutes, seconds }
               document.getElementById("countdownTimer").textContent = "Error";
               return;
             }
@@ -1585,7 +1532,7 @@
                 .classList.remove("text-red-600", "text-orange-600");
             }
 
-            console.log("Countdown updated:", displayText);
+            // Countdown updated: displayText
           };
 
           // Update immediately
