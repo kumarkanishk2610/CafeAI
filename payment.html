@@ -1013,7 +1013,7 @@
           >
             <span class="font-medium">To</span>
             <span id="upiIdVal" class="text-center font-mono break-all"
-              >8758610922@ptsbi</span
+              >Loading...</span
             >
             <button
               id="copyUpiBtn"
@@ -1595,14 +1595,38 @@
         // Checkbox event listener will be set up after user details are loaded
 
         /* ---------- events ---------- */
-        manualPayBtn.onclick = () => manualModal.classList.remove("hidden");
+        manualPayBtn.onclick = async () => {
+          // Fetch and display the folder name
+          try {
+            const folderName = await PriceUtility.getCurrentQRFolder();
+            const upiIdValElement = document.getElementById("upiIdVal");
+            if (upiIdValElement) {
+              upiIdValElement.textContent = folderName;
+            }
+          } catch (error) {
+            // Fallback to default UPI ID if folder name fetch fails
+            const upiIdValElement = document.getElementById("upiIdVal");
+            if (upiIdValElement) {
+              upiIdValElement.textContent = UPI_ID;
+            }
+          }
+          manualModal.classList.remove("hidden");
+        };
         closeModal.onclick = () => manualModal.classList.add("hidden");
         manualModal.addEventListener("click", (e) => {
           if (e.target === manualModal) manualModal.classList.add("hidden");
         });
 
         copyAmtBtn.onclick = () => copy(manualAmt.textContent, copyAmtBtn);
-        copyUpiBtn.onclick = () => copy(UPI_ID, copyUpiBtn);
+        copyUpiBtn.onclick = async () => {
+          try {
+            const folderName = await PriceUtility.getCurrentQRFolder();
+            copy(folderName, copyUpiBtn);
+          } catch (error) {
+            // Fallback to default UPI ID if folder name fetch fails
+            copy(UPI_ID, copyUpiBtn);
+          }
+        };
         copyBookingIdModalBtn.onclick = () => copy(code, copyBookingIdModalBtn);
 
         // UPI Transaction Validation
