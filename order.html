@@ -633,13 +633,11 @@
       const baseReferrer = referrerUrl.origin + referrerUrl.pathname;
 
       if (baseReferrer !== allowedReferrer || !hasCode) {
-        console.log(
-          "Access denied: Invalid referrer or missing code parameter"
-        );
-        console.log("Expected referrer:", allowedReferrer);
-        console.log("Actual referrer:", document.referrer);
-        console.log("Base referrer:", baseReferrer);
-        console.log("Has code parameter:", hasCode);
+        // Access denied: Invalid referrer or missing code parameter
+        // Expected referrer: allowedReferrer
+        // Actual referrer: document.referrer
+        // Base referrer: baseReferrer
+        // Has code parameter: hasCode
         alert("Please access this page through the proper booking flow.");
         window.location.href = "initiatebooking.html";
       }*/
@@ -650,8 +648,8 @@
 
       const initializeCountdownTimer = async (bookingId) => {
         try {
-          console.log("=== INITIALIZING COUNTDOWN TIMER ===");
-          console.log("Booking ID:", bookingId);
+          // === INITIALIZING COUNTDOWN TIMER ===
+          // Booking ID: bookingId
 
           // Fetch data from Slot Blocking Sources sheet
           const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
@@ -661,14 +659,14 @@
             sheetName
           )}&tq=${query}`;
 
-          console.log("Fetching data from:", url);
+          // Fetching data from: url
 
           const response = await fetch(url);
           const data = await response.text();
           const json = JSON.parse(data.substring(47).slice(0, -2));
           const rows = json.table.rows;
 
-          console.log("Total rows fetched:", rows.length);
+          // Total rows fetched: rows.length
 
           // Find the last occurrence of the booking ID with status "Processing"
           let lastProcessingEntry = null;
@@ -684,10 +682,7 @@
           }
 
           if (!lastProcessingEntry) {
-            console.error(
-              "No Processing entry found for booking ID:",
-              bookingId
-            );
+            // No Processing entry found for booking ID: bookingId
             document.getElementById("countdownTimer").textContent = "N/A";
             return;
           }
@@ -695,12 +690,12 @@
           // Extract timestamp from the first column
           const timestampStr = lastProcessingEntry.c[0]?.v;
           if (!timestampStr) {
-            console.error("No timestamp found in Processing entry");
+            // No timestamp found in Processing entry
             document.getElementById("countdownTimer").textContent = "N/A";
             return;
           }
 
-          console.log("Found Processing entry timestamp:", timestampStr);
+          // Found Processing entry timestamp: timestampStr
 
           // Parse the timestamp from Google Sheets format
           let timestamp;
@@ -725,10 +720,7 @@
                 parseInt(second)
               );
             } else {
-              console.error(
-                "Could not parse timestamp format:",
-                timestampStr
-              );
+              // Could not parse timestamp format: timestampStr
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
@@ -738,20 +730,20 @@
           }
 
           if (isNaN(timestamp.getTime())) {
-            console.error("Invalid timestamp after parsing:", timestampStr);
+            // Invalid timestamp after parsing: timestampStr
             document.getElementById("countdownTimer").textContent = "N/A";
             return;
           }
 
           const tPlus10 = new Date(timestamp.getTime() + 10 * 60 * 1000); // T + 10 minutes
 
-          console.log("Original timestamp:", timestamp);
-          console.log("T+10 deadline:", tPlus10);
+          // Original timestamp: timestamp
+          // T+10 deadline: tPlus10
 
           // Start countdown
           updateCountdown(tPlus10);
         } catch (error) {
-          console.error("Error initializing countdown timer:", error);
+          // Error initializing countdown timer: error
           document.getElementById("countdownTimer").textContent = "Error";
         }
       };
@@ -768,10 +760,10 @@
             timeoutOccurred = true;
             clearInterval(countdownInterval);
 
-            console.log("=== TIMEOUT OCCURRED ===");
-            console.log("Current time:", now);
-            console.log("Deadline:", deadline);
-            console.log("Time left:", timeLeft);
+            // === TIMEOUT OCCURRED ===
+            // Current time: now
+            // Deadline: deadline
+            // Time left: timeLeft
 
             // Show timeout message
             document.getElementById("countdownTimer").textContent = "00:00";
@@ -793,11 +785,7 @@
 
           // Check for valid numbers
           if (isNaN(minutes) || isNaN(seconds)) {
-            console.error("Invalid time calculation:", {
-              timeLeft,
-              minutes,
-              seconds,
-            });
+            // Invalid time calculation: { timeLeft, minutes, seconds }
             document.getElementById("countdownTimer").textContent = "Error";
             return;
           }
@@ -823,7 +811,7 @@
               .classList.remove("text-red-600", "text-orange-600");
           }
 
-          console.log("Countdown updated:", displayText);
+          // Countdown updated: displayText
         };
 
         // Update immediately
@@ -842,15 +830,15 @@
       // Function to check if Order already exists for a booking ID
       const checkOrderExists = async (bookingId) => {
         try {
-          console.log("=== CHECKING ORDER STATUS ===");
-          console.log(`Checking booking ID: "${bookingId}"`);
+          // === CHECKING ORDER STATUS ===
+          // Checking booking ID: bookingId
 
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${orderSheetID}/gviz/tq?sheet=${encodeURIComponent(
             orderSheetName
           )}&tq=${query}`;
 
-          console.log("Making fetch request to check order...");
+          // Making fetch request to check order...
           const response = await fetch(url);
 
           if (!response.ok) {
@@ -864,7 +852,7 @@
           const json = JSON.parse(jsonData);
 
           const rows = json.table.rows;
-          console.log(`Total rows in sheet: ${rows.length}`);
+          // Total rows in sheet: rows.length
 
           // Search for the booking ID in column B (index 1) and check if Order exists in column C (index 2)
           for (let i = 0; i < rows.length; i++) {
@@ -874,30 +862,24 @@
               : ""; // Column B (index 1)
             const tabToBlock = row.c[2]?.v ? String(row.c[2].v).trim() : ""; // Column C (index 2)
 
-            console.log(
-              `Row ${i}: Booking ID = "${bookingIdInSheet}", Tab To Block = "${tabToBlock}"`
-            );
+            // Row i: Booking ID = bookingIdInSheet, Tab To Block = tabToBlock
 
             if (bookingIdInSheet === bookingId) {
-              console.log(`Found booking ID "${bookingId}" in row ${i}`);
+              // Found booking ID bookingId in row i
 
               if (tabToBlock === "Order") {
-                console.log(`Order found in row ${i} - User should be blocked`);
+                // Order found in row i - User should be blocked
                 return true;
               } else {
-                console.log(
-                  `Booking ID found but Tab To Block is "${tabToBlock}" (not Order)`
-                );
+                // Booking ID found but Tab To Block is tabToBlock (not Order)
               }
             }
           }
 
-          console.log(
-            `Booking ID "${bookingId}" not found in sheet or no Order recorded`
-          );
+          // Booking ID bookingId not found in sheet or no Order recorded
           return false;
         } catch (error) {
-          console.error("Error checking order status:", error);
+          // Error checking order status: error
           return false;
         }
       };
@@ -905,8 +887,8 @@
       // Function to write Order to form
       const writeOrder = async (bookingId) => {
         try {
-          console.log("=== WRITING ORDER ===");
-          console.log(`Writing booking ID: "${bookingId}"`);
+          // === WRITING ORDER ===
+          // Writing booking ID: bookingId
 
           const formData = new FormData();
           formData.append("entry.1737294711", bookingId); // Booking ID
@@ -918,10 +900,10 @@
             body: formData,
           });
 
-          console.log("Order data written successfully");
+          // Order data written successfully
           return true;
         } catch (error) {
-          console.error("Error writing order:", error);
+          // Error writing order: error
           return false;
         }
       };
@@ -929,10 +911,10 @@
       // Function to initialize order tracking
       const initializeOrderTracking = async (bookingId) => {
         try {
-          console.log("=== INITIALIZING ORDER TRACKING ===");
+          // === INITIALIZING ORDER TRACKING ===
 
           if (!bookingId) {
-            console.log("No booking ID provided");
+            // No booking ID provided
             return;
           }
 
@@ -940,7 +922,7 @@
           const orderExists = await checkOrderExists(bookingId);
 
           if (orderExists) {
-            console.log("Order already exists - Reload/Forward/Back detected");
+            // Order already exists - Reload/Forward/Back detected
             alert(
               "Reload/Forward/Back was detected. Please start booking again."
             );
@@ -949,16 +931,16 @@
           }
 
           // Write Order to form
-          console.log("Order not found - writing to form");
+          // Order not found - writing to form
           const writeSuccess = await writeOrder(bookingId);
 
           if (writeSuccess) {
-            console.log("Order tracking initialized successfully");
+            // Order tracking initialized successfully
           } else {
-            console.log("Failed to write order data");
+            // Failed to write order data
           }
         } catch (error) {
-          console.error("Error in order tracking:", error);
+          // Error in order tracking: error
         }
       };
 
@@ -977,15 +959,15 @@
       // ===== FETCH USER SLOT SELECTIONS =====
       const fetchUserSlotSelections = async (bookingId) => {
         try {
-          console.log("=== FETCHING USER SLOT SELECTIONS ===");
-          console.log(`Booking ID: "${bookingId}"`);
-          console.log(`Sheet ID: ${availabilityUpdaterSheetID}`);
-          console.log(`Sheet Name: ${availabilityUpdaterSheetName}`);
+          // === FETCHING USER SLOT SELECTIONS ===
+          // Booking ID: bookingId
+          // Sheet ID: availabilityUpdaterSheetID
+          // Sheet Name: availabilityUpdaterSheetName
 
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${availabilityUpdaterSheetID}/gviz/tq?sheet=${encodeURIComponent(availabilityUpdaterSheetName)}&tq=${query}`;
 
-          console.log("Query URL:", url);
+          // Query URL: url
           const response = await fetch(url);
           
           if (!response.ok) {
@@ -999,7 +981,7 @@
           const json = JSON.parse(jsonData);
 
           const rows = json.table.rows;
-          console.log(`Total rows in sheet: ${rows.length}`);
+          // Total rows in sheet: rows.length
 
           const userSlots = [];
 
@@ -1011,10 +993,10 @@
             const slotId = row.c[3]?.v ? String(row.c[3].v).trim() : ""; // Column D (Slot ID)
             const expiry = row.c[4]?.v ? String(row.c[4].v).trim() : ""; // Column E (Expiry)
 
-            console.log(`Row ${i}: Booking ID = "${rowBookingId}", Seats = ${seatCount}, Slot = "${slotId}", Expiry = "${expiry}"`);
+            // Row i: Booking ID = rowBookingId, Seats = seatCount, Slot = slotId, Expiry = expiry
 
             if (rowBookingId === bookingId && expiry === "Active") {
-              console.log(`Found active slot for booking ID "${bookingId}": ${slotId} with ${seatCount} seats`);
+              // Found active slot for booking ID bookingId: slotId with seatCount seats
               userSlots.push({
                 slotId: slotId,
                 seatCount: seatCount,
@@ -1023,12 +1005,12 @@
             }
           }
 
-          console.log(`Total active slots found for booking ID "${bookingId}": ${userSlots.length}`);
-          console.log("User slots:", userSlots);
+          // Total active slots found for booking ID bookingId: userSlots.length
+          // User slots: userSlots
 
           return userSlots;
         } catch (error) {
-          console.error("Error fetching user slot selections:", error);
+          // Error fetching user slot selections: error
           return [];
         }
       };
@@ -1059,7 +1041,7 @@
         const seatContainer = document.getElementById("seatContainer");
         
         if (!seatContainer) {
-          console.error("seatContainer element not found");
+          // seatContainer element not found
           return;
         }
 
@@ -1420,7 +1402,7 @@
           const slot = userSlotSelections[slotIndex];
           const quantities = window.slotQuantities[slotIndex];
           
-          console.log(`Submitting order for ${slot.slotId}:`, quantities);
+          // Submitting order for slot.slotId: quantities
           
           const formData = new FormData();
           formData.append("entry.1027873371", userBookingId); // Booking ID
@@ -1436,12 +1418,12 @@
               mode: "no-cors",
               body: formData,
             });
-            console.log(`Order submitted successfully for ${slot.slotId}`);
+            // Order submitted successfully for slot.slotId
             
             // Add a small delay between submissions
             await new Promise((resolve) => setTimeout(resolve, 200));
           } catch (error) {
-            console.error(`Error submitting order for ${slot.slotId}:`, error);
+            // Error submitting order for slot.slotId: error
             throw error;
           }
         }
@@ -1453,118 +1435,77 @@
 
       // Function to fetch user details from Google Sheet
       async function fetchUserDetails(bookingId) {
-        console.log("=== FETCH USER DETAILS START ===");
-        console.log("Input booking ID:", JSON.stringify(bookingId));
-        console.log("Sheet ID:", userDetailsSheetID);
-        console.log("Sheet Name:", userDetailsSheetName);
+        // === FETCH USER DETAILS START ===
+        // Input booking ID: JSON.stringify(bookingId)
+        // Sheet ID: userDetailsSheetID
+        // Sheet Name: userDetailsSheetName
 
         try {
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${userDetailsSheetName}&tq=${query}`;
 
-          console.log("Query URL:", url);
-          console.log("Making fetch request...");
+          // Query URL: url
+          // Making fetch request...
 
           const response = await fetch(url);
-          console.log("Response status:", response.status);
-          console.log("Response ok:", response.ok);
+          // Response status: response.status
+          // Response ok: response.ok
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
           const data = await response.text();
-          console.log("Response data length:", data.length);
-          console.log(
-            "Raw response (first 500 chars):",
-            data.substring(0, 500)
-          );
+          // Response data length: data.length
+          // Raw response (first 500 chars): data.substring(0, 500)
 
           // Parse the response
           const jsonStart = data.indexOf("{");
           const jsonEnd = data.lastIndexOf("}") + 1;
           const jsonData = data.substring(jsonStart, jsonEnd);
 
-          console.log("Parsing JSON response...");
+          // Parsing JSON response...
           const json = JSON.parse(jsonData);
-          console.log("JSON parsed successfully");
-          console.log("JSON structure:", Object.keys(json));
+          // JSON parsed successfully
+          // JSON structure: Object.keys(json)
 
           const rows = json.table.rows;
-          console.log("Total rows in sheet:", rows.length);
+          // Total rows in sheet: rows.length
 
           // Search for the booking ID
-          console.log("Searching for booking ID:", JSON.stringify(bookingId));
-          console.log("First few rows for debugging:");
+          // Searching for booking ID: JSON.stringify(bookingId)
+          // First few rows for debugging:
 
           for (let i = 0; i < Math.min(3, rows.length); i++) {
             const row = rows[i];
             const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
-            console.log(
-              `Row ${i}: col0="${row.c[0]?.v || ""}", col1="${
-                row.c[1]?.v || ""
-              }", col2="${row.c[2]?.v || ""}", col3="${
-                row.c[3]?.v || ""
-              }", col4="${hashValue}", col5="${row.c[5]?.v || ""}", col6="${
-                row.c[6]?.v || ""
-              }", col7="${row.c[7]?.v || ""}", col8="${
-                row.c[8]?.v || ""
-              }", col9="${row.c[9]?.v || ""}", col10="${row.c[10]?.v || ""}"`
-            );
+            // Row i: col0="row.c[0]?.v || """, col1="row.c[1]?.v || """, col2="row.c[2]?.v || """, col3="row.c[3]?.v || """, col4="hashValue", col5="row.c[5]?.v || """, col6="row.c[6]?.v || """, col7="row.c[7]?.v || """, col8="row.c[8]?.v || """, col9="row.c[9]?.v || """, col10="row.c[10]?.v || ""
           }
 
           for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
 
-            console.log(
-              `Row ${i}: Hash value = "${hashValue}", looking for "${bookingId}"`
-            );
+            // Row i: Hash value = hashValue, looking for bookingId
 
             if (hashValue === bookingId) {
-              console.log(
-                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = true`
-              );
+              // Row i comparison: hashValue === bookingId = true
 
               // Additional debugging for type checking
-              console.log(
-                `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
-                  hashValue.length
-                }`
-              );
-              console.log(
-                `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
-                  bookingId.length
-                }`
-              );
-              console.log(
-                `Row ${i} - hashValue char codes: ${Array.from(hashValue)
-                  .map((c) => c.charCodeAt(0))
-                  .join(", ")}`
-              );
-              console.log(
-                `Row ${i} - bookingId char codes: ${Array.from(bookingId)
-                  .map((c) => c.charCodeAt(0))
-                  .join(", ")}`
-              );
+              // Row i - hashValue type: typeof hashValue, length: hashValue.length
+              // Row i - bookingId type: typeof bookingId, length: bookingId.length
+              // Row i - hashValue char codes: Array.from(hashValue).map((c) => c.charCodeAt(0)).join(", ")
+              // Row i - bookingId char codes: Array.from(bookingId).map((c) => c.charCodeAt(0)).join(", ")
 
               // Try trimming both values
               const trimmedHash = hashValue.trim();
               const trimmedBookingId = bookingId.trim();
-              console.log(`Row ${i} - hashValue trimmed: "${trimmedHash}"`);
-              console.log(
-                `Row ${i} - bookingId trimmed: "${trimmedBookingId}"`
-              );
-              console.log(
-                `Row ${i} - trimmed comparison: "${trimmedHash}" === "${trimmedBookingId}" = ${
-                  trimmedHash === trimmedBookingId
-                }`
-              );
+              // Row i - hashValue trimmed: trimmedHash
+              // Row i - bookingId trimmed: trimmedBookingId
+              // Row i - trimmed comparison: trimmedHash === trimmedBookingId = trimmedHash === trimmedBookingId
 
               if (trimmedHash === trimmedBookingId) {
-                console.log(
-                  `Found matching booking ID in row ${i} (exact match)`
-                );
+                // Found matching booking ID in row i (exact match)
 
                 const userDetails = {
                   email: row.c[1]?.v || "",
@@ -1573,41 +1514,39 @@
                   hash: row.c[4]?.v || "",
                 };
 
-                console.log("User details found:", userDetails);
-                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                // User details found: userDetails
+                // === FETCH USER DETAILS SUCCESS ===
                 return userDetails;
               }
             } else {
-              console.log(
-                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = false`
-              );
+              // Row i comparison: hashValue === bookingId = false
             }
           }
 
-          console.log("No matching booking ID found");
-          console.log("=== FETCH USER DETAILS FAILED ===");
+          // No matching booking ID found
+          // === FETCH USER DETAILS FAILED ===
           return null;
         } catch (error) {
-          console.error("Error fetching user details:", error);
-          console.log("=== FETCH USER DETAILS FAILED ===");
+          // Error fetching user details: error
+          // === FETCH USER DETAILS FAILED ===
           return null;
         }
       }
 
       // Function to initialize user details
       async function initializeUserDetails() {
-        console.log("=== INITIALIZE USER DETAILS START ===");
+        // === INITIALIZE USER DETAILS START ===
 
         try {
           const params = new URLSearchParams(location.search);
           const bookingId = params.get("code")?.trim();
 
-          console.log("Booking ID from URL:", JSON.stringify(bookingId));
-          console.log("Sheet ID:", userDetailsSheetID);
-          console.log("Sheet Name:", userDetailsSheetName);
+          // Booking ID from URL: JSON.stringify(bookingId)
+          // Sheet ID: userDetailsSheetID
+          // Sheet Name: userDetailsSheetName
 
           if (!bookingId) {
-            console.log("No booking ID found in URL parameters");
+            // No booking ID found in URL parameters
 
             // Hide loading modal
             const loadingModal = document.getElementById("loadingModal");
@@ -1620,14 +1559,14 @@
             return;
           }
 
-          console.log("Waiting 2 seconds before fetching...");
+          // Waiting 2 seconds before fetching...
           await new Promise((resolve) => setTimeout(resolve, 2000));
-          console.log("2-second wait completed, now fetching user details...");
+          // 2-second wait completed, now fetching user details...
 
           const userDetails = await fetchUserDetails(bookingId);
 
           if (!userDetails) {
-            console.log("Failed to fetch user details");
+            // Failed to fetch user details
 
             // Hide loading modal
             const loadingModal = document.getElementById("loadingModal");
@@ -1640,20 +1579,20 @@
             return;
           }
 
-          console.log("User details returned:", userDetails);
+          // User details returned: userDetails
 
           // Validate user details
-          console.log("Validating user details:");
-          console.log("Email:", JSON.stringify(userDetails.email));
-          console.log("Mobile:", JSON.stringify(userDetails.mobile));
-          console.log("Seats:", userDetails.seats);
+          // Validating user details:
+          // Email: JSON.stringify(userDetails.email)
+          // Mobile: JSON.stringify(userDetails.mobile)
+          // Seats: userDetails.seats
 
           if (
             !userDetails.email ||
             !userDetails.mobile ||
             userDetails.seats <= 0
           ) {
-            console.log("User details validation failed");
+            // User details validation failed
 
             // Hide loading modal
             const loadingModal = document.getElementById("loadingModal");
@@ -1666,7 +1605,7 @@
             return;
           }
 
-          console.log("User details validation passed");
+          // User details validation passed
 
           // Set global variables
           userEmail = userDetails.email;
@@ -1675,17 +1614,17 @@
           userBookingId = bookingId;
           userAmount = await PriceUtility.calculateAmount(userDetails.seats); // Calculate amount with dynamic pricing
 
-          console.log("Global variables set:");
-          console.log("Email:", userEmail);
-          console.log("Mobile:", userMobile);
-          console.log("Seats:", userSeats);
-          console.log("Amount:", userAmount);
-          console.log("Max Seats:", userSeats);
+          // Global variables set:
+          // Email: userEmail
+          // Mobile: userMobile
+          // Seats: userSeats
+          // Amount: userAmount
+          // Max Seats: userSeats
 
           // Update UI elements (only those that still exist)
           // Note: totalSeats and totalSelections elements were removed
 
-          console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
+          // === INITIALIZE USER DETAILS COMPLETED ===
 
           // Hide loading modal after successful initialization
           const loadingModal = document.getElementById("loadingModal");
@@ -1693,10 +1632,10 @@
             loadingModal.classList.add("hidden");
           }
         } catch (error) {
-          console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
-          console.error("Error details:", error);
-          console.error("Error message:", error.message);
-          console.error("Error stack:", error.stack);
+          // === ERROR IN INITIALIZE USER DETAILS ===
+          // Error details: error
+          // Error message: error.message
+          // Error stack: error.stack
 
           // Hide loading modal on error
           const loadingModal = document.getElementById("loadingModal");
@@ -1758,18 +1697,18 @@
 
         // Fetch user slot selections
         userSlotSelections = await fetchUserSlotSelections(bookingId);
-        console.log("Fetched slot selections:", userSlotSelections);
+        // Fetched slot selections: userSlotSelections
 
         // Create dynamic order interface based on slot selections
         createOrderInterface(userSlotSelections);
         
         // Debug: Log total seats from slot selections
         const totalSeatsFromSlots = userSlotSelections.reduce((total, slot) => total + slot.seatCount, 0);
-        console.log(`Total seats from slot selections: ${totalSeatsFromSlots}`);
-        console.log(`User seats from data: ${userSeats}`);
+        // Total seats from slot selections: totalSeatsFromSlots
+        // User seats from data: userSeats
         
         if (totalSeatsFromSlots !== userSeats) {
-          console.warn(`Mismatch: Slot seats (${totalSeatsFromSlots}) vs User seats (${userSeats})`);
+          // Mismatch: Slot seats (totalSeatsFromSlots) vs User seats (userSeats)
         }
 
         // Initialize countdown timer
@@ -1904,7 +1843,7 @@
                   }
                 }
               } catch (error) {
-                console.error("Error updating popup amount:", error);
+                // Error updating popup amount: error
                 // Fallback to normal amount display
                 popupAmountEl.textContent = `₹${userAmount}`;
                 
@@ -1977,7 +1916,7 @@
                 }
               }
             } catch (error) {
-              console.error("Error updating popup amount:", error);
+              // Error updating popup amount: error
               // Fallback to normal amount display
               popupAmountEl.textContent = `₹${userAmount}`;
               
@@ -2052,7 +1991,7 @@
               try {
                 // Submit orders for each slot
                 await submitOrdersForAllSlots();
-                console.log("All food choices submitted successfully");
+                // All food choices submitted successfully
 
                 // Hide loading modal
                 loadingModal.classList.add("hidden");
@@ -2060,7 +1999,7 @@
                 // Redirect to payment page
                 window.location.href = `ordersummary.html?code=${userBookingId}`;
               } catch (error) {
-                console.error("Error submitting food choices:", error);
+                // Error submitting food choices: error
 
                 // Hide loading modal
                 loadingModal.classList.add("hidden");
