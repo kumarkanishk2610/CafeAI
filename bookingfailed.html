@@ -511,8 +511,10 @@
             document.body.removeChild(form);
             document.body.removeChild(iframe);
           }, 1000);
+
+          console.log("Google Form auto-filled with booking ID:", bookingId);
         } catch (error) {
-          // Error handling without console logging
+          console.error("Error auto-filling Google Form:", error);
         }
       }
 
@@ -559,7 +561,8 @@
             copyBtn.classList.remove("text-green-600");
           }, 2000);
         } catch (err) {
-          // Failed to copy booking ID
+          console.error("Failed to copy booking ID:", err);
+          alert("Failed to copy booking ID. Please copy it manually.");
         }
       }
 

@@ -900,7 +900,7 @@
             // If we're still on the same page after 2 seconds, the app probably didn't open
             if (document.hidden || document.webkitHidden) {
               // App opened successfully
-              
+              console.log(`${appName} opened successfully`);
             } else {
               // App didn't open, show fallback
               showError(
@@ -1102,13 +1102,13 @@
         const code = params.get("code")?.trim() || "";
 
         // Debug logging
-        
-        
-        
-        
+        console.log("=== URL PARAMETERS DEBUG ===");
+        console.log("Raw URL:", window.location.href);
+        console.log("URL search params:", location.search);
+        console.log("Code:", code, "| Valid:", !!code);
 
         if (!code) {
-          
+          console.error("=== REDIRECTING DUE TO MISSING BOOKING ID ===");
           alert("Missing booking ID. Redirecting to initiate payment page...");
           setTimeout(() => {
             location.replace("initiatebooking.html");
@@ -1129,51 +1129,57 @@
          */
         const fetchUserDetailsByBookingId = async (bookingId) => {
           try {
-            
-            
-            
-            
+            console.log("=== FETCH USER DETAILS START ===");
+            console.log(`Input booking ID: "${bookingId}"`);
+            console.log(`Sheet ID: ${userDetailsSheetID}`);
+            console.log(`Sheet Name: ${userDetailsSheetName}`);
 
             // Fetch the entire sheet data
             const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
               userDetailsSheetName
             )}&tq=${encodeURIComponent("SELECT *")}`;
 
-            
+            console.log(`Query URL: ${userUrl}`);
 
-            
+            console.log("Making fetch request...");
             const response = await fetch(userUrl);
-            
-            
+            console.log(`Response status: ${response.status}`);
+            console.log(`Response ok: ${response.ok}`);
 
             const data = await response.text();
-            
-            : ${data.substring(0, 500)}...`
+            console.log(`Response data length: ${data.length}`);
+            console.log(
+              `Raw response (first 500 chars): ${data.substring(0, 500)}...`
             );
 
             if (!response.ok) {
-              
+              console.error(
+                `HTTP Error: ${response.status} ${response.statusText}`
+              );
               return null;
             }
 
-            
+            console.log("Parsing JSON response...");
             const json = JSON.parse(data.substring(47).slice(0, -2));
-            
-            );
+            console.log("JSON parsed successfully");
+            console.log(`JSON structure:`, Object.keys(json));
 
             const rows = json.table.rows;
-            
+            console.log(`Total rows in sheet: ${rows.length}`);
 
             if (rows.length === 0) {
-              
+              console.warn("No rows found in sheet");
               return null;
             }
 
-            
-            
+            console.log(`Searching for booking ID: "${bookingId}"`);
+            console.log("First few rows for debugging:");
             for (let i = 0; i < Math.min(3, rows.length); i++) {
               const row = rows[i];
-               => `col${idx}="${cell?.v || ""}"`)
+              console.log(
+                `Row ${i}:`,
+                row.c
+                  ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
                   .join(", ")
               );
             }
@@ -1184,25 +1190,44 @@
               const hashValue = row.c[4]?.v || ""; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
               const hashValueStr = String(hashValue); // Convert to string to handle both number and string types
 
-              
-              
+              console.log(
+                `Row ${i}: Hash value = "${hashValueStr}", looking for "${bookingId}"`
+              );
+              console.log(
+                `Row ${i} comparison: "${hashValueStr}" === "${bookingId}" = ${
+                  hashValueStr === bookingId
+                }`
+              );
 
               // Detailed character analysis
-              
-              
-              
+              console.log(
+                `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
+                  hashValueStr.length
+                }`
+              );
+              console.log(
+                `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
+                  bookingId.length
+                }`
+              );
+              console.log(
+                `Row ${i} - hashValue char codes: ${Array.from(hashValueStr)
                   .map((c) => c.charCodeAt(0))
                   .join(", ")}`
               );
-              
+              console.log(
+                `Row ${i} - bookingId char codes: ${Array.from(bookingId)
                   .map((c) => c.charCodeAt(0))
                   .join(", ")}`
               );
-              }"`
+              console.log(
+                `Row ${i} - hashValue trimmed: "${hashValueStr.trim()}"`
               );
-              }"`
+              console.log(
+                `Row ${i} - bookingId trimmed: "${bookingId.trim()}"`
               );
-              }" === "${bookingId.trim()}" = ${
+              console.log(
+                `Row ${i} - trimmed comparison: "${hashValueStr.trim()}" === "${bookingId.trim()}" = ${
                   hashValueStr.trim() === bookingId.trim()
                 }`
               );
@@ -1211,7 +1236,10 @@
                 hashValueStr === bookingId ||
                 hashValueStr.trim() === bookingId.trim()
               ) {
-                `
+                console.log(
+                  `Found matching booking ID in row ${i} (${
+                    hashValueStr === bookingId ? "exact match" : "trimmed match"
+                  })`
                 );
 
                 const userDetails = {
@@ -1221,21 +1249,23 @@
                   hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
                 };
 
-                
-                
+                console.log(`User details found:`, userDetails);
+                console.log("=== FETCH USER DETAILS SUCCESS ===");
                 return userDetails;
               }
             }
 
-            
-            
-            
+            console.warn(
+              `No user details found for booking ID: "${bookingId}"`
+            );
+            console.log("All rows checked, no match found");
+            console.log("=== FETCH USER DETAILS FAILED ===");
             return null;
           } catch (error) {
-            
-            
-            
-            
+            console.error("=== ERROR IN FETCH USER DETAILS ===");
+            console.error("Error details:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
             return null;
           }
         };
@@ -1247,8 +1277,8 @@
 
         const initializeCountdownTimer = async (bookingId) => {
           try {
-            
-            
+            console.log("=== INITIALIZING COUNTDOWN TIMER ===");
+            console.log("Booking ID:", bookingId);
 
             // Fetch data from Slot Blocking Sources sheet
             const sheetID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
@@ -1258,14 +1288,14 @@
               sheetName
             )}&tq=${query}`;
 
-            
+            console.log("Fetching data from:", url);
 
             const response = await fetch(url);
             const data = await response.text();
             const json = JSON.parse(data.substring(47).slice(0, -2));
             const rows = json.table.rows;
 
-            
+            console.log("Total rows fetched:", rows.length);
 
             // Find the last occurrence of the booking ID with status "Processing"
             let lastProcessingEntry = null;
@@ -1281,7 +1311,10 @@
             }
 
             if (!lastProcessingEntry) {
-              
+              console.error(
+                "No Processing entry found for booking ID:",
+                bookingId
+              );
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
@@ -1289,12 +1322,12 @@
             // Extract timestamp from the first column
             const timestampStr = lastProcessingEntry.c[0]?.v;
             if (!timestampStr) {
-              
+              console.error("No timestamp found in Processing entry");
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
 
-            
+            console.log("Found Processing entry timestamp:", timestampStr);
 
             // Parse the timestamp from Google Sheets format
             let timestamp;
@@ -1319,7 +1352,10 @@
                   parseInt(second)
                 );
               } else {
-                
+                console.error(
+                  "Could not parse timestamp format:",
+                  timestampStr
+                );
                 document.getElementById("countdownTimer").textContent = "N/A";
                 return;
               }
@@ -1329,20 +1365,20 @@
             }
 
             if (isNaN(timestamp.getTime())) {
-              
+              console.error("Invalid timestamp after parsing:", timestampStr);
               document.getElementById("countdownTimer").textContent = "N/A";
               return;
             }
 
             const tPlus10 = new Date(timestamp.getTime() + 10 * 60 * 1000); // T + 10 minutes
 
-            
-            
+            console.log("Original timestamp:", timestamp);
+            console.log("T+10 deadline:", tPlus10);
 
             // Start countdown
             updateCountdown(tPlus10);
           } catch (error) {
-            
+            console.error("Error initializing countdown timer:", error);
             document.getElementById("countdownTimer").textContent = "Error";
           }
         };
@@ -1359,10 +1395,10 @@
               timeoutOccurred = true;
               clearInterval(countdownInterval);
 
-              
-              
-              
-              
+              console.log("=== TIMEOUT OCCURRED ===");
+              console.log("Current time:", now);
+              console.log("Deadline:", deadline);
+              console.log("Time left:", timeLeft);
 
               // Show timeout message
               document.getElementById("countdownTimer").textContent = "00:00";
@@ -1386,7 +1422,11 @@
 
             // Check for valid numbers
             if (isNaN(minutes) || isNaN(seconds)) {
-              
+              console.error("Invalid time calculation:", {
+                timeLeft,
+                minutes,
+                seconds,
+              });
               document.getElementById("countdownTimer").textContent = "Error";
               return;
             }
@@ -1412,7 +1452,7 @@
                 .classList.remove("text-red-600", "text-orange-600");
             }
 
-            
+            console.log("Countdown updated:", displayText);
           };
 
           // Update immediately
@@ -1424,52 +1464,58 @@
 
         const initializeUserDetails = async () => {
           try {
-            
-            
-            
-            
+            console.log("=== INITIALIZE USER DETAILS START ===");
+            console.log(`Booking ID from URL: "${code}"`);
+            console.log(`Sheet ID: ${userDetailsSheetID}`);
+            console.log(`Sheet Name: ${userDetailsSheetName}`);
 
             // Show loading state
             document.getElementById("loadingModal").classList.remove("hidden");
 
             // Wait 2 seconds before fetching user details from Raw Data
-            
+            console.log("Waiting 2 seconds before fetching...");
             await new Promise((resolve) => setTimeout(resolve, 500));
-            
+            console.log(
+              "2-second wait completed, now fetching user details..."
+            );
 
             // Fetch user details from sheet
             const userDetails = await fetchUserDetailsByBookingId(code);
 
-            
+            console.log("User details returned:", userDetails);
 
             if (!userDetails) {
-              
+              console.error(
+                "No user details found - redirecting to initiatebooking.html"
+              );
               alert("Invalid booking ID. Please try again.");
               location.replace("initiatebooking.html");
               return;
             }
 
             // Validate user details
-            
-            
-            
-            
+            console.log("Validating user details:");
+            console.log(`Email: "${userDetails.email}"`);
+            console.log(`Mobile: "${userDetails.mobile}"`);
+            console.log(`Seats: ${userDetails.seats}`);
 
             if (
               !userDetails.email ||
               !userDetails.mobile ||
               userDetails.seats < 1
             ) {
-              
-              
-              
-              
+              console.error(
+                "Invalid user details - redirecting to initiatebooking.html"
+              );
+              console.error(`Email valid: ${!!userDetails.email}`);
+              console.error(`Mobile valid: ${!!userDetails.mobile}`);
+              console.error(`Seats valid: ${userDetails.seats >= 1}`);
               alert("Invalid user details. Please try again.");
               location.replace("initiatebooking.html");
               return;
             }
 
-            
+            console.log("User details validation passed");
 
             // Set global variables
             window.userDetails = userDetails; // Store globally for later access
@@ -1478,11 +1524,11 @@
             const seats = userDetails.seats;
             const amount = await PriceUtility.calculateAmount(seats);
 
-            
-            
-            
-            
-            
+            console.log("Global variables set:");
+            console.log(`Email: ${email}`);
+            console.log(`Mobile: ${mobile}`);
+            console.log(`Seats: ${seats}`);
+            console.log(`Amount: ${amount}`);
 
             // Update UI elements
             const amountDisplayEl = document.getElementById("amountDisplay");
@@ -1498,21 +1544,21 @@
             if (bookingIdTextModalEl) bookingIdTextModalEl.textContent = code;
             if (displayBookingIdEl) displayBookingIdEl.textContent = code;
 
-            
+            console.log("UI elements updated successfully");
 
             // Build UPI URL
             upiURL = buildUPI(email, seats, amount);
-            
+            console.log("UPI URL built:", upiURL);
 
             // Set up QR code - always fetch from configured folder
             try {
               const qrFilePath = await getQRFilePath(amount);
-              
+              console.log("Using folder-based QR code:", qrFilePath);
               qrImg.src = qrFilePath;
             } catch (error) {
-              
+              console.error("Error loading QR code:", error);
               // Fallback to generated QR code if folder-based fails
-              ");
+              console.log("Using generated QR code (fallback)");
               qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
                 upiURL
               )}`;
@@ -1527,14 +1573,14 @@
             // Hide loading modal
             document.getElementById("loadingModal").classList.add("hidden");
 
-            
+            console.log("Loading modal hidden, starting application...");
 
-            
+            console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
           } catch (error) {
-            
-            
-            
-            
+            console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
+            console.error("Error details:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
             alert("Failed to load user details. Please try again.");
             location.replace("initiatebooking.html");
           }
@@ -1550,15 +1596,15 @@
           try {
             // Get the QR folder from the Google Sheet configuration
             const qrFolder = await PriceUtility.getCurrentQRFolder();
-            
+            console.log("[QR] Using QR folder:", qrFolder);
 
             // Construct the file path based on the configured folder
             const qrFilePath = `assets/${qrFolder}/${amount}.png`;
-            
+            console.log("[QR] Constructed QR path:", qrFilePath);
 
             return qrFilePath;
           } catch (error) {
-            
+            console.error("[QR] Error getting QR folder:", error);
             // Fallback to default folder
             return `assets/upiqr/${amount}.png`;
           }
@@ -1761,7 +1807,7 @@
 
             return false; // Transaction ID is unique
           } catch (error) {
-            
+            console.error("Error checking transaction ID:", error);
             return false; // Allow submission if check fails
           }
         }
@@ -1847,10 +1893,13 @@
             try {
               qrFolderName = await PriceUtility.getCurrentQRFolder();
             } catch (error) {
-              
+              console.error(
+                "Error getting QR folder for form submission:",
+                error
+              );
             }
             upiFormData.append("entry.1621166332", qrFolderName); // Folder Name
-            
+            console.log("QR Folder name submitted:", qrFolderName);
 
             // Get the amount for submission
             let amountValue = "0"; // Default fallback
@@ -1858,16 +1907,20 @@
               if (typeof PriceUtility !== "undefined") {
                 const currentTotal = await PriceUtility.calculateAmount(seats);
                 amountValue = currentTotal.toString();
-                
+                console.log(
+                  `Calculated amount for ${seats} seats: ₹${currentTotal}`
+                );
               } else {
-                
+                console.warn(
+                  "PriceUtility not available, using default amount"
+                );
               }
             } catch (error) {
-              
-              
+              console.error("Error getting amount for form submission:", error);
+              console.log("Using default amount due to error");
             }
             upiFormData.append("entry.964038986", amountValue); // Amount
-            
+            console.log("Amount submitted:", amountValue);
 
             try {
               await fetch(upiFormURL, {
@@ -1875,9 +1928,9 @@
                 mode: "no-cors",
                 body: upiFormData,
               });
-              
+              console.log("UPI transaction data submitted successfully");
             } catch (upiError) {
-              
+              console.error("Error submitting UPI transaction data:", upiError);
               // Continue with the process even if UPI form submission fails
             }
 
@@ -1937,7 +1990,7 @@
             // Redirect after successful submission
             window.location.href = `paid.html?code=${bookingId}`;
           } catch (error) {
-            
+            console.error("Booking confirmation failed:", error);
             alert(
               "There was an issue confirming your booking. Please try again."
             );
@@ -1968,7 +2021,7 @@
             alert(
               "Couldn't download the QR code. Please long‑press or right‑click the image instead."
             );
-            
+            console.error(err);
           }
         };
       });
@@ -2165,7 +2218,7 @@
                 }
               }
             } catch (error) {
-              
+              console.error("Error updating popup amount:", error);
               // Fallback to normal amount display
               const currentTotal = await PriceUtility.calculateAmount(
                 window.userDetails.seats

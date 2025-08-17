@@ -259,30 +259,33 @@
       async function fetchEmailForBookingId(bookingId) {
         const query = encodeURIComponent("SELECT B, E");
         const url = SHEET_URL + `&tq=${query}`;
-        
-        
+        console.log(
+          "[OTP] Fetching ALL emails and hashes for local search. BookingId:",
+          bookingId
+        );
+        console.log("[OTP] Fetch URL:", url);
         try {
           const res = await fetch(url);
           const text = await res.text();
-          );
+          console.log("[OTP] Raw response:", text.substring(0, 200));
           const json = JSON.parse(text.substring(47, text.length - 2));
-          
+          console.log("[OTP] Parsed JSON:", json);
           if (json.table.rows.length > 0) {
             for (const row of json.table.rows) {
               const email = row.c[0]?.v;
               const hash = row.c[1]?.v;
-              
+              console.log(`[OTP] Row: email=${email}, hash=${hash}`);
               if (String(hash).trim() === String(bookingId).trim()) {
-                
+                console.log("[OTP] Found email for bookingId:", email);
                 return email;
               }
             }
-            
+            console.log("[OTP] No matching bookingId found in local data");
           } else {
-            
+            console.log("[OTP] No rows in sheet");
           }
         } catch (e) {
-          
+          console.error("[OTP] Error fetching email:", e);
         }
         return "";
       }
@@ -358,10 +361,10 @@
            return;
          }
          const expectedOtp = hash6DigitNumber(bookingId);
-         
-         :", expectedOtp);
+         console.log("[OTP] User entered OTP:", otp);
+         console.log("[OTP] Expected OTP (hash of bookingId):", expectedOtp);
          if (otp === expectedOtp) {
-          
+          console.log("[OTP] OTP verified successfully!");
           if (!document.getElementById("otpSuccessModal")) {
             const modal = document.createElement("div");
             modal.id = "otpSuccessModal";
@@ -394,7 +397,7 @@
             )}`;
           }, 1700);
                  } else {
-           
+           console.log("[OTP] OTP verification failed.");
                        document.getElementById("otpStatus").innerHTML =
               '<div class="flex items-center gap-2 text-red-600"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>Invalid OTP. Please check and try again.</div>';
             // Clear the OTP input field for retry
