@@ -730,7 +730,7 @@
 
           hideLoadingModal();
         } catch (error) {
-          console.error("Error loading kitchen data:", error);
+          
           showStatus("Error loading data: " + error.message, "error");
           hideLoadingModal();
         }
@@ -746,7 +746,7 @@
         // Start new interval - refresh every 15 seconds
         refreshInterval = setInterval(() => {
           if (currentSlot) {
-            console.log("Auto-refreshing kitchen data...");
+            
             loadKitchenData();
           }
         }, 15000); // 15 seconds
@@ -781,7 +781,7 @@
           );
         }
 
-        console.log("Food Items Data:", data.table?.rows);
+        
         return data.table?.rows || [];
       }
 
@@ -804,7 +804,7 @@
           );
         }
 
-        console.log("Transaction IDs Data:", data.table?.rows);
+        
         return data.table?.rows || [];
       }
 
@@ -827,19 +827,17 @@
           );
         }
 
-        console.log("Raw Payment Tracker Data:", data.table?.rows);
-        console.log("Payment Tracker Columns:", data.table?.cols);
+        
+        
 
         // Process all data locally
         const allRows = data.table?.rows || [];
-        console.log("Total rows in Payment Tracker:", allRows.length);
+        
 
         if (allRows.length > 0) {
-          console.log("Sample rows from Payment Tracker:");
+          
           allRows.slice(0, 3).forEach((row, index) => {
-            console.log(
-              `Row ${index}:`,
-              row.c.map((col, colIndex) => `Col${colIndex}:${col?.v}`)
+             => `Col${colIndex}:${col?.v}`)
             );
           });
         }
@@ -868,7 +866,7 @@
           );
         }
 
-        console.log("Table Reservations Data:", data.table?.rows);
+        
         return data.table?.rows || [];
       }
 
@@ -879,24 +877,19 @@
         transactionIdsData,
         paymentTrackerData
       ) {
-        console.log("Processing data...");
-        console.log("Food Items Data:", foodItemsData);
-        console.log("Table Reservations Data:", tableReservationsData);
-        console.log("Transaction IDs Data:", transactionIdsData);
-        console.log("Payment Tracker Data:", paymentTrackerData);
-        console.log("Payment Tracker Data Length:", paymentTrackerData.length);
+        
+        
+        
+        
+        
+        
         if (paymentTrackerData.length > 0) {
-          console.log("First row sample:", paymentTrackerData[0]);
-          console.log(
-            "All columns in first row:",
-            paymentTrackerData[0].c.map(
-              (col, index) => `Column ${index}: ${col?.v}`
+          
+           => `Column ${index}: ${col?.v}`
             )
           );
         }
-        console.log(
-          "Payment Tracker Data Details:",
-          paymentTrackerData.map((row) => ({
+         => ({
             bookingId: row.c[0]?.v,
             paymentConfirmed: row.c[1]?.v,
             rawValue: row.c[1],
@@ -913,7 +906,7 @@
           }
         });
 
-        console.log("Valid Booking IDs:", Array.from(validBookingIds));
+        );
 
         // Create a map of booking ID to payment confirmation status
         const paymentStatusMap = {};
@@ -929,18 +922,14 @@
             paymentValue === "YES" ||
             paymentValue === "Yes" ||
             paymentValue === "yes";
-          console.log(
-            `Payment status for ${bookingId}: raw=${paymentValue}, type=${paymentValueType}, parsed=${paymentConfirmed}`
-          );
+          
           if (bookingId) {
             paymentStatusMap[bookingId] = paymentConfirmed;
           }
         });
 
-        console.log("Payment Status Map:", paymentStatusMap);
-        console.log(
-          "Payment Status Map Details:",
-          Object.entries(paymentStatusMap).map(
+        
+        .map(
             ([id, status]) => `${id}: ${status}`
           )
         );
@@ -950,7 +939,7 @@
         tableReservationsData.forEach((row) => {
           const bookingId = row.c[0]?.v || ""; // Column B - Booking ID
           const tableSeat = row.c[2]?.v || ""; // Column D - Table/Seat
-          console.log(`Table mapping: ${bookingId} -> ${tableSeat}`);
+          
           if (bookingId && tableSeat) {
             if (!tableMap[bookingId]) {
               tableMap[bookingId] = [];
@@ -959,7 +948,7 @@
           }
         });
 
-        console.log("Final table map:", tableMap);
+        
 
         // Process food items data
         const paidOrders = [];
@@ -973,7 +962,7 @@
 
           // Skip if booking ID is not in valid transaction IDs
           if (!validBookingIds.has(bookingId)) {
-            console.log(`Skipping invalid booking ID: ${bookingId}`);
+            
             return;
           }
 
@@ -983,13 +972,11 @@
           const plainWater = parseInt(row.c[5]?.v || 0); // Column G - Plain Water Qty
           const totalItems = omurice + curryRice + icedTea + plainWater;
 
-          console.log(`Processing booking: ${bookingId}, items: ${totalItems}`);
+          
 
           if (totalItems > 0) {
             const paymentConfirmed = paymentStatusMap[bookingId] || false;
-            console.log(
-              `Order ${bookingId}: payment status = ${paymentConfirmed}`
-            );
+            
 
             const orderData = {
               bookingId,

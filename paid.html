@@ -684,30 +684,29 @@
 
       // Function to fetch user details from Google Sheet - same as order.html
       async function fetchUserDetails(bookingId) {
-        console.log("=== FETCH USER DETAILS START ===");
-        console.log("Input booking ID:", JSON.stringify(bookingId));
-        console.log("Sheet ID:", userDetailsSheetID);
-        console.log("Sheet Name:", userDetailsSheetName);
+        
+        );
+        
+        
 
         try {
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${userDetailsSheetName}&tq=${query}`;
 
-          console.log("Query URL:", url);
-          console.log("Making fetch request...");
+          
+          
 
           const response = await fetch(url);
-          console.log("Response status:", response.status);
-          console.log("Response ok:", response.ok);
+          
+          
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
           const data = await response.text();
-          console.log("Response data length:", data.length);
-          console.log(
-            "Raw response (first 500 chars):",
+          
+          :",
             data.substring(0, 500)
           );
 
@@ -716,65 +715,41 @@
           const jsonEnd = data.lastIndexOf("}") + 1;
           const jsonData = data.substring(jsonStart, jsonEnd);
 
-          console.log("Parsing JSON response...");
+          
           const json = JSON.parse(jsonData);
-          console.log("JSON parsed successfully");
-          console.log("JSON structure:", Object.keys(json));
+          
+          );
 
           const rows = json.table.rows;
-          console.log("Total rows in sheet:", rows.length);
+          
 
           // Search for the booking ID
-          console.log("Searching for booking ID:", JSON.stringify(bookingId));
-          console.log("First few rows for debugging:");
+          );
+          
 
           for (let i = 0; i < Math.min(3, rows.length); i++) {
             const row = rows[i];
             const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
-            console.log(
-              `Row ${i}: col0="${row.c[0]?.v || ""}", col1="${
-                row.c[1]?.v || ""
-              }", col2="${row.c[2]?.v || ""}", col3="${
-                row.c[3]?.v || ""
-              }", col4="${hashValue}", col5="${row.c[5]?.v || ""}", col6="${
-                row.c[6]?.v || ""
-              }", col7="${row.c[7]?.v || ""}", col8="${
-                row.c[8]?.v || ""
-              }", col9="${row.c[9]?.v || ""}", col10="${row.c[10]?.v || ""}"`
-            );
+            
           }
 
           for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             const hashValue = row.c[4]?.v ? String(row.c[4].v).trim() : "";
 
-            console.log(
-              `Row ${i}: Hash value = "${hashValue}", looking for "${bookingId}"`
-            );
+            
 
             if (hashValue === bookingId) {
-              console.log(
-                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = true`
-              );
+              
 
               // Additional debugging for type checking
-              console.log(
-                `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
-                  hashValue.length
-                }`
-              );
-              console.log(
-                `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
-                  bookingId.length
-                }`
-              );
-              console.log(
-                `Row ${i} - hashValue char codes: ${Array.from(hashValue)
+              
+              
+              
                   .map((c) => c.charCodeAt(0))
                   .join(", ")}`
               );
-              console.log(
-                `Row ${i} - bookingId char codes: ${Array.from(bookingId)
+              
                   .map((c) => c.charCodeAt(0))
                   .join(", ")}`
               );
@@ -782,19 +757,12 @@
               // Try trimming both values
               const trimmedHash = hashValue.trim();
               const trimmedBookingId = bookingId.trim();
-              console.log(`Row ${i} - hashValue trimmed: "${trimmedHash}"`);
-              console.log(
-                `Row ${i} - bookingId trimmed: "${trimmedBookingId}"`
-              );
-              console.log(
-                `Row ${i} - trimmed comparison: "${trimmedHash}" === "${trimmedBookingId}" = ${
-                  trimmedHash === trimmedBookingId
-                }`
-              );
+              
+              
+              
 
               if (trimmedHash === trimmedBookingId) {
-                console.log(
-                  `Found matching booking ID in row ${i} (exact match)`
+                `
                 );
 
                 const userDetails = {
@@ -804,23 +772,21 @@
                   hash: row.c[4]?.v || "",
                 };
 
-                console.log("User details found:", userDetails);
-                console.log("=== FETCH USER DETAILS SUCCESS ===");
+                
+                
                 return userDetails;
               }
             } else {
-              console.log(
-                `Row ${i} comparison: "${hashValue}" === "${bookingId}" = false`
-              );
+              
             }
           }
 
-          console.log("No matching booking ID found");
-          console.log("=== FETCH USER DETAILS FAILED ===");
+          
+          
           return null;
         } catch (error) {
-          console.error("Error fetching user details:", error);
-          console.log("=== FETCH USER DETAILS FAILED ===");
+          
+          
           return null;
         }
       }
@@ -880,7 +846,7 @@
                 document.getElementById("popupAmount").textContent = "₹--";
               }
             } catch (error) {
-              console.error("Error calculating amount:", error);
+              
               document.getElementById("popupAmount").textContent = "₹--";
             }
           } else {
@@ -901,7 +867,7 @@
             popupDiscountInfoEl.innerHTML = "";
           }
         } catch (error) {
-          console.error("Error initializing user details:", error);
+          
           // Set fallback values
           document.getElementById("popupEmail").textContent = "Error loading";
           document.getElementById("popupBookingId").textContent =
@@ -992,7 +958,7 @@
               }, 2000);
             })
             .catch((err) => {
-              console.error("Failed to copy: ", err);
+              
               alert("Failed to copy booking ID. Please copy it manually.");
             });
         } else {

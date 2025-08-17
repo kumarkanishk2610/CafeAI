@@ -446,9 +446,9 @@
       // ===== REFERRER CHECK =====
       /*<const allowedReferrer = window.location.origin + "/initiatebooking.html";
       if (document.referrer !== allowedReferrer) {
-        console.log("Access denied: Invalid referrer");
-        console.log("Expected referrer:", allowedReferrer);
-        console.log("Actual referrer:", document.referrer);
+        
+        
+        
         alert("Please access this page through the proper booking flow.");
         window.location.href = "initiatebooking.html";
       }*/
@@ -467,15 +467,15 @@
        */
       const checkSlotSelectionExists = async (bookingId) => {
         try {
-          console.log("=== CHECKING SLOT SELECTION STATUS ===");
-          console.log(`Checking booking ID: "${bookingId}"`);
+          
+          
 
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${slotSelectionSheetID}/gviz/tq?sheet=${encodeURIComponent(
             slotSelectionSheetName
           )}&tq=${query}`;
 
-          console.log("Making fetch request to check slot selection...");
+          
           const response = await fetch(url);
 
           if (!response.ok) {
@@ -489,7 +489,7 @@
           const json = JSON.parse(jsonData);
 
           const rows = json.table.rows;
-          console.log(`Total rows in sheet: ${rows.length}`);
+          
 
           // Search for the booking ID in column B (index 1) and check if SlotSelection exists in column C (index 2)
           for (let i = 0; i < rows.length; i++) {
@@ -499,32 +499,25 @@
               : ""; // Column B (index 1)
             const tabToBlock = row.c[2]?.v ? String(row.c[2].v).trim() : ""; // Column C (index 2)
 
-            console.log(
-              `Row ${i}: Booking ID = "${bookingIdInSheet}", Tab To Block = "${tabToBlock}"`
-            );
+            
 
             if (bookingIdInSheet === bookingId) {
-              console.log(`Found booking ID "${bookingId}" in row ${i}`);
+              
 
               if (tabToBlock === "SlotSelection") {
-                console.log(
-                  `SlotSelection found in row ${i} - User should be blocked`
-                );
+                
                 return true;
               } else {
-                console.log(
-                  `Booking ID found but Tab To Block is "${tabToBlock}" (not SlotSelection)`
+                `
                 );
               }
             }
           }
 
-          console.log(
-            `Booking ID "${bookingId}" not found in sheet or no SlotSelection recorded`
-          );
+          
           return false;
         } catch (error) {
-          console.error("Error checking slot selection status:", error);
+          
           return false;
         }
       };
@@ -536,8 +529,8 @@
        */
       const writeSlotSelection = async (bookingId) => {
         try {
-          console.log("=== WRITING SLOT SELECTION ===");
-          console.log(`Writing booking ID: "${bookingId}"`);
+          
+          
 
           const formData = new FormData();
           formData.append("entry.1737294711", bookingId); // Booking ID
@@ -549,10 +542,10 @@
             body: formData,
           });
 
-          console.log("Slot selection data written successfully");
+          
           return true;
         } catch (error) {
-          console.error("Error writing slot selection:", error);
+          
           return false;
         }
       };
@@ -563,10 +556,10 @@
        */
       const initializeSlotSelectionTracking = async (bookingId) => {
         try {
-          console.log("=== INITIALIZING SLOT SELECTION TRACKING ===");
+          
 
           if (!bookingId) {
-            console.log("No booking ID provided");
+            
             return;
           }
 
@@ -574,9 +567,7 @@
           const slotSelectionExists = await checkSlotSelectionExists(bookingId);
 
           if (slotSelectionExists) {
-            console.log(
-              "SlotSelection already exists - Reload/Forward/Back detected"
-            );
+            
             alert(
               "Reload/Forward/Back was detected. Please start booking again."
             );
@@ -585,16 +576,16 @@
           }
 
           // Write SlotSelection to form
-          console.log("SlotSelection not found - writing to form");
+          
           const writeSuccess = await writeSlotSelection(bookingId);
 
           if (writeSuccess) {
-            console.log("Slot selection tracking initialized successfully");
+            
           } else {
-            console.log("Failed to write slot selection data");
+            
           }
         } catch (error) {
-          console.error("Error in slot selection tracking:", error);
+          
         }
       };
 
@@ -712,57 +703,51 @@
        */
       const fetchUserDetailsByBookingId = async (bookingId) => {
         try {
-          console.log("=== FETCH USER DETAILS START ===");
-          console.log(`Input booking ID: "${bookingId}"`);
-          console.log(`Sheet ID: ${userDetailsSheetID}`);
-          console.log(`Sheet Name: ${userDetailsSheetName}`);
+          
+          
+          
+          
 
           // Fetch the entire sheet data
           const userUrl = `https://docs.google.com/spreadsheets/d/${userDetailsSheetID}/gviz/tq?sheet=${encodeURIComponent(
             userDetailsSheetName
           )}&tq=${encodeURIComponent("SELECT *")}`;
 
-          console.log(`Query URL: ${userUrl}`);
+          
 
-          console.log("Making fetch request...");
+          
           const response = await fetch(userUrl);
-          console.log(`Response status: ${response.status}`);
-          console.log(`Response ok: ${response.ok}`);
+          
+          
 
           const data = await response.text();
-          console.log(`Response data length: ${data.length}`);
-          console.log(
-            `Raw response (first 500 chars): ${data.substring(0, 500)}...`
+          
+          : ${data.substring(0, 500)}...`
           );
 
           if (!response.ok) {
-            console.error(
-              `HTTP Error: ${response.status} ${response.statusText}`
-            );
+            
             return null;
           }
 
-          console.log("Parsing JSON response...");
+          
           const json = JSON.parse(data.substring(47).slice(0, -2));
-          console.log("JSON parsed successfully");
-          console.log(`JSON structure:`, Object.keys(json));
+          
+          );
 
           const rows = json.table.rows;
-          console.log(`Total rows in sheet: ${rows.length}`);
+          
 
           if (rows.length === 0) {
-            console.warn("No rows found in sheet");
+            
             return null;
           }
 
-          console.log(`Searching for booking ID: "${bookingId}"`);
-          console.log("First few rows for debugging:");
+          
+          
           for (let i = 0; i < Math.min(3, rows.length); i++) {
             const row = rows[i];
-            console.log(
-              `Row ${i}:`,
-              row.c
-                ?.map((cell, idx) => `col${idx}="${cell?.v || ""}"`)
+             => `col${idx}="${cell?.v || ""}"`)
                 .join(", ")
             );
           }
@@ -773,42 +758,24 @@
             const hashValue = row.c[4]?.v || ""; // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
             const hashValueStr = String(hashValue); // Convert to string to handle both number and string types
 
-            console.log(
-              `Row ${i}: Hash value = "${hashValueStr}", looking for "${bookingId}"`
-            );
-            console.log(
-              `Row ${i} comparison: "${hashValueStr}" === "${bookingId}" = ${
-                hashValueStr === bookingId
-              }`
-            );
+            
+            
 
             // Detailed character analysis
-            console.log(
-              `Row ${i} - hashValue type: ${typeof hashValue}, length: ${
-                hashValueStr.length
-              }`
-            );
-            console.log(
-              `Row ${i} - bookingId type: ${typeof bookingId}, length: ${
-                bookingId.length
-              }`
-            );
-            console.log(
-              `Row ${i} - hashValue char codes: ${Array.from(hashValueStr)
+            
+            
+            
                 .map((c) => c.charCodeAt(0))
                 .join(", ")}`
             );
-            console.log(
-              `Row ${i} - bookingId char codes: ${Array.from(bookingId)
+            
                 .map((c) => c.charCodeAt(0))
                 .join(", ")}`
             );
-            console.log(
-              `Row ${i} - hashValue trimmed: "${hashValueStr.trim()}"`
+            }"`
             );
-            console.log(`Row ${i} - bookingId trimmed: "${bookingId.trim()}"`);
-            console.log(
-              `Row ${i} - trimmed comparison: "${hashValueStr.trim()}" === "${bookingId.trim()}" = ${
+            }"`);
+            }" === "${bookingId.trim()}" = ${
                 hashValueStr.trim() === bookingId.trim()
               }`
             );
@@ -817,10 +784,7 @@
               hashValueStr === bookingId ||
               hashValueStr.trim() === bookingId.trim()
             ) {
-              console.log(
-                `Found matching booking ID in row ${i} (${
-                  hashValueStr === bookingId ? "exact match" : "trimmed match"
-                })`
+              `
               );
 
               const userDetails = {
@@ -830,21 +794,21 @@
                 hash: hashValue, // E column (Hash/Booking ID) - 5th column (0-indexed as 4)
               };
 
-              console.log(`User details found:`, userDetails);
-              console.log("=== FETCH USER DETAILS SUCCESS ===");
+              
+              
               return userDetails;
             }
           }
 
-          console.warn(`No user details found for booking ID: "${bookingId}"`);
-          console.log("All rows checked, no match found");
-          console.log("=== FETCH USER DETAILS FAILED ===");
+          
+          
+          
           return null;
         } catch (error) {
-          console.error("=== ERROR IN FETCH USER DETAILS ===");
-          console.error("Error details:", error);
-          console.error("Error message:", error.message);
-          console.error("Error stack:", error.stack);
+          
+          
+          
+          
           return null;
         }
       };
@@ -867,56 +831,52 @@
       // ===== INITIALIZE USER DETAILS =====
       const initializeUserDetails = async () => {
         try {
-          console.log("=== INITIALIZE USER DETAILS START ===");
-          console.log(`Booking ID from URL: "${bookingId}"`);
-          console.log(`Sheet ID: ${userDetailsSheetID}`);
-          console.log(`Sheet Name: ${userDetailsSheetName}`);
+          
+          
+          
+          
 
           // Show loading state
           document.getElementById("loadingModal").classList.remove("hidden");
 
           // Wait 2 seconds before fetching user details from Raw Data
-          console.log("Waiting 2 seconds before fetching...");
+          
           await new Promise((resolve) => setTimeout(resolve, 2000));
-          console.log("2-second wait completed, now fetching user details...");
+          
 
           // Fetch user details from sheet
           const userDetails = await fetchUserDetailsByBookingId(bookingId);
 
-          console.log("User details returned:", userDetails);
+          
 
           if (!userDetails) {
-            console.error(
-              "No user details found - redirecting to initiatebooking.html"
-            );
+            
             alert("Invalid booking ID. Please try again.");
             location.replace("initiatebooking.html");
             return;
           }
 
           // Validate user details
-          console.log("Validating user details:");
-          console.log(`Email: "${userDetails.email}"`);
-          console.log(`Mobile: "${userDetails.mobile}"`);
-          console.log(`Seats: ${userDetails.seats}`);
+          
+          
+          
+          
 
           if (
             !userDetails.email ||
             !userDetails.mobile ||
             userDetails.seats < 1
           ) {
-            console.error(
-              "Invalid user details - redirecting to initiatebooking.html"
-            );
-            console.error(`Email valid: ${!!userDetails.email}`);
-            console.error(`Mobile valid: ${!!userDetails.mobile}`);
-            console.error(`Seats valid: ${userDetails.seats >= 1}`);
+            
+            
+            
+            
             alert("Invalid user details. Please try again.");
             location.replace("initiatebooking.html");
             return;
           }
 
-          console.log("User details validation passed");
+          
 
           // Set global variables
           email = userDetails.email;
@@ -925,32 +885,32 @@
           amount = await PriceUtility.calculateAmount(seats);
           maxSeats = seats;
 
-          console.log("Global variables set:");
-          console.log(`Email: ${email}`);
-          console.log(`Mobile: ${mobile}`);
-          console.log(`Seats: ${seats}`);
-          console.log(`Amount: ${amount}`);
-          console.log(`Max Seats: ${maxSeats}`);
+          
+          
+          
+          
+          
+          
 
           // Store user details for popup (no need to update header elements since they were removed)
           // The popup will be populated when the user clicks the details button
 
-          console.log("UI elements updated successfully");
+          
 
           // Hide loading modal
           document.getElementById("loadingModal").classList.add("hidden");
 
-          console.log("Loading modal hidden, starting application...");
+          
 
           // Start the application
           fetchAndRenderTable();
 
-          console.log("=== INITIALIZE USER DETAILS COMPLETED ===");
+          
         } catch (error) {
-          console.error("=== ERROR IN INITIALIZE USER DETAILS ===");
-          console.error("Error details:", error);
-          console.error("Error message:", error.message);
-          console.error("Error stack:", error.stack);
+          
+          
+          
+          
           alert("Failed to load user details. Please try again.");
           location.replace("initiatebooking.html");
         }
@@ -992,7 +952,7 @@
             renderTable(currentDay);
           })
           .catch((error) => {
-            console.error("Error loading sheet:", error);
+            
             document.getElementById("sheet-data").innerHTML =
               '<p class="text-red-600 text-center">Failed to load availability data.</p>';
           });
@@ -1132,7 +1092,7 @@
 
       const updateSummary = async () => {
         const summaryDiv = document.getElementById("selectionSummary");
-        console.log("[SlotSelection] updateSummary called");
+        
 
         summaryDiv.innerHTML = `
           <div class="text-center mb-4">
@@ -1266,7 +1226,7 @@
                 ) === slotId
             )?.[1];
             if (!entryField) {
-              console.warn(`No entry field mapping found for slot ${slotId}`);
+              
               continue;
             }
             await submitToGoogleForm(FORM_URLS.slotEntry, {
@@ -1344,7 +1304,7 @@
             const slotMatch = slotId.match(/Slot\s*(\d+)/);
 
             if (!dayMatch || !slotMatch) {
-              console.warn(`Invalid slotId format: ${slotId}`);
+              
               continue;
             }
 
@@ -1384,23 +1344,21 @@
        */
       const triplePreRegistrationCheck = async () => {
         for (let attempt = 1; attempt <= 5; attempt++) {
-          console.log(`Pre-registration check attempt ${attempt}/5`);
+          
 
           const { allCleared, matchedBookingId } =
             await checkRaceConditionStatus();
 
           // Check if all slots are either expired or belong to current user
           if (!allCleared && !matchedBookingId) {
-            console.log(
-              `Pre-registration check ${attempt}/5 FAILED: Slots locked by others`
-            );
+            
             if (attempt < 5) {
               await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second between checks
             }
             continue;
           }
 
-          console.log(`Pre-registration check ${attempt}/5 PASSED`);
+          
 
           // If this is the last attempt and it passed, return true
           if (attempt === 5) {
@@ -1421,22 +1379,18 @@
        */
       const triplePostRegistrationVerification = async () => {
         for (let attempt = 1; attempt <= 5; attempt++) {
-          console.log(`Post-registration verification attempt ${attempt}/5`);
+          
 
           const { allCleared, matchedBookingId } =
             await checkRaceConditionStatus();
 
           // Check if at least one slot belongs to current user (indicating successful registration)
           if (matchedBookingId) {
-            console.log(
-              `Post-registration verification ${attempt}/5 PASSED: Own booking ID found`
-            );
+            
             return true;
           }
 
-          console.log(
-            `Post-registration verification ${attempt}/5 FAILED: Own booking ID not found`
-          );
+          
 
           if (attempt < 5) {
             await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second between checks
@@ -1469,21 +1423,18 @@
           if (selection[slotId] === 0) continue;
 
           const statusOrUser = raceStatusMap[slotId];
-          console.log(`Slot ${slotId}: Status/User = ${statusOrUser}`);
+          
 
           if (statusOrUser === "Expired") {
-            console.log(`Slot ${slotId} is Expired. ✅`);
+            
             continue;
           } else if (statusOrUser === bookingId) {
-            console.log(
-              `Slot ${slotId} belongs to current Booking ID (${bookingId}). ✅ Proceeding...`
+            . ✅ Proceeding...`
             );
             matchedBookingId = true;
             break;
           } else {
-            console.log(
-              `Slot ${slotId} is held by another booking or not expired. ⏳`
-            );
+            
             allCleared = false;
           }
         }
@@ -1545,9 +1496,7 @@
             const freeCount = row.c[1]?.v ? parseInt(row.c[1].v) : 0;
             if (slotName) {
               freeSlotsMap[slotName] = freeCount;
-              console.log(
-                `Parsed from sheet: "${slotName}" → Free Slots = ${freeCount}`
-              );
+              
             }
           });
 
@@ -1561,24 +1510,22 @@
             const normalizedSlotName = fullSlotName.toLowerCase();
             const availableSeats = freeSlotsMap[normalizedSlotName];
 
-            console.log(
-              `Slot "${fullSlotName}": Available = ${availableSeats}, Requested = ${seatsRequested}`
-            );
+            
 
             if (availableSeats === undefined) {
-              console.warn(`⚠️ Slot "${fullSlotName}" not found in sheet.`);
+              
               allSlotsHaveCapacity = false;
             } else if (availableSeats < seatsRequested) {
-              console.warn(`❌ Not enough seats in "${fullSlotName}".`);
+              
               allSlotsHaveCapacity = false;
             } else {
-              console.log(`✅ Slot "${fullSlotName}" has enough seats.`);
+              
             }
           }
 
           return allSlotsHaveCapacity;
         } catch (err) {
-          console.error("Error checking slot availability:", err);
+          
           return false;
         }
       };
@@ -1605,19 +1552,15 @@
           if (selection[slotId] === 0) continue;
 
           const recordedVal = raceStatusMap[slotId];
-          console.log(`Post-submission check: Slot ${slotId} = ${recordedVal}`);
+          
 
           if (recordedVal !== bookingId) {
-            console.warn(
-              `Slot ${slotId} does not match bookingId. Status: ${recordedVal}`
-            );
+            
             allMatched = false;
           }
 
           if (recordedVal === "Expired") {
-            console.warn(
-              `Slot ${slotId} is marked as Expired — invalid after form submission.`
-            );
+            
             allMatched = false;
           }
         }
@@ -1644,7 +1587,7 @@
             status === "Processing" &&
             activity === "Active";
           if (match)
-            console.log("MATCH FOUND:", rowBookingId, status, activity);
+            
           return match;
         });
       };
@@ -1685,7 +1628,7 @@
           const slotMatch = slotId.match(/Slot\s*(\d+)/);
 
           if (!dayMatch || !slotMatch) {
-            console.warn(`Invalid slotId format: ${slotId}`);
+            
             continue;
           }
 
@@ -1770,7 +1713,7 @@
                 }
               }
             } catch (error) {
-              console.error("Error updating popup amount:", error);
+              
               // Fallback to normal amount display
               popupAmountEl.textContent = `₹${amount}`;
 
@@ -1911,10 +1854,7 @@
             bannerDiv.innerHTML = "";
           }
         } catch (error) {
-          console.error(
-            "[SlotSelection] Error updating top discount banner:",
-            error
-          );
+          
           bannerDiv.innerHTML = "";
         }
       };

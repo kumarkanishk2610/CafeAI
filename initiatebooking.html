@@ -369,7 +369,7 @@
           }
           return false;
         } catch (err) {
-          console.error("Error checking booking ID existence:", err);
+          // Error checking booking ID existence
           // On errors, do not block progression by default
           return false;
         }
@@ -403,7 +403,6 @@
           }
 
           const code = generateBookingCode(email.toLowerCase(), mobile, seats);
-          console.log("Generated Booking Code:", code);
 
           // Show loading while checking for duplicate booking ID
           document.getElementById("loadingModal").classList.remove("hidden");
@@ -441,7 +440,7 @@
             const params = new URLSearchParams({ bookingId: code });
             location.href = `otp.html?${params}`;
           } catch (err) {
-            console.error(err);
+            // Failed to save booking
             document.getElementById("loadingModal").classList.add("hidden");
             document.getElementById("submitBtn").disabled = false;
             alert("Failed to save booking. Please try again.");

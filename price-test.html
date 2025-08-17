@@ -163,7 +163,7 @@
             await loadCurrentPrice();
             updateStatus();
           } catch (error) {
-            console.error("Error refreshing price:", error);
+            
           } finally {
             refreshBtn.disabled = false;
             refreshBtn.textContent = "Refresh Price";
@@ -185,7 +185,7 @@
             const total = await PriceUtility.calculateAmount(seats);
             totalAmountEl.textContent = `₹${total}`;
           } catch (error) {
-            console.error("Error calculating amount:", error);
+            
             totalAmountEl.textContent = "Error";
           } finally {
             calculateBtn.disabled = false;
@@ -201,7 +201,7 @@
               const total = await PriceUtility.calculateAmount(seats);
               totalAmountEl.textContent = `₹${total}`;
             } catch (error) {
-              console.error("Error calculating amount:", error);
+              
             }
           }
         });
@@ -252,7 +252,7 @@
                 `;
               }
             } catch (error) {
-              console.error("Error loading discount info:", error);
+              
               document.getElementById("discountInfo").innerHTML = `
                 <div class="text-red-600 p-4">Error loading discount info</div>
               `;
@@ -260,7 +260,7 @@
 
             updateStatus();
           } catch (error) {
-            console.error("Error loading price:", error);
+            
             currentPriceEl.textContent = "Error";
           }
         }

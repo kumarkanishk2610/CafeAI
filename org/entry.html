@@ -812,16 +812,16 @@
       function onScanFailure(error) {
         // Handle scan failure, usually ignore
         // Disabled console logging to prevent spam
-        // console.warn(`QR scan error = ${error}`);
+        // 
       }
 
       // Process entry verification
       async function processEntry(bookingId, selectedSlot = null) {
-        console.log("=== ENTRY PROCESSING START ===");
-        console.log("Scanned Booking ID:", bookingId);
-        console.log("Booking ID type:", typeof bookingId);
-        console.log("Booking ID length:", bookingId.length);
-        console.log("Selected Slot:", selectedSlot);
+        
+        
+        
+        
+        
 
         // Store booking ID and slot for seat booking redirect
         window.currentBookingId = bookingId;
@@ -837,13 +837,10 @@
           }
 
           // Step 2: Fetch user data for given booking ID
-          console.log("\n--- STEP 2: Fetch User Data ---");
+          
           const allReservationsData = await fetchReservationsData(bookingId);
-          console.log(
-            "All Reservations Data Count:",
-            allReservationsData.length
-          );
-          console.log("All Reservations Data:", allReservationsData);
+          
+          
 
           if (!allReservationsData || allReservationsData.length === 0) {
             showStatus("No reservations found for this booking ID", "error");
@@ -851,7 +848,7 @@
           }
 
           // Step 3: Check if any slots in userdata match admin selected slot
-          console.log("\n--- STEP 3: Slot Matching Check ---");
+          
           const hasMatchingSlot = allReservationsData.some((row) => {
             const slotName = row.c[0]?.v || row.c[1]?.v || "";
             return (
@@ -861,7 +858,7 @@
           });
 
           if (!hasMatchingSlot) {
-            console.log("❌ No bookings found for selected slot");
+            
             showStatus(
               `No bookings found for ${selectedSlot}. Please check slot selection.`,
               "error"
@@ -874,66 +871,63 @@
             allReservationsData,
             selectedSlot
           );
-          console.log(
-            "Filtered Reservations Data Count:",
-            filteredReservationsData.length
-          );
-          console.log("Filtered Reservations Data:", filteredReservationsData);
+          
+          
           window.currentReservationsData = filteredReservationsData;
 
           // Step 5: Cross checks (admin confirmation, entry status, etc.)
-          console.log("\n--- STEP 5: Cross Checks ---");
+          
 
           // 5.1: Check payment status
-          console.log("--- STEP 5.1: Payment Tracker Check ---");
+          
           const paymentTrackerStatus = await checkPaymentTracker(bookingId);
-          console.log("Payment Tracker Status:", paymentTrackerStatus);
+          
 
           if (paymentTrackerStatus === "not_found") {
-            console.log("❌ ID Not Found in Payment Tracker");
+            
             showStatus("ID Not Found", "error");
             return;
           } else if (paymentTrackerStatus === "not_approved") {
-            console.log("❌ Admin Confirmation Pending");
+            
             showStatus("Admin Confirmation Pending", "warning");
             showViewDetailsButton(); // Show View Details button
             return;
           }
 
-          console.log("✅ Payment Tracker Check Passed");
+          
 
           // 5.2: Check existing entry
-          console.log("--- STEP 5.2: Entry Status Check ---");
+          
           const entryStatus = await checkExistingEntry(bookingId, selectedSlot);
-          console.log("Entry Status:", entryStatus);
+          
 
           // Step 6: Handle entry logging based on entry status
-          console.log("\n--- STEP 6: Entry Handling ---");
+          
           if (entryStatus === "new") {
-            console.log("New Entry - Log Entry");
+            
 
             // Log entry immediately for new users
-            console.log("--- STEP 6.1: Log Entry ---");
+            
             const logResult = await logEntry(bookingId, selectedSlot);
-            console.log("Log Result:", logResult);
+            
 
             if (logResult === "success") {
-              console.log("✅ Entry Logged Successfully");
+              
 
-              console.log("--- STEP 6.2: Showing Success Status ---");
+              
               showStatus(
                 "Entry successful! Click 'View Details' to see reservation info.",
                 "success"
               );
-              console.log("--- STEP 6.3: Showing View Details Button ---");
+              
               showViewDetailsButton(); // Show View Details button
-              console.log("✅ New entry process completed successfully");
+              
             } else {
-              console.log("❌ Error Logging Entry");
+              
               showStatus("Error logging entry", "error");
             }
           } else if (entryStatus === "exists") {
-            console.log("Existing Entry - Show Details");
+            
 
             showStatus(
               "Entry already done. You can still view reservation details.",
@@ -943,10 +937,10 @@
             populateReservationSummary(); // Populate the summary
           }
 
-          console.log("=== ENTRY PROCESSING COMPLETE ===");
+          
         } catch (error) {
-          console.error("❌ Entry processing error:", error);
-          console.error("Error stack:", error.stack);
+          
+          
           showStatus("Error processing entry", "error");
         } finally {
           document.getElementById("loadingModal").classList.add("hidden");
@@ -958,10 +952,10 @@
         const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
         const gid = "364335196"; // Payment Tracker tab GID (corrected)
 
-        console.log("🔍 Checking Payment Tracker...");
-        console.log("Spreadsheet ID:", spreadsheetId);
-        console.log("GID:", gid);
-        console.log("Booking ID to search:", bookingId);
+        
+        
+        
+        
 
         try {
           const query = encodeURIComponent(
@@ -969,51 +963,45 @@
           );
           const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log("Query:", query);
-          console.log("Full URL:", url);
+          
+          
 
           const response = await fetch(url);
-          console.log("Response status:", response.status);
-          console.log("Response ok:", response.ok);
+          
+          
 
           const text = await response.text();
-          console.log("Raw response text length:", text.length);
-          console.log(
-            "Raw response text (first 200 chars):",
+          
+          :",
             text.substring(0, 200)
           );
 
           const jsonText = text.substring(47).slice(0, -2); // Remove "google.visualization.Query.setResponse(" and ");"
-          console.log("JSON text length:", jsonText.length);
-          console.log(
-            "JSON text (first 200 chars):",
+          
+          :",
             jsonText.substring(0, 200)
           );
 
           const data = JSON.parse(jsonText);
-          console.log("Parsed data:", data);
-          console.log("Table rows count:", data.table?.rows?.length || 0);
+          
+          
 
           if (data.table.rows.length === 0) {
-            console.log("❌ No rows found in Payment Tracker");
+            
             return "not_found";
           }
 
           // Check column E (payment status) - should be true for approved
           const paymentStatus = data.table.rows[0].c[1]?.v;
-          console.log("Payment status from column E:", paymentStatus);
-          console.log("Payment status type:", typeof paymentStatus);
+          
+          
 
           const result = paymentStatus === true ? "approved" : "not_approved";
-          console.log("Payment Tracker result:", result);
+          
           return result;
         } catch (error) {
-          console.error("❌ Error checking payment tracker:", error);
-          console.error("Error details:", {
-            message: error.message,
-            stack: error.stack,
-            name: error.name,
-          });
+          
+          
           throw error;
         }
       }
@@ -1023,35 +1011,35 @@
         const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
         const gid = "2113355260"; // Raw Data tab GID (usually 0 for first sheet)
 
-        console.log("🔍 Checking Raw Data for existing entry...");
-        console.log("Booking ID to check:", bookingId);
+        
+        
 
         try {
           // Fetch all data from Raw Data sheet to search locally
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log("Raw Data Query (fetch all):", query);
-          console.log("Raw Data URL:", url);
+          :", query);
+          
 
           const response = await fetch(url);
-          console.log("Raw Data Response status:", response.status);
+          
 
           const text = await response.text();
-          console.log("Raw Data response text length:", text.length);
+          
 
           const jsonText = text.substring(47).slice(0, -2);
           const data = JSON.parse(jsonText);
-          console.log("Raw Data parsed data:", data);
+          
 
           // Check if there's an error in the response
           if (data.status === "error") {
-            console.log("❌ Raw Data query error:", data.errors);
-            console.log("⚠️ Assuming entry exists due to query error");
+            
+            
             return "exists";
           }
 
-          console.log("Raw Data rows count:", data.table?.rows?.length || 0);
+          
 
           // Search through all rows for the booking ID in column I (index 8) AND slot in column J (index 9)
           let found = false;
@@ -1062,12 +1050,7 @@
               // Check column J (index 9) for the slot name
               const columnJ = row.c[9]?.v;
 
-              console.log(
-                `Row ${index + 1}, Column I:`,
-                columnI,
-                `Column J:`,
-                columnJ,
-                `(type: ${typeof columnI})`
+              `
               );
 
               // Convert both to strings for consistent comparison
@@ -1081,28 +1064,20 @@
                 columnIString === bookingIdString &&
                 columnJString === selectedSlotString
               ) {
-                console.log(
-                  `✅ Found booking ID ${bookingId} for slot ${selectedSlot} in row ${
-                    index + 1
-                  }`
-                );
+                
                 found = true;
               }
             });
           }
 
           const result = found ? "exists" : "new";
-          console.log("Raw Data check result:", result);
+          
           return result;
         } catch (error) {
-          console.error("❌ Error checking existing entry:", error);
-          console.error("Error details:", {
-            message: error.message,
-            stack: error.stack,
-            name: error.name,
-          });
+          
+          
           // If there's an error, be conservative and assume entry exists
-          console.log("⚠️ Error occurred, assuming entry exists for safety");
+          
           return "exists";
         }
       }
@@ -1112,38 +1087,35 @@
         const spreadsheetId = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
         const gid = "706665562"; // Reservations tab GID
 
-        console.log("🔍 Fetching Reservations data...");
-        console.log("Booking ID for reservations:", bookingId);
+        
+        
 
         try {
           // First, try to get all data and filter locally
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log("Reservations Query (fetch all):", query);
-          console.log("Reservations URL:", url);
+          :", query);
+          
 
           const response = await fetch(url);
-          console.log("Reservations Response status:", response.status);
+          
 
           const text = await response.text();
-          console.log("Reservations response text length:", text.length);
+          
 
           const jsonText = text.substring(47).slice(0, -2); // Remove "google.visualization.Query.setResponse(" and ");"
           const data = JSON.parse(jsonText);
-          console.log("Reservations parsed data:", data);
+          
 
           // Check if there's an error in the response
           if (data.status === "error") {
-            console.log("❌ Reservations query error:", data.errors);
+            
             // If there's an error, return empty array
             return [];
           }
 
-          console.log(
-            "Total Reservations rows count:",
-            data.table?.rows?.length || 0
-          );
+          
 
           // Filter rows locally where column I (index 8) matches the booking ID
           const filteredRows = [];
@@ -1151,10 +1123,7 @@
             data.table.rows.forEach((row, index) => {
               // Check column I (index 8) for the booking ID
               const columnI = row.c[8]?.v; // Column I (index 8)
-              console.log(
-                `Row ${index + 1}, Column I:`,
-                columnI,
-                `(type: ${typeof columnI})`
+              `
               );
 
               // Convert both to strings for consistent comparison
@@ -1163,11 +1132,7 @@
 
               // Compare as strings
               if (columnIString === bookingIdString) {
-                console.log(
-                  `✅ Found matching booking ID ${bookingId} in row ${
-                    index + 1
-                  }`
-                );
+                
                 // Extract only columns F, G, H, I, J, K (indices 5, 6, 7, 8, 9, 10)
                 const filteredRow = {
                   c: [
@@ -1184,16 +1149,12 @@
             });
           }
 
-          console.log("Filtered Reservations rows count:", filteredRows.length);
-          console.log("Filtered Reservations data:", filteredRows);
+          
+          
           return filteredRows;
         } catch (error) {
-          console.error("❌ Error fetching reservations data:", error);
-          console.error("Error details:", {
-            message: error.message,
-            stack: error.stack,
-            name: error.name,
-          });
+          
+          
           return [];
         }
       }
@@ -1249,7 +1210,7 @@
             }
           }
         } catch (error) {
-          console.error("Error populating reservation summary:", error);
+          
         }
       }
 
@@ -1259,9 +1220,9 @@
         const bookingId = window.currentBookingId || "";
         const selectedSlot = window.currentSelectedSlot || "";
 
-        console.log("Redirecting to seat booking with:");
-        console.log("- Booking ID:", bookingId);
-        console.log("- Selected Slot:", selectedSlot);
+        
+        
+        
 
         // Build URL with parameters
         const url = new URL("org/seat.html", window.location.origin);
@@ -1272,7 +1233,7 @@
           url.searchParams.set("slot", selectedSlot);
         }
 
-        console.log("Redirecting to:", url.toString());
+        );
         window.location.href = url.toString();
       }
 
@@ -1327,15 +1288,12 @@
         });
 
         // Add table assignments section if available
-        console.log(
-          "Checking for table assignments:",
-          window.currentTableAssignments
-        );
+        
         if (
           window.currentTableAssignments &&
           window.currentTableAssignments.length > 0
         ) {
-          console.log("Found table assignments, creating section");
+          
           const tableAssignmentsSection = document.createElement("div");
           tableAssignmentsSection.className =
             "mt-6 pt-6 border-t border-gray-700";
@@ -1357,17 +1315,15 @@
 
           // Insert after the table but before the close button
           const closeButtonContainer = popup.querySelector(".mt-4.text-center");
-          console.log("Close button container found:", !!closeButtonContainer);
+          
           if (closeButtonContainer) {
             closeButtonContainer.parentNode.insertBefore(
               tableAssignmentsSection,
               closeButtonContainer
             );
-            console.log("Table assignments section inserted");
+            
           } else {
-            console.log(
-              "Close button container not found, trying alternative insertion"
-            );
+            
             // Try inserting after the table container
             const tableContainer = popup.querySelector(".overflow-x-auto");
             if (tableContainer) {
@@ -1375,11 +1331,11 @@
                 tableAssignmentsSection,
                 tableContainer.nextSibling
               );
-              console.log("Table assignments section inserted after table");
+              
             }
           }
         } else {
-          console.log("No table assignments found or empty array");
+          
         }
 
         popup.classList.remove("hidden");
@@ -1434,7 +1390,7 @@
           // Return as is if no special formatting needed
           return timestamp;
         } catch (error) {
-          console.error("Error formatting timestamp:", error);
+          
           return timestamp; // Return original value if formatting fails
         }
       }
@@ -1447,8 +1403,8 @@
 
       // Log entry to Google Form
       async function logEntry(bookingId, slotName) {
-        console.log("📝 Logging entry for booking ID:", bookingId);
-        console.log("📝 Logging entry for slot:", slotName);
+        
+        
 
         const formData = new FormData();
         formData.append("entry.1735629859", bookingId); // Booking ID
@@ -1457,28 +1413,28 @@
         const formUrl =
           "https://docs.google.com/forms/d/e/1FAIpQLSfbGZ2i3oJTEhSm15EJ7IPmIz6G29lzze4P2da-cXLYGn0xLg/formResponse";
 
-        console.log("Form URL:", formUrl);
-        console.log("Form data:", formData);
+        
+        
 
         try {
-          console.log("--- Submitting form ---");
+          
           const response = await fetch(formUrl, {
             method: "POST",
             mode: "no-cors",
             body: formData,
           });
-          console.log("Form submission completed");
-          console.log("Response status:", response.status);
-          console.log("Response type:", response.type);
+          
+          
+          
 
           // Since no-cors mode doesn't give us response details, we assume success
           // but we can add a small delay to simulate the request
           await new Promise((resolve) => setTimeout(resolve, 1000));
 
-          console.log("✅ Entry logged successfully");
+          
           return "success";
         } catch (error) {
-          console.error("❌ Error logging entry:", error);
+          
           return "error";
         }
       }
@@ -1490,7 +1446,7 @@
           const slots = extractUniqueSlots(reservationsData);
 
           if (slots.length === 0) {
-            console.log("❌ No slots found in reservations data");
+            
             return;
           }
 
@@ -1502,7 +1458,7 @@
             await processTableAssignment(bookingId, slots[0]);
           }
         } catch (error) {
-          console.error("❌ Error in table assignment:", error);
+          
         }
       }
 
@@ -1572,9 +1528,7 @@
       // Process table assignment
       async function processTableAssignment(bookingId, slotName) {
         try {
-          console.log(
-            `🔍 Checking table assignment for booking ${bookingId}, slot ${slotName}`
-          );
+          
 
           // Check existing table assignment
           const existingAssignment = await checkExistingTableAssignment(
@@ -1583,28 +1537,26 @@
           );
 
           if (existingAssignment) {
-            console.log(
-              `✅ Found existing table assignment: ${existingAssignment}`
-            );
+            
             showTableAssignmentStatus(
               `Already assigned to ${existingAssignment}`,
               "info"
             );
           } else {
-            console.log("❌ No existing table assignment found");
+            
             // Assign new table
             const newTableAssignment = await assignNewTable(
               bookingId,
               slotName
             );
             if (newTableAssignment) {
-              console.log(`✅ Assigned to table: ${newTableAssignment}`);
+              
               showTableAssignmentStatus(
                 `Assigned to ${newTableAssignment}`,
                 "success"
               );
             } else {
-              console.log("❌ Failed to assign table");
+              
               showTableAssignmentStatus(
                 "Failed to assign table - all tables may be occupied",
                 "error"
@@ -1612,7 +1564,7 @@
             }
           }
         } catch (error) {
-          console.error("❌ Error processing table assignment:", error);
+          
           showTableAssignmentStatus(
             "Error processing table assignment",
             "error"
@@ -1637,7 +1589,7 @@
           const data = JSON.parse(jsonText);
 
           if (data.status === "error") {
-            console.log("❌ Error checking table assignment:", data.errors);
+            
             return null;
           }
 
@@ -1650,7 +1602,7 @@
 
           return null; // No existing assignment
         } catch (error) {
-          console.error("❌ Error checking table assignment:", error);
+          
           return null;
         }
       }
@@ -1662,7 +1614,7 @@
           const availableTables = await getAvailableTables(slotName);
 
           if (availableTables.length === 0) {
-            console.log("❌ No available tables for this slot");
+            
             return null;
           }
 
@@ -1684,10 +1636,10 @@
             mode: "no-cors",
           });
 
-          console.log(`✅ Table assignment submitted: ${assignedTable}`);
+          
           return assignedTable;
         } catch (error) {
-          console.error("❌ Error assigning table:", error);
+          
           return null;
         }
       }
@@ -1708,7 +1660,7 @@
           const data = JSON.parse(jsonText);
 
           if (data.status === "error") {
-            console.log("❌ Error getting available tables:", data.errors);
+            
             return [];
           }
 
@@ -1743,14 +1695,11 @@
           const availableTables = allTables.filter(
             (table) => !occupiedTables.has(table)
           );
-          console.log(
-            `Available tables for slot ${slotName}:`,
-            availableTables
-          );
+          
 
           return availableTables;
         } catch (error) {
-          console.error("❌ Error getting available tables:", error);
+          
           return [];
         }
       }
@@ -1831,12 +1780,10 @@
           const query = encodeURIComponent("SELECT *");
           const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log(
-            `🔍 Fetching entire VenueTableReservation sheet for booking: ${bookingIdStr}`
-          );
-          console.log("Selected Slot:", selectedSlot);
-          console.log("Query:", query);
-          console.log("URL:", url);
+          
+          
+          
+          
 
           const response = await fetch(url);
           const text = await response.text();
@@ -1844,14 +1791,14 @@
           const data = JSON.parse(jsonText);
 
           if (data.status === "error") {
-            console.log("❌ Error getting table assignments:", data.errors);
+            
             return [];
           }
 
           // Extract table assignments with local filtering
           const tableAssignments = [];
           if (data.table && data.table.rows) {
-            console.log("Total rows in sheet:", data.table.rows.length);
+            
 
             data.table.rows.forEach((row, index) => {
               // Skip header row (index 0)
@@ -1863,13 +1810,11 @@
               const slotName = row.c[2]?.v || ""; // Column C
               const tableSeat = row.c[3]?.v || ""; // Column D
 
-              console.log(
-                `Row ${index}: BookingID="${bookingIdInSheet}", Slot="${slotName}", Table="${tableSeat}"`
-              );
+              
 
               // Check if this row matches our booking ID
               if (bookingIdInSheet === bookingIdStr) {
-                console.log(`✅ Found matching booking ID: ${bookingIdStr}`);
+                
 
                 if (selectedSlot) {
                   // Filter by selected slot
@@ -1881,13 +1826,9 @@
                       slot: slotName,
                       table: tableSeat,
                     });
-                    console.log(
-                      `✅ Found table assignment: ${tableSeat} for slot ${slotName}`
-                    );
+                    
                   } else {
-                    console.log(
-                      `❌ Slot mismatch: "${slotName}" vs "${selectedSlot}"`
-                    );
+                    
                   }
                 } else {
                   // Include all assignments for this booking
@@ -1895,21 +1836,16 @@
                     slot: slotName,
                     table: tableSeat,
                   });
-                  console.log(
-                    `✅ Found table assignment: ${tableSeat} for slot ${slotName}`
-                  );
+                  
                 }
               }
             });
           }
 
-          console.log(
-            `Total table assignments for booking ${bookingIdStr}:`,
-            tableAssignments
-          );
+          
           return tableAssignments;
         } catch (error) {
-          console.error("❌ Error getting table assignments:", error);
+          
           return [];
         }
       }
@@ -1924,9 +1860,9 @@
           const query = encodeURIComponent(`SELECT D WHERE C = '${slotName}'`);
           const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&tq=${query}&gid=${gid}`;
 
-          console.log(`🔍 Checking occupied tables for slot: ${slotName}`);
-          console.log("Query:", query);
-          console.log("URL:", url);
+          
+          
+          
 
           const response = await fetch(url);
           const text = await response.text();
@@ -1934,7 +1870,7 @@
           const data = JSON.parse(jsonText);
 
           if (data.status === "error") {
-            console.log("❌ Error getting occupied tables:", data.errors);
+            
             return [];
           }
 
@@ -1945,38 +1881,35 @@
               const tableSeat = row.c[0]?.v || ""; // Column D: Table/Seat
               if (tableSeat) {
                 occupiedTables.push(tableSeat);
-                console.log(`Found occupied table: ${tableSeat}`);
+                
               }
             });
           }
 
-          console.log(
-            `Total occupied tables for slot ${slotName}:`,
-            occupiedTables
-          );
+          
           return occupiedTables;
         } catch (error) {
-          console.error("❌ Error getting occupied tables:", error);
+          
           return [];
         }
       }
 
       // Close manual table selection modal
       function closeManualTableSelectionModal() {
-        console.log("Attempting to close table selection modal");
+        
         if (window.currentTableSelectionModal) {
-          console.log("Found modal, removing from DOM");
+          
           document.body.removeChild(window.currentTableSelectionModal);
           window.currentTableSelectionModal = null;
           window.selectedTables = []; // Clear selected tables
         } else {
-          console.log("No modal found to close");
+          
           // Fallback: try to find modal by class
           const modal = document.querySelector(
             ".fixed.inset-0.bg-black.bg-opacity-50"
           );
           if (modal) {
-            console.log("Found modal by class, removing");
+            
             document.body.removeChild(modal);
             window.selectedTables = [];
           }
@@ -2008,7 +1941,7 @@
         );
 
         if (!button) {
-          console.error(`Button for table ${tableSeat} not found`);
+          
           return;
         }
 
@@ -2020,12 +1953,12 @@
           // Reset to unselected state - keep all base classes
           button.className =
             "p-3 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-gray-700 table-selection-btn";
-          console.log(`Deselected table: ${tableSeat}`);
-          console.log(`Button classes after deselection:`, button.className);
+          
+          
         } else {
           // Check if we can select more tables
           if (window.selectedTables.length >= maxSelections) {
-            console.log(`Cannot select more than ${maxSelections} tables`);
+            
             showTableAssignmentStatus(
               `You can only select up to ${maxSelections} table(s)`,
               "error"
@@ -2038,18 +1971,16 @@
           // Set to selected state - blue background and white text
           button.className =
             "p-3 border border-blue-500 rounded-lg bg-blue-500 text-white text-sm font-medium table-selection-btn";
-          console.log(`Selected table: ${tableSeat}`);
-          console.log(`Button classes after selection:`, button.className);
+          
+          
         }
 
         // Update the selection counter
         if (selectedCountElement) {
           selectedCountElement.textContent = window.selectedTables.length;
-          console.log(
-            `Counter updated: ${window.selectedTables.length} of ${maxSelections} tables selected`
-          );
+          
         } else {
-          console.error("Selected count element not found in modal");
+          
         }
 
         // Update submit button state
@@ -2057,63 +1988,52 @@
           "#submitTableSelectionBtn"
         );
         if (submitBtn) {
-          console.log(
-            `Updating submit button state: ${window.selectedTables.length} of ${maxSelections} tables selected`
-          );
-          console.log(`Button disabled state before:`, submitBtn.disabled);
+          
+          
 
           if (window.selectedTables.length === maxSelections) {
             submitBtn.classList.remove("bg-gray-400", "cursor-not-allowed");
             submitBtn.classList.add("bg-blue-500", "hover:bg-blue-600");
             submitBtn.disabled = false;
-            console.log(
-              `Submit button enabled - ${window.selectedTables.length} of ${maxSelections} tables selected`
-            );
+            
           } else {
             submitBtn.classList.remove("bg-blue-500", "hover:bg-blue-600");
             submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
             submitBtn.disabled = true;
-            console.log(
-              `Submit button disabled - ${window.selectedTables.length} of ${maxSelections} tables selected`
-            );
+            
           }
 
-          console.log(`Button disabled state after:`, submitBtn.disabled);
+          
         } else {
-          console.error("Submit button not found in modal");
+          
         }
 
-        console.log("Currently selected tables:", window.selectedTables);
+        
 
         // Debug: Check all buttons in the modal
         const allButtons = window.currentTableSelectionModal?.querySelectorAll(
           ".table-selection-btn"
         );
         if (allButtons) {
-          console.log("All table buttons in modal:");
+          
           allButtons.forEach((btn) => {
             const tableName = btn.getAttribute("data-table");
             const isSelected = window.selectedTables.includes(tableName);
-            console.log(
-              `Table ${tableName}: selected=${isSelected}, classes=${btn.className}`
-            );
+            
           });
         }
       }
 
       // Submit multiple table selections
       async function submitTableSelection(bookingId, slotName) {
-        console.log("🚀 submitTableSelection called with:");
-        console.log("- bookingId:", bookingId);
-        console.log("- slotName:", slotName);
-        console.log("- selectedTables:", window.selectedTables);
-        console.log(
-          "- currentReservationsData:",
-          window.currentReservationsData
-        );
+        
+        
+        
+        
+        
 
         if (!window.selectedTables || window.selectedTables.length === 0) {
-          console.log("❌ No tables selected");
+          
           showTableAssignmentStatus(
             "Please select at least one table",
             "error"
@@ -2130,13 +2050,13 @@
         const existingSeatsCount = existingUserAssignments?.length || 0;
         const remainingSeatsToSelect = maxSelections - existingSeatsCount;
 
-        console.log("- maxSelections:", maxSelections);
-        console.log("- existingSeatsCount:", existingSeatsCount);
-        console.log("- remainingSeatsToSelect:", remainingSeatsToSelect);
-        console.log("- selectedTables.length:", window.selectedTables.length);
+        
+        
+        
+        
 
         if (window.selectedTables.length !== remainingSeatsToSelect) {
-          console.log("❌ Table count mismatch");
+          
           showTableAssignmentStatus(
             `Please select exactly ${remainingSeatsToSelect} table(s) to complete your booking`,
             "error"
@@ -2146,14 +2066,12 @@
 
         // Store selected tables before closing modal (to prevent clearing)
         const tablesToSubmit = [...window.selectedTables];
-        console.log(`Tables to submit:`, tablesToSubmit);
+        
 
         closeManualTableSelectionModal();
 
         try {
-          console.log(
-            `Submitting ${tablesToSubmit.length} table assignments for booking ${bookingId}`
-          );
+          
 
           // Submit each table assignment
           for (const tableSeat of tablesToSubmit) {
@@ -2165,13 +2083,13 @@
             formData.append("entry.1779047001", slotName); // Slot Name
             formData.append("entry.1374097765", tableSeat); // Table/Seat
 
-            console.log(`Submitting table assignment for ${tableSeat}:`);
-            console.log(`- Booking ID: ${bookingId}`);
-            console.log(`- Slot Name: ${slotName}`);
-            console.log(`- Table/Seat: ${tableSeat}`);
-            console.log(`- Form URL: ${formUrl}`);
+            
+            
+            
+            
+            
 
-            console.log(`Attempting to submit form for ${tableSeat}...`);
+            
 
             try {
               // Method 1: Try fetch with no-cors
@@ -2181,23 +2099,18 @@
                 mode: "no-cors",
               });
 
-              console.log(`✅ Table assignment submitted: ${tableSeat}`);
-              console.log(`Response status: ${response.status}`);
-              console.log(`Response type: ${response.type}`);
+              
+              
+              
 
               // Since no-cors mode doesn't give us response details, we'll assume success
               // but add a small delay to ensure the form submission completes
               await new Promise((resolve) => setTimeout(resolve, 500));
             } catch (error) {
-              console.error(
-                `❌ Error submitting form for ${tableSeat}:`,
-                error
-              );
+              
 
               // Method 2: Try alternative submission method
-              console.log(
-                `Trying alternative submission method for ${tableSeat}...`
-              );
+              
               try {
                 // Create a hidden iframe to submit the form
                 const iframe = document.createElement("iframe");
@@ -2235,14 +2148,9 @@
                   document.body.removeChild(iframe);
                 }, 1000);
 
-                console.log(
-                  `✅ Alternative submission completed for ${tableSeat}`
-                );
+                
               } catch (altError) {
-                console.error(
-                  `❌ Alternative submission also failed for ${tableSeat}:`,
-                  altError
-                );
+                
                 throw error; // Throw original error
               }
             }
@@ -2255,22 +2163,20 @@
                   existingSeatsCount + tablesToSubmit.length
                 } seats)`
               : `Assigned to: ${tableList}`;
-          console.log(`Showing success message: ${successMessage}`);
+          
           showTableAssignmentStatus(successMessage, "success");
 
           // Clear selected tables
           window.selectedTables = [];
 
           // NOW log the entry after successful table assignment
-          console.log(
-            "--- Logging entry after successful table assignment ---"
-          );
+          
 
           const logResult = await logEntry(bookingId, slotName);
-          console.log("Entry log result:", logResult);
+          
 
           if (logResult === "success") {
-            console.log("✅ Entry logged successfully after table assignment");
+            
             // Show final success message
             showStatus(
               "Entry successful! Click 'View Details' to see reservation info.",
@@ -2278,14 +2184,14 @@
             );
             showViewDetailsButton(false); // Show View Details button after table assignment
           } else {
-            console.log("❌ Error logging entry after table assignment");
+            
             showStatus(
               "Entry logged but table assignment may have failed",
               "warning"
             );
           }
         } catch (error) {
-          console.error("❌ Error assigning tables:", error);
+          
           showTableAssignmentStatus("Error assigning tables", "error");
         }
       }
@@ -2304,13 +2210,9 @@
         formData.append("entry.1779047001", testSlotName);
         formData.append("entry.1374097765", testTableSeat);
 
-        console.log("🧪 Testing form submission...");
-        console.log("Form URL:", formUrl);
-        console.log("Form Data:", {
-          bookingId: testBookingId,
-          slotName: testSlotName,
-          tableSeat: testTableSeat,
-        });
+        
+        
+        
 
         try {
           const response = await fetch(formUrl, {
@@ -2319,11 +2221,11 @@
             mode: "no-cors",
           });
 
-          console.log("✅ Test form submission completed");
-          console.log("Response status:", response.status);
-          console.log("Response type:", response.type);
+          
+          
+          
         } catch (error) {
-          console.error("❌ Test form submission failed:", error);
+          
         }
       }
 
@@ -2347,10 +2249,10 @@
             mode: "no-cors",
           });
 
-          console.log(`✅ Table assignment submitted: ${tableSeat}`);
+          
           showTableAssignmentStatus(`Assigned to ${tableSeat}`, "success");
         } catch (error) {
-          console.error("❌ Error assigning table:", error);
+          
           showTableAssignmentStatus("Error assigning table", "error");
         }
       }
