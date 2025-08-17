@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cafe Kyaa! – Welcome</title>
+    <title>Cafe Kyaa! – Under Maintenance</title>
 
     <!-- Fonts + Tailwind -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -209,6 +209,24 @@
           transform: translateY(-10px);
         }
       }
+
+      .maintenance-icon {
+        animation: maintenanceSpin 4s linear infinite;
+      }
+
+      @keyframes maintenanceSpin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .countdown {
+        font-family: "Courier New", monospace;
+        font-weight: bold;
+      }
     </style>
   </head>
 
@@ -237,9 +255,9 @@
       </div>
     </header>
 
-    <!-- WELCOME -->
+    <!-- MAINTENANCE SECTION -->
     <section
-      id="welcome"
+      id="maintenance"
       class="flex flex-col items-center justify-center text-center px-4 min-h-screen"
       style="padding-bottom: calc(2rem + var(--sab))"
     >
@@ -254,52 +272,71 @@
           />
         </div>
 
+        <!-- Maintenance Icon -->
+        <div class="mb-6 flex justify-center">
+          <div
+            class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-xl maintenance-icon"
+          >
+            <svg
+              class="w-10 h-10 md:w-12 md:h-12 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
         <!-- Main Title -->
         <h1 class="text-3xl md:text-5xl font-bold mb-4 gradient-text">
-          Welcome to Cafe Kyaa!
+          Under Maintenance
         </h1>
 
         <!-- Subtitle -->
         <p
           class="text-base md:text-lg text-gray-600 mb-6 max-w-2xl mx-auto leading-relaxed"
         >
-          Experience the magic of anime culture at Mumbai's premier maid café.
-          Book your slot and immerse yourself in kawaii wonder! ✨
+          We're currently experiencing high traffic volume and need to
+          temporarily pause bookings to ensure the best experience for everyone.
+          ⚡
         </p>
 
-        <!-- Call to Action Buttons -->
-        <div class="space-y-3 max-w-md mx-auto mb-6">
-          <button
-            id="startBookingBtn"
-            class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 px-6 rounded-xl font-bold text-base shadow-xl card-hover pulse-glow transition-all duration-300 transform hover:scale-105"
-          >
-            <span class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Book Now!
-            </span>
-          </button>
+        <!-- Maintenance Message -->
+        <div
+          class="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-pink-200 mb-6 max-w-2xl mx-auto"
+        >
+          <div class="text-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">
+              🕐 Please Try Again After
+            </h2>
+            <div class="text-3xl md:text-4xl font-bold text-pink-600 mb-2">
+              10:00 AM
+            </div>
+            <div class="text-lg font-semibold text-gray-700 mb-4">
+              18th August 2025
+            </div>
+            <p class="text-sm text-gray-600">
+              We apologize for the inconvenience and appreciate your patience!
+              🌸
+            </p>
+          </div>
+        </div>
 
-          <button
-            id="viewRulesBtn"
-            class="hidden w-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-700 py-2 px-4 rounded-lg font-semibold shadow-lg card-hover border border-pink-200 transition-all duration-300"
+        <!-- Countdown Timer -->
+        <div
+          class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-4 shadow-lg mb-6 max-w-md mx-auto"
+        >
+          <h3 class="text-white font-semibold mb-2">Time Until Reopening</h3>
+          <div
+            id="countdown"
+            class="text-2xl md:text-3xl font-bold text-white countdown"
           >
-            <span class="flex items-center justify-center gap-2">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              View House Rules
-            </span>
-          </button>
+            Loading...
+          </div>
         </div>
 
         <!-- Additional Info -->
@@ -309,9 +346,31 @@
             Mumbai
           </p>
           <p class="mb-1">
-            📅 <span class="font-medium"></span> 22nd August - 24th August 2025
+            📅 <span class="font-medium">Event:</span> 22nd August - 24th August
+            2025
           </p>
-          <p>🎟️ <span class="font-medium"></span> Limited Seats Available!</p>
+          <p>
+            🎟️ <span class="font-medium">Status:</span> Temporarily Unavailable
+          </p>
+        </div>
+
+        <!-- Refresh Button -->
+        <div class="mt-6">
+          <button
+            onclick="location.reload()"
+            class="bg-white/80 backdrop-blur-sm hover:bg-white text-gray-700 py-3 px-6 rounded-lg font-semibold shadow-lg card-hover border border-pink-200 transition-all duration-300"
+          >
+            <span class="flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Refresh Page
+            </span>
+          </button>
         </div>
       </div>
 
@@ -330,234 +389,6 @@
       ></div>
     </section>
 
-    <!-- MAIN -->
-    <main
-      id="content"
-      class="hidden mt-14 flex flex-col items-center w-full text-gray-800 overflow-hidden h-[calc(100vh-3.5rem)]"
-    >
-      <!-- RULES -->
-      <section
-        id="rules"
-        class="hidden fade w-full h-full px-6 pt-6 pb-6 overflow-y-auto overflow-x-hidden"
-        style="padding-bottom: calc(1.5rem + var(--sab))"
-      >
-        <div class="fade-in">
-          <!-- Decorative elements -->
-          <div
-            class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-20 blur-3xl"
-          ></div>
-          <div
-            class="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full opacity-20 blur-3xl"
-          ></div>
-
-          <div class="relative z-10 max-w-4xl mx-auto w-full">
-            <!-- Header -->
-
-            <!-- Rules List -->
-            <div
-              class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 mb-6"
-            >
-              <div class="text-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-1">
-                  House Rules & Guest Consent
-                </h2>
-                <p class="text-gray-600 font-medium">
-                  Please read the rules carefully to ensure a safe and
-                  enchanting experience for everyone. 🌸
-                </p>
-              </div>
-              <ol
-                class="space-y-4 text-gray-700 leading-relaxed text-sm sm:text-base"
-              >
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >1</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Arrival Time:</span>
-                    Please arrive 15 minutes before your selected slot time so
-                    we can start the session on time.
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >2</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Props & Bags:</span>
-                    Please avoid entering the café with cosplay props, or with
-                    heavy, large, or multiple bags (very small café… sorry
-                    master/princess).
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >3</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Respect:</span>
-                    Be respectful to other guests & staff during the session.
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >4</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Group Entry:</span>
-                    When coming in a big group, please divide yourselves into
-                    pairs of 2 for easier access to the café.
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >5</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600"
-                      >Seating Arrangements:</span
-                    >
-                    <strong
-                      >Due to very limited seating, you may be paired with
-                      guests outside your group. Pairing is done on a
-                      first-come, first-served basis. Please plan
-                      accordingly!</strong
-                    >
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >6</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Booking:</span>
-                    Limited seats only. Please book your tickets early to ensure
-                    you get a seat. We have a no cancellation & zero-refund
-                    policy.
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >7</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600"
-                      >Cosplay Consent:</span
-                    >
-                    Cosplay is not consent. Please be respectful and ask for
-                    permission before filming or touching the maids.
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >8</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Behavior:</span>
-                    Any guest found causing trouble will be asked to leave
-                    immediately (escorted out if necessary).
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >9</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Venue Entry:</span>
-                    The ticket to the Maid Café does not include entry to the
-                    venue.
-                    <strong>
-                      You need to buy a separate ticket for Anime India (<a
-                        href="https://www.district.in/events/anime-india-mumbai-aug22-2025-buy-tickets"
-                        target="_blank"
-                        style="
-                          color: #0066ff;
-                          /* text-decoration: underline; */
-                          font-weight: bold;
-                        "
-                        >tickets available here</a
-                      >).
-                    </strong>
-                  </div>
-                </li>
-                <li class="flex items-start gap-3 break-words">
-                  <span
-                    class="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                    >10</span
-                  >
-                  <div>
-                    <span class="font-medium text-pink-600">Support:</span>
-                    In case you need any help, feel free to reach out to us via
-                    this form.
-                  </div>
-                </li>
-              </ol>
-            </div>
-
-            <!-- Agreement Section -->
-            <div
-              class="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
-            >
-              <div class="space-y-4 mb-4">
-                <label
-                  class="inline-flex items-start gap-3 text-sm text-gray-700 cursor-pointer"
-                >
-                  <input id="agree" type="checkbox" class="mt-1 h-5 w-5" />
-                  <span class="break-words">
-                    I have read and agree to the Maid Café rules.
-                  </span>
-                </label>
-
-                <button
-                  id="continue"
-                  type="button"
-                  class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 rounded-xl font-semibold shadow-lg card-hover glow-animation opacity-50 cursor-not-allowed"
-                >
-                  <span class="flex items-center justify-center gap-2">
-                    <svg
-                      class="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    Accept & Continue
-                  </span>
-                </button>
-
-                <div id="timerText" class="text-center">
-                  <p class="text-sm text-pink-600 mb-2">
-                    You can accept after
-                    <span id="count" class="font-bold">30</span>s.
-                  </p>
-                  <p class="text-xs text-gray-500 break-words">
-                    Please take a moment to read the rules!
-                  </p>
-                </div>
-              </div>
-            </div>
-            <br />
-            <br />
-            <br />
-            <br />
-          </div>
-        </div>
-      </section>
-    </main>
-
     <!-- SCRIPT -->
     <script>
       function setVH() {
@@ -569,73 +400,44 @@
       setVH();
       window.addEventListener("resize", setVH);
 
-      const startBookingBtn = document.getElementById("startBookingBtn"),
-        viewRulesBtn = document.getElementById("viewRulesBtn"),
-        welcome = document.getElementById("welcome"),
-        rules = document.getElementById("rules"),
-        agree = document.getElementById("agree"),
-        contBtn = document.getElementById("continue"),
-        topBar = document.getElementById("topBar"),
-        timerTxt = document.getElementById("timerText"),
-        countEl = document.getElementById("count");
+      // Countdown Timer
+      function updateCountdown() {
+        const now = new Date();
+        const targetDate = new Date("2025-08-18T10:00:00");
 
-      // Start Booking Button - shows rules first, then allows booking
-      startBookingBtn.addEventListener("click", () => {
-        welcome.classList.add("hidden");
-        rules.classList.remove("hidden");
-        rules.classList.add("show");
-        topBar.classList.remove("hidden");
-        document.getElementById("content").classList.remove("hidden");
-        document.body.classList.remove("bubbles", "justify-center");
-        document.body.classList.add("bg-gray-50", "text-gray-800");
-        startTimer();
-      });
+        const timeDifference = targetDate - now;
 
-      // View Rules Button - shows the rules section
-      viewRulesBtn.addEventListener("click", () => {
-        welcome.classList.add("hidden");
-        rules.classList.remove("hidden");
-        rules.classList.add("show");
-        topBar.classList.remove("hidden");
-        document.getElementById("content").classList.remove("hidden");
-        document.body.classList.remove("bubbles", "justify-center");
-        document.body.classList.add("bg-gray-50", "text-gray-800");
-        startTimer();
-      });
-
-      let remaining = 10,
-        timerId;
-      function startTimer() {
-        countEl.textContent = remaining;
-        timerId = setInterval(() => {
-          remaining--;
-          countEl.textContent = remaining;
-          if (remaining <= 0) {
-            clearInterval(timerId);
-            timerTxt.classList.add("hidden");
-            updateButtonState();
-          }
-        }, 1000);
-      }
-
-      function updateButtonState() {
-        const ready = agree.checked && remaining <= 0;
-        contBtn.classList.toggle("opacity-50", !ready);
-        contBtn.classList.toggle("cursor-not-allowed", !ready);
-        contBtn.classList.toggle("glow-animation", ready);
-        contBtn.dataset.ready = ready ? "yes" : "no";
-      }
-      agree.addEventListener("change", updateButtonState);
-
-      contBtn.addEventListener("click", () => {
-        if (contBtn.dataset.ready !== "yes") {
-          alert(
-            `Please take a moment to read the rules.\nYou can continue in ${remaining}s.`
-          );
+        if (timeDifference <= 0) {
+          document.getElementById("countdown").innerHTML = "Now Open! 🎉";
           return;
         }
-        location.href = "initiatebooking.html";
-      });
+
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        let countdownText = "";
+        if (days > 0) {
+          countdownText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else if (hours > 0) {
+          countdownText = `${hours}h ${minutes}m ${seconds}s`;
+        } else if (minutes > 0) {
+          countdownText = `${minutes}m ${seconds}s`;
+        } else {
+          countdownText = `${seconds}s`;
+        }
+
+        document.getElementById("countdown").textContent = countdownText;
+      }
+
+      // Update countdown every second
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
     </script>
   </body>
 </html>
