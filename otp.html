@@ -310,10 +310,24 @@
           }
         }
       })();
-      const OTP_FORM_URL =
-        "https://docs.google.com/forms/d/e/1FAIpQLSemxmJ85jxEP1sXmlUpzSzAmB54XcJvg1tmtDbor9QpELGRfg/formResponse";
-      const OTP_BOOKING_ENTRY = "entry.777211195";
-      const OTP_EMAIL_ENTRY = "entry.1068172299";
+      //**********************SECTION FOR OTP MAILER SELECTION**********************
+      //Mailer 1 - verifycafekyaa@gmail.com
+      //const OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSemxmJ85jxEP1sXmlUpzSzAmB54XcJvg1tmtDbor9QpELGRfg/formResponse";
+      //const OTP_BOOKING_ENTRY = "entry.777211195";
+      //const OTP_EMAIL_ENTRY = "entry.1068172299";
+      //****************************************************************************
+      //Mailer 2 - donotreply.cafekyaa@gmail.com
+      const OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
+      const OTP_BOOKING_ENTRY = "entry.2132914483";
+      const OTP_EMAIL_ENTRY = "entry.187307928";
+      //****************************************************************************
+      //Mailer 3 - verifycafekyaa@proton.me
+      //const OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdfHahBiXDLtXa1u_0eLjEIPgUY8PGLub0FiumsrjcgtBsBGA/formResponse";
+      //const OTP_BOOKING_ENTRY = "entry.893453668";
+      //const OTP_EMAIL_ENTRY = "entry.762914152";
+      //****************************************************************************
+
+
       let otpSent = false;
       document.getElementById("sendOtpBtn").onclick = async function () {
         if (!otpSent) {
@@ -339,8 +353,47 @@
              "OTP sent to your email.";
            document.getElementById("otpHelpTip").classList.remove("hidden");
            otpSent = true;
+           
+           // Show OTP info popup
+           showOtpInfoPopup();
         }
       };
+      
+      // Function to show OTP info popup
+      function showOtpInfoPopup() {
+        if (!document.getElementById("otpInfoModal")) {
+          const modal = document.createElement("div");
+          modal.id = "otpInfoModal";
+          modal.className = "fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50";
+          modal.innerHTML = `
+            <div class="bg-white rounded-2xl p-6 shadow-2xl text-center max-w-md mx-4 fade-in">
+              <div class="mb-4">
+                <svg class="w-12 h-12 mx-auto text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <h2 class="text-lg font-semibold text-gray-800 mb-3">OTP Sent Successfully!</h2>
+              <div class="text-sm text-gray-600 mb-4 space-y-2">
+                <p>📧 Please check your <strong>spam folder</strong> for the OTP.</p>
+                <p>⚠️ In case you do not receive an OTP, please do not try to resend another one.</p>
+                <p>🎫 Kindly raise a ticket using the form at the bottom of this page.</p>
+              </div>
+              <button onclick="closeOtpInfoPopup()" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2">
+                Got it!
+              </button>
+            </div>
+          `;
+          document.body.appendChild(modal);
+        }
+      }
+      
+      // Function to close OTP info popup
+      function closeOtpInfoPopup() {
+        const modal = document.getElementById("otpInfoModal");
+        if (modal) {
+          modal.remove();
+        }
+      }
                     document.getElementById("verifyOtpBtn").onclick = function () {
          const otp = document.getElementById("otpInput").value.trim();
          if (!otp || otp.length !== 6) {
