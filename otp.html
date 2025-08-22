@@ -253,6 +253,83 @@
       const SHEET_ID = "1Sxrv3iIIdl_6RqAahVZBKKCA-PvzIJXIyz5fkhq0HNc";
       const SHEET_GID = "2113355260";
       const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+      // Temp sheet config for dynamic settings (e.g., mailer selection)
+      const TEMP_SHEET_GID = "1287652045"; // Sheet name: Temp:
+      const TEMP_SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${TEMP_SHEET_GID}`;
+
+      // Default OTP mailer (Mailer 2) – can be overridden by Temp!Q2
+      let OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
+      let OTP_BOOKING_ENTRY = "entry.2132914483";
+      let OTP_EMAIL_ENTRY = "entry.187307928";
+
+      // Read Temp!Q2 value (expected: "Mailer 1", "Mailer 2", "Mailer 3", ...)
+      async function fetchMailerPreference() {
+        try {
+          const res = await fetch(TEMP_SHEET_URL);
+          const text = await res.text();
+          const json = JSON.parse(text.substring(47, text.length - 2));
+          const row = json.table?.rows?.[1] || json.table?.rows?.[0]; // Prefer 2nd row (row index 1)
+          const value = row?.c?.[16]?.v || ""; // Column Q (index 16)
+          return String(value).trim();
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function setOtpMailerConfig(selectedMailer) {
+        const m = String(selectedMailer || "").toLowerCase();
+        if (m === "mailer 1") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSemxmJ85jxEP1sXmlUpzSzAmB54XcJvg1tmtDbor9QpELGRfg/formResponse";
+          OTP_BOOKING_ENTRY = "entry.777211195";
+          OTP_EMAIL_ENTRY = "entry.1068172299";
+          return;
+        }
+        if (m === "mailer 2") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
+          OTP_BOOKING_ENTRY = "entry.2132914483";
+          OTP_EMAIL_ENTRY = "entry.187307928";
+          return;
+        }
+        if (m === "mailer 3") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdfHahBiXDLtXa1u_0eLjEIPgUY8PGLub0FiumsrjcgtBsBGA/formResponse";
+          OTP_BOOKING_ENTRY = "entry.893453668";
+          OTP_EMAIL_ENTRY = "entry.762914152";
+          return;
+        }
+        
+        if (m === "mailer 2") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
+          OTP_BOOKING_ENTRY = "entry.2132914483";
+          OTP_EMAIL_ENTRY = "entry.187307928";
+          return;
+        }
+        
+        if (m === "mailer 4") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScQ7jbB7rRe9olcre39Of85WG2Y8YfcUPqUnEAUYjwk2OfYjA/formResponse"
+          OTP_BOOKING_ENTRY = "entry.1932514190";
+          OTP_EMAIL_ENTRY = "entry.1202516544";
+          return;
+        }
+        if (m === "mailer 5") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeSGWKHK_C1tb0YQySU7hNwOahqCh5nx4waAIg_L2SyrMJIvg/formResponse";
+          OTP_BOOKING_ENTRY = "entry.697686466";
+          OTP_EMAIL_ENTRY = "entry.1792017535";
+          return;
+        }
+        if (m === "mailer 6") {
+          OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfer4l5NxZIiPvpBLJcnYebS8MRTElGE2vVuHfSKSRe7H0BDQ/formResponse";
+          OTP_BOOKING_ENTRY = "entry.435992267";
+          OTP_EMAIL_ENTRY = "entry.1712490831";
+          return;
+        }
+
+
+
+        // Default/fallback to Mailer 2
+        OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
+        OTP_BOOKING_ENTRY = "entry.2132914483";
+        OTP_EMAIL_ENTRY = "entry.187307928";
+      }
       const urlParams = new URLSearchParams(window.location.search);
       const bookingId = urlParams.get("bookingId");
       document.getElementById("bookingIdDisplay").innerText = bookingId || "";
@@ -288,13 +365,17 @@
           sendOtpBtn.innerText = "Loading user details...";
           sendOtpBtn.classList.add("opacity-75", "cursor-not-allowed");
           
-          const email = await fetchEmailForBookingId(bookingId);
+          const [email, mailerPref] = await Promise.all([
+            fetchEmailForBookingId(bookingId),
+            fetchMailerPreference(),
+          ]);
           
           // Wait at least 2 seconds before showing result
           await new Promise(resolve => setTimeout(resolve, 2000));
           
           document.getElementById("emailDisplay").innerText = email;
           window._otpEmail = email;
+          setOtpMailerConfig(mailerPref);
           
           if (!email) {
             document.getElementById("otpStatus").innerText =
@@ -311,20 +392,7 @@
         }
       })();
       //**********************SECTION FOR OTP MAILER SELECTION**********************
-      //Mailer 1 - verifycafekyaa@gmail.com
-      //const OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSemxmJ85jxEP1sXmlUpzSzAmB54XcJvg1tmtDbor9QpELGRfg/formResponse";
-      //const OTP_BOOKING_ENTRY = "entry.777211195";
-      //const OTP_EMAIL_ENTRY = "entry.1068172299";
-      //****************************************************************************
-      //Mailer 2 - donotreply.cafekyaa@gmail.com
-      const OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdCYkIHu9g6ylpuZqjFqJ12xHZ1i4w1ASt0lbo26mMMEaGISg/formResponse";
-      const OTP_BOOKING_ENTRY = "entry.2132914483";
-      const OTP_EMAIL_ENTRY = "entry.187307928";
-      //****************************************************************************
-      //Mailer 3 - verifycafekyaa@proton.me
-      //const OTP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdfHahBiXDLtXa1u_0eLjEIPgUY8PGLub0FiumsrjcgtBsBGA/formResponse";
-      //const OTP_BOOKING_ENTRY = "entry.893453668";
-      //const OTP_EMAIL_ENTRY = "entry.762914152";
+      // Mailer selection is now dynamic via Temp!Q2. Defaults are set above.
       //****************************************************************************
 
 
